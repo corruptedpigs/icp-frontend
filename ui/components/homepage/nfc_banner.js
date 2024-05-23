@@ -5,9 +5,9 @@ import Link from "next/link";
 const NFCBanner = () => {
   return (
     <section id="nfc-side-event" style={ { backgroundColor: "rgb(200, 255, 0)", minHeight: "280px" } } className="py-10 px-10 md:py-20">
-      <div className="flex flex-row-reverse  flex-wrap  container justify-center space-x-10 space-y-6">
-        <div className="max-w-screen-lg space-y-6">
-          <h2 className="text-5xl ">Show your pride in the Corrupted Pigs community!
+      <div className="flex flex-row-reverse flex-wrap  container justify-center space-x-10 space-y-6 ">
+        <div className="text-slate-800 max-w-screen-lg space-y-6">
+          <h2 className="text-5xl">Show your pride in the Corrupted Pigs community!
           </h2>
           <p className="text-2xl">
             Our T-shirts are more than just merch — they&#39;re a statement.
@@ -16,7 +16,7 @@ const NFCBanner = () => {
             Get yours today.
           </p>
           <Link
-            className="btn btn-white btn-wide hover:animate-bounce"
+            className="btn dark:bg-white dark:text-black btn-wide hover:animate-bounce"
             target="_blank"
             rel="noopener noreferrer"
             href="https://corruptedpigs.store">
