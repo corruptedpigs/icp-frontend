@@ -1,3 +1,17 @@
+## Corrupted Pigs Game
+
+![banner-pigs-store](https://github.com/corruptedpigs/frontend/assets/4332567/599a5712-5563-4108-a421-c6359c87857c)
+
+Our "Corrupted Pigs" aren't your average oinkers. They're a symbol of power, influence, and a healthy dose of rebellion. Rock a tee or cap featuring a "Corrupted Pig" and let the world know you play by your own rules.
+
+This ain't your grandpa's pigpen. Our merch is bold, edgy, and perfect for those who like to stand out. More than just a design, it's a badge of honor for those who hustle, innovate, and carve their own path.
+
+Join the "Corrupted Pigs" movement. Rep the power pig and show the world you're here to play for keeps.
+
+Shop the collection now!
+https://corruptedpigs.store/
+
+
 # Next.js Internet Computer Starter Template
 
 This project provides a simple starter template for Dfinity Internet Computer using Next.js framework as frontend.
@@ -40,14 +54,14 @@ sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
 Clone this Git repository:
 
 ```bash
-git clone https://github.com/dappblock/nextjs-ic-starter
+git clone https://github.com/corruptedpigs/icp-frontend
 ```
 
 Open command terminal:
 Enter the commands to start dfx local server in background:
 
 ```bash
-cd nextjs-ic-starter
+cd icp-frontend
 dfx start --background
 ```
 
@@ -152,7 +166,7 @@ const greeting = await hello.greet(name)
 
 The beautiful part is you can invoke the hello actor greet function with async/await style as if they are on the same platform. For details, see React Components GreetingSection.js and ImageSection.js in /ui/components/.
 
-Webpack configuration:  
+Webpack configuration:
 In Next.js, it's located in next.config.js.
 
 ## React Hook
@@ -193,7 +207,7 @@ dfx deploy hello_assets
 
 **npm run build** builds and export Next.js as static code storing in **/out** folder which would be picked up by **dfx deploy hello_assets** as defined in dfx.json with **/out** as the source.
 
-When it completes, you can open Chrome and browse to:  
+When it completes, you can open Chrome and browse to:
 http://localhost:8000/?canisterId=[canisterId]
 
 Replace [canisterId] with the hello_assets canister ID which you can find by running:
@@ -233,7 +247,7 @@ To do that you will need:
 - ICP tokens and convert it to [cycles](https://internetcomputer.org/docs/current/concepts/tokens-cycles/)
 - Cycles wallet
 
-Follow the [Network Deployment](https://internetcomputer.org/docs/current/developer-docs/setup/cycles/cycles-wallet/) guide to create a wallet.  
+Follow the [Network Deployment](https://internetcomputer.org/docs/current/developer-docs/setup/cycles/cycles-wallet/) guide to create a wallet.
 Dfinity offers [free cycle](https://faucet.dfinity.org/) to developers.
 
 Now, you can deploy your Next.js Dapp to Internet Computer IC network by adding **--network ic** to the dfx subcommand. We will first update our env var to point to IC network host. Then deploy the backend canister first, export Next.js static code and deploy frontend canister **hello_assets**.
@@ -243,7 +257,7 @@ cp .env.icprod .env.production
 dfx deploy --network ic
 ```
 
-Open Chrome and go to https://[canisterId].raw.ic0.app/  
+Open Chrome and go to https://[canisterId].raw.ic0.app/
 Replace [canisterId] by the hello_assets canister id in the IC network. You can find it by running:
 
 ```bash
