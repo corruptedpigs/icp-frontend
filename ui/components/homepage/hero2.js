@@ -10,8 +10,8 @@ const Hero = () => {
         <div className="lg:flex lg:justify-between">
           <article className="lg:w-1/2 lg:ml-6 text-neutral-content mx-10">
             <h1 className="mb-5 text-5xl font-bold">Challenge the System.</h1>
-            <h2 className="mb-5 text-2xl">Corrupted Pigs&apos; Online Card Game - Coming Soon. Sharpen your skills and rise to the top.</h2>
-            <p>
+            <h2 className="mb-5 text-2xl font-bold">Corrupted Pigs&apos; Online Card Game - Coming Soon. Sharpen your skills and rise to the top.</h2>
+            <p className='text-xl'>
               &quot;Corrupted Pigs&quot; is an NFT collection, where users can purchase unique digital assets. These NFTs grant access to three distinct games within our platform. As players engage with these games, a portion of the proceeds from burning NFTs will be donated to social causes. It&apos;s a novel way to combine gaming, rewards, and social impact, all while supporting meaningful initiatives. 🎮🐷 oink oink
             </p>
             <Link className="link" href="https://corruptedpigs.notion.site/Game-Rules-643b79c0b7394b6dafd9adc54157cc80">Game Rules</Link>

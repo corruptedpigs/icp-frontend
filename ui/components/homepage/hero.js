@@ -54,7 +54,7 @@ const Hero = () => {
               />
             </div>
             <h1 className="mb-5 text-5xl font-bold">Power Up for Good</h1>
-            <p className="mb-5 text-2xl"> Corrupted Pigs&apos; NFTs fuel social causes. Play. Earn. Make a Difference.</p>
+            <p className="mb-5 text-2xl font-bold"> Corrupted Pigs&apos; NFTs fuel social causes. Play. Earn. Make a Difference.</p>
             <CtaGoogleAnalytics
               buttonText="Get your t-shirt and support the cause"
               buttonClass="btn btn-warning hover:animate-[wiggle_1s_ease-in-out_infinite]"
