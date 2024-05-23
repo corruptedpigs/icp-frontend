@@ -36,7 +36,6 @@ const Navbar = () => {
               />
             </li>
             <li><Link href="#associations">Associations</Link></li>
-            <li><Link href="/about">Meet the Team</Link></li>
             <li><Link href="#roadmap">Roadmap</Link></li>
             <li><Link href="#about">About</Link></li>
             <li>
@@ -64,7 +63,6 @@ const Navbar = () => {
             />
           </li>
           <li><Link href="#associations">Associations</Link></li>
-          <li><Link href="/about">Meet the Team</Link></li>
           <li><Link href="#roadmap">Roadmap</Link></li>
           <li><Link href="#about">About</Link></li>
           <li>
