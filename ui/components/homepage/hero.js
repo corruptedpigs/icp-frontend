@@ -19,15 +19,15 @@ const Hero = () => {
   const slides = [
     {
       key: uuidv4(),
-      content: <Image src="/carta1.png" alt="Pig card1" height={600} width={600}/>
+      content: <Image src="/carta1.png" alt="Pig card1" height={600} width={450} />
     },
     {
       key: uuidv4(),
-      content: <Image src="/carta2.png" alt="Pig card2" height={600} width={600}/>
+      content: <Image src="/carta2.png" alt="Pig card2" height={600} width={450} />
     },
     {
       key: uuidv4(),
-      content: <Image src="/carta3.png" alt="Pig card3" height={600} width={600}/>
+      content: <Image src="/carta3.png" alt="Pig card3" height={600} width={450} />
     },
   ];
 
