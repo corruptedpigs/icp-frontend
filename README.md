@@ -32,11 +32,6 @@ This project provides a simple starter template for Dfinity Internet Computer us
 - A simple React HTML form with name input, sending it to greet canister and showing the returned result
 - An Image Upload HTML form with Pick an Image button, upload the image to image canister, loading the image back from the canister and display it using useImageObject React Hook
 
-## Live Demo in IC Mainnet 🥳
-
-https://u4gun-5aaaa-aaaah-qabma-cai.raw.ic0.app
-
-![Screenshot](/public/demo-screenshot.png)
 
 ## Quick Start (Run locally)
 
