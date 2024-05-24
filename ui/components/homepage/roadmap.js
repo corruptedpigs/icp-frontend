@@ -1,8 +1,9 @@
 import Image from "next/image";
+import SectionScrollPlaySound from '../../../app/components/section_scroll_play_sound'
 
 const Roadmap = () => {
   return (
-    <section id="roadmap" className="bg-violet py-10 md:py-16">
+    <SectionScrollPlaySound id="roadmap" css="bg-violet py-10 md:py-16" soundUrl="https://cdn.freesound.org/previews/692/692838_11519060-lq.mp3">
       <div className="container mx-auto px-4 text-neutral-content">
         <h2 className="text-4xl font-bold mb-8 text-center">Roadmap</h2>
         <ul className="timeline mx-auto timeline-vertical max-w-screen-lg">
@@ -111,7 +112,7 @@ const Roadmap = () => {
           </li>
         </ul>
       </div>
-    </section>
+    </SectionScrollPlaySound>
   )
 }
 
