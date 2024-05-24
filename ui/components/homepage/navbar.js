@@ -4,10 +4,23 @@ import Image from "next/image";
 import Link from "next/link";
 import CtaGoogleAnalytics from "../cta_google_analytics";
 
-const Navbar = () => {
+const Navbar = ( { show_logo = false }) => {
   return (
     <div className="navbar text-neutral-content">
       <div className="navbar-start lg:w-20">
+        {
+          show_logo && (
+            <Link href="/">
+              <Image src="/logo.png"
+                alt="corrupted pigs logo"
+                height={70}
+                width={88}
+                priority
+                className="hidden lg:block"
+              />
+            </Link>
+          )
+        }
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg
@@ -31,6 +44,7 @@ const Navbar = () => {
             </li>
             <li><Link href="#associations">Associations</Link></li>
             <li><Link href="#roadmap">Roadmap</Link></li>
+            <li><Link href="/about">Team</Link></li>
             <li><Link href="#about">About</Link></li>
             <li>
               <CtaGoogleAnalytics
@@ -44,12 +58,14 @@ const Navbar = () => {
         </div>
       </div>
       <div className="navbar-center lg:hidden">
-        <Image src="/logo.png"
-          alt="corrupted pigs logo"
-          height={70}
-          width={88}
-          priority
-        />
+        <Link href="/">
+          <Image src="/logo.png"
+            alt="corrupted pigs logo"
+            height={70}
+            width={88}
+            priority
+          />
+        </Link>
       </div>
       <div className="navbar-end hidden lg:flex lg:flex-1">
         <ul className="menu menu-horizontal px-1 uppercase font-bold">
@@ -63,6 +79,7 @@ const Navbar = () => {
           </li>
           <li><Link href="#associations">Associations</Link></li>
           <li><Link href="#roadmap">Roadmap</Link></li>
+          <li><Link href="/about">Team</Link></li>
           <li><Link href="#about">About</Link></li>
           <li>
             <CtaGoogleAnalytics
