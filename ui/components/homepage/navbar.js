@@ -5,12 +5,6 @@ import Link from "next/link";
 import CtaGoogleAnalytics from "../cta_google_analytics";
 
 const Navbar = () => {
-  const discordInviteLink = 'https://discord.gg/x6uJ65PpPj';
-
-  const handleDiscordButtonClick = () => {
-    window.location.href = discordInviteLink;
-  };
-
   return (
     <div className="navbar text-neutral-content">
       <div className="navbar-start lg:w-20">
@@ -39,7 +33,12 @@ const Navbar = () => {
             <li><Link href="#roadmap">Roadmap</Link></li>
             <li><Link href="#about">About</Link></li>
             <li>
-              <button onClick={handleDiscordButtonClick} className="btn btn-sm btn-warning uppercase">Join waiting list</button>
+              <CtaGoogleAnalytics
+                buttonText="Play the game"
+                buttonClass="btn btn-warning uppercase"
+                url="#"
+                ctaLabel="cta-play-game"
+              />
             </li>
           </ul>
         </div>
@@ -66,7 +65,12 @@ const Navbar = () => {
           <li><Link href="#roadmap">Roadmap</Link></li>
           <li><Link href="#about">About</Link></li>
           <li>
-            <button onClick={handleDiscordButtonClick} className="btn btn-sm btn-warning uppercase">Join waiting list</button>
+            <CtaGoogleAnalytics
+              buttonText="Play the game"
+              buttonClass="btn btn-sm btn-warning uppercase"
+              url="#"
+              ctaLabel="cta-play-game"
+            />
           </li>
         </ul>
       </div>

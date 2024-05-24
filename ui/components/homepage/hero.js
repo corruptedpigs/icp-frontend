@@ -31,6 +31,8 @@ const Hero = () => {
     },
   ];
 
+  const discordInviteLink = 'https://discord.gg/x6uJ65PpPj';
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       setActiveSlide((prevIndex) => (prevIndex + 1) % slides.length);
@@ -44,8 +46,8 @@ const Hero = () => {
       <div className="hero-overlay custom-hero-overlay"></div>
       <div className="hero-content grid grid-cols-1 container py-20">
         <div className="lg:flex lg:justify-between">
-          <div className="lg:w-1/2 lg:ml-6 text-neutral-content">
-          <div className="hidden lg:block mb-4">
+          <div className="mx-6 mb-10 lg:mx-0 text-neutral-content">
+            <div className="hidden lg:block mb-4">
               <Image src="/logo.png"
                 alt="corrupted pigs logo"
                 height={120}
@@ -53,13 +55,13 @@ const Hero = () => {
                 priority
               />
             </div>
-            <h1 className="mb-5 text-5xl font-bold">Power Up for Good</h1>
-            <p className="mb-5 text-2xl font-bold"> Corrupted Pigs&apos; NFTs fuel social causes. Play. Earn. Make a Difference.</p>
+            <h1 className="mb-5 text-5xl font-bold">Be a Game Changer</h1>
+            <p className="mb-5 text-2xl font-bold"> Join Corrupted Pigs' NFTs to support social causes. Game. Earn. Impact Lives.</p>
             <CtaGoogleAnalytics
-              buttonText="Get your t-shirt and support the cause"
-              buttonClass="btn btn-warning hover:animate-[wiggle_1s_ease-in-out_infinite]"
-              url="https://corruptedpigs.store"
-              ctaLabel="cta-merch-hero"
+              buttonText="Join waiting list"
+              buttonClass="btn btn-warning uppercase hover:animate-bounce"
+              url={discordInviteLink}
+              ctaLabel="cta-discord"
             />
           </div>
 

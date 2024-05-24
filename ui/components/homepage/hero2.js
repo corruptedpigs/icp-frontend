@@ -8,7 +8,7 @@ const Hero = () => {
       <div className="hero-overlay custom-hero-overlay"></div>
       <div className="hero-content grid grid-cols-1 py-12">
         <div className="lg:flex lg:justify-between">
-          <article className="lg:w-1/2 lg:ml-6 text-neutral-content mx-10">
+          <article className="lg:w-1/2 mb-10 lg:mb-0 xl:mx-0 text-neutral-content mx-10">
             <h1 className="mb-5 text-5xl font-bold">Challenge the System.</h1>
             <h2 className="mb-5 text-2xl font-bold">Corrupted Pigs&apos; Online Card Game - Coming Soon. Sharpen your skills and rise to the top.</h2>
             <p className='text-xl'>
@@ -16,7 +16,7 @@ const Hero = () => {
             </p>
             <Link className="link" href="https://corruptedpigs.notion.site/Game-Rules-643b79c0b7394b6dafd9adc54157cc80">Game Rules</Link>
           </article>
-          <div className="lg:w-1/2 lg:ml-6 mt-8 lg:mt-0">
+          <div className="lg:w-1/2 mx-6 mb-10 lg:mx-0 mt-8 lg:mt-0">
             <div className="mockup-browser border bg-slate-300 max-w-xl mx-auto">
               <div className="mockup-browser-toolbar">
                 <div className="input text-sm sm:text-base">https://corruptedpigs.com</div>

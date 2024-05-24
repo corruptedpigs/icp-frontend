@@ -14,6 +14,7 @@ const logoUrl = `${baseUrl}/images/favicon.png`
 export const metadata = {
   title: title,
   description: description,
+  keywords: "NFT game, social good, donate to institutions, crowdfunding, animal farm, fight corruption",
   openGraph: {
     description: description,
     logo: logoUrl,

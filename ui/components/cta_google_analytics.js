@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 
 const CtaGoogleAnalytics = ({ buttonText, buttonClass, url, ctaLabel }) => {
   const router = useRouter();
@@ -24,9 +23,9 @@ const CtaGoogleAnalytics = ({ buttonText, buttonClass, url, ctaLabel }) => {
   };
 
   return (
-    <Link href={url} className={buttonClass} onClick={handleCTAClick}>
+    <button href={url} className={buttonClass} onClick={handleCTAClick}>
       {buttonText}
-    </Link>
+    </button>
   );
 };
 
