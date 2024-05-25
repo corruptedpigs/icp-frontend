@@ -5,7 +5,7 @@ export default function ToggleMuteButton() {
 
   return (
     <label className="swap text-neutral-content">
-      {/* {isMuted ? 'Unmute' : 'Mute'} */}
+      <div className='hidden'>{isMuted ? 'Unmute' : 'Mute'}</div>
 
       {/* This hidden checkbox controls the state */}
       <input type="checkbox" />

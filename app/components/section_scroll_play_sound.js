@@ -38,7 +38,7 @@ const SectionScrollPlaySound = ({ id, soundUrls, css, children }) => {
       window.removeEventListener('scroll', handleScroll);
       handleScroll.cancel();
     };
-  }, [isMuted]);
+  }, [soundUrls, isMuted]);
 
   return (
     <section id={id} ref={sectionRef} className={css}>
