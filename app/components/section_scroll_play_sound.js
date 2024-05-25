@@ -1,19 +1,29 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import SoundPlayer from './sound_player';
 import debounce from 'lodash.debounce';
 
-const SectionScrollPlaySound = ({ id, soundUrl, css, children }) => {
+const SectionScrollPlaySound = ({ id, soundUrls, css, children }) => {
   const sectionRef = useRef(null);
-  const audioRef = useRef(new Audio(soundUrl)); // Initialize audioRef with the provided sound URL
+  const audioRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = debounce(() => {
       if (sectionRef.current) {
         const { top } = sectionRef.current.getBoundingClientRect();
+
+        // Play sound when the top of the section is in view
         if (top <= window.innerHeight && top >= 0) {
-          // Play sound when the top of the section is in view
+          if (audioRef.current && !audioRef.current.paused) {
+            // Audio is currently playing, do not start a new sound
+            return;
+          }
+
+          const randomId = Math.floor(Math.random() * soundUrls.length);
+          const randomSoundUrl = soundUrls[randomId];
+
+          audioRef.current = new Audio(randomSoundUrl);
+
           audioRef.current.play();
         }
       }
@@ -29,7 +39,6 @@ const SectionScrollPlaySound = ({ id, soundUrl, css, children }) => {
   return (
     <section id={id} ref={sectionRef} className={css}>
       {children}
-      <SoundPlayer soundUrl={soundUrl} />
     </section>
   );
 };
