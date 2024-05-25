@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import CtaGoogleAnalytics from "../cta_google_analytics";
+import ToggleMuteButton from "../../../app/components/toggle_mute_button";
 
-const Navbar = ( { show_logo = false }) => {
+const NavbarWithConnectWallet = ( { show_logo = false }) => {
   return (
     <div className="navbar text-neutral-content">
       <div className="navbar-start lg:w-20">
@@ -36,20 +37,11 @@ const Navbar = ( { show_logo = false }) => {
           <ul tabIndex={0} className="menu dropdown-content mt-3 z-[1] p-2 rounded-box shadow bg-slate-600 text-neutral-content border-solid w-52">
             <li>
               <CtaGoogleAnalytics
-                buttonText="Merchandising"
-                buttonClass=""
-                url="https://corruptedpigs.store"
-                ctaLabel="cta-merch-nav"
+                buttonText="Connect Wallet"
+                buttonClass="btn btn-warning uppercase"
+                url="#"
+                ctaLabel="cta-play-game"
               />
-            </li>
-            <li><Link href="#associations">Associations</Link></li>
-            <li><Link href="#roadmap">Roadmap</Link></li>
-            <li><Link href="/about">Team</Link></li>
-            <li><Link href="#about">About</Link></li>
-            <li>
-              <Link
-                className="btn btn-sm btn-warning uppercase"
-                href="/games">Play the game</Link>
             </li>
           </ul>
         </div>
@@ -66,22 +58,14 @@ const Navbar = ( { show_logo = false }) => {
       </div>
       <div className="navbar-end hidden lg:flex lg:flex-1">
         <ul className="menu menu-horizontal px-1 uppercase font-bold">
+          <li><ToggleMuteButton /></li>
           <li>
             <CtaGoogleAnalytics
-              buttonText="Merchandising"
-              buttonClass=""
-              url="https://corruptedpigs.store"
-              ctaLabel="cta-merch-nav"
+              buttonText="Connect wallet"
+              buttonClass="btn btn-sm btn-warning uppercase"
+              url="#"
+              ctaLabel="cta-play-game"
             />
-          </li>
-          <li><Link href="#associations">Associations</Link></li>
-          <li><Link href="#roadmap">Roadmap</Link></li>
-          <li><Link href="/about">Team</Link></li>
-          <li><Link href="#about">About</Link></li>
-          <li>
-            <Link
-              className="btn btn-sm btn-warning uppercase"
-              href="/games">Play the game</Link>
           </li>
         </ul>
       </div>
@@ -89,4 +73,4 @@ const Navbar = ( { show_logo = false }) => {
   )
 }
 
-export default Navbar;
+export default NavbarWithConnectWallet;

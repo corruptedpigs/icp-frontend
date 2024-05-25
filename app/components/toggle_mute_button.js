@@ -1,3 +1,5 @@
+'use client';
+
 import { useMute } from './mute_context';
 
 export default function ToggleMuteButton() {

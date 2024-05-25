@@ -20,7 +20,7 @@ import ToggleMuteButton from "./components/toggle_mute_button";
 function HomePage() {
   return (
     <div className={styles.container}>
-      <div className="fixed top-14 lg:top-12 right-4 lg:left-4" style={{ zIndex: 1 }}>
+      <div className="fixed top-14 lg:top-12 right-4 lg:left-4">
         <ToggleMuteButton />
       </div>
 

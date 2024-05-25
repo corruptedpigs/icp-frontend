@@ -49,6 +49,14 @@ body {
   }
 }
 
+.card.image-full:before {
+  opacity: 0;
+}
+
+.card.card-title {
+  font-size: clamp(1.5rem, 2.5vw, 5rem);
+}
+
 hr {
   &.glow {
     box-shadow: 0 0 24px var(--color-glow), /* Inner glow */
