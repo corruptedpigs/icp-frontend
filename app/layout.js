@@ -1,6 +1,7 @@
 import { GoogleAnalytics } from '@next/third-parties/google';
-import "./globals.css";
+import "../styles/globals.css";
 import '../fonts/roboto.css';
+import { MuteProvider } from './components/mute_context';
 
 const baseUrl = process.env.HOST_URL
   ? `https://${process.env.HOST_URL}`
@@ -33,7 +34,11 @@ export default function RootLayout({ children }) {
         <meta property="og:image" content={metadata.openGraph.image} />
         <meta property="og:logo" content={metadata.openGraph.logo} />
       </head>
-      <body className="roboto">{children}</body>
+      <body className="roboto">
+        <MuteProvider>
+          {children}
+        </MuteProvider>
+      </body>
       {process.env.NODE_ENV === 'production' && (
         <GoogleAnalytics gaId={process.env.GOOGLE_ANALYTICS} />
       )}

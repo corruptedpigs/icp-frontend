@@ -1,5 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 
+'use client';
+
 import InstitutionsMarquee from '../ui/components/homepage/institutions_marquee';
 import Navbar from "../ui/components/homepage/navbar";
 import Hero from "../ui/components/homepage/hero"
@@ -11,11 +13,17 @@ import Accordion from "../ui/components/homepage/accordion"
 import Roadmap from "../ui/components/homepage/roadmap"
 import Footer from "../ui/components/homepage/footer"
 
-import styles from "../ui/styles/Home.module.css"
+import styles from "../styles/Home.module.css"
+import ToggleMuteButton from "./components/toggle_mute_button";
+
 
 function HomePage() {
   return (
     <div className={styles.container}>
+      <div className="fixed top-14 lg:top-12 right-4 lg:left-4" style={{ zIndex: 1 }}>
+        <ToggleMuteButton />
+      </div>
+
       <main className={styles.main}>
         <InstitutionsMarquee/>
         <div style={{ backgroundImage: "url('/background-3.png')", backgroundSize: "cover", backgroundPosition: 'center' }}>

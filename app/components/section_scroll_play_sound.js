@@ -2,13 +2,17 @@
 
 import { useEffect, useRef } from 'react';
 import debounce from 'lodash.debounce';
+import { useMute } from './mute_context';
 
 const SectionScrollPlaySound = ({ id, soundUrls, css, children }) => {
   const sectionRef = useRef(null);
   const audioRef = useRef(null);
+  const { isMuted } = useMute();
 
   useEffect(() => {
     const handleScroll = debounce(() => {
+      if (isMuted) return;
+
       if (sectionRef.current) {
         const { top } = sectionRef.current.getBoundingClientRect();
 
@@ -34,7 +38,7 @@ const SectionScrollPlaySound = ({ id, soundUrls, css, children }) => {
       window.removeEventListener('scroll', handleScroll);
       handleScroll.cancel();
     };
-  }, []);
+  }, [isMuted]);
 
   return (
     <section id={id} ref={sectionRef} className={css}>
