@@ -7,7 +7,7 @@ import ToggleMuteButton from "../../../app/components/toggle_mute_button";
 
 const NavbarWithConnectWallet = ( { show_logo = false }) => {
   return (
-    <div className="navbar text-neutral-content">
+    <div className="navbar absolute text-neutral-content">
       <div className="navbar-start lg:w-20">
         {
           show_logo && (
@@ -58,7 +58,11 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
       </div>
       <div className="navbar-end hidden lg:flex lg:flex-1">
         <ul className="menu menu-horizontal px-1 uppercase font-bold">
-          <li><ToggleMuteButton /></li>
+          <li>
+            <div className="relative top-[-12px]">
+              <ToggleMuteButton />
+            </div>
+          </li>
           <li>
             <CtaGoogleAnalytics
               buttonText="Connect wallet"
