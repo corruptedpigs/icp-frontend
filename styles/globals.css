@@ -41,14 +41,6 @@ body {
   background-color: rgba(2, 0, 35, 0.8); /* Your custom color with 50% opacity */
 }
 
-.navbar {
-  ul.menu {
-    li {
-      text-shadow: white 4px 3px 10px;
-    }
-  }
-}
-
 .card.image-full:before {
   opacity: 0;
 }

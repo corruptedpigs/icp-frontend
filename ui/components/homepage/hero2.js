@@ -4,7 +4,7 @@ import React from 'react';
 
 const Hero = () => {
   return (
-    <section id="hero2" style={{ backgroundImage: "url('/TRADER-2-faded.png')", backgroundSize: "380px", backgroundPosition: 'bottom left', backgroundRepeat: "no-repeat" }} className='hero bg-pig'>
+    <section id="hero2" className='hero bg-pig'>
       <div className="hero-overlay custom-hero-overlay"></div>
       <div className="hero-content grid grid-cols-1 py-12">
         <div className="lg:flex lg:justify-between">

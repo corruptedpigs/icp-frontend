@@ -3,7 +3,6 @@
 'use client';
 
 import InstitutionsMarquee from '../ui/components/homepage/institutions_marquee';
-import Navbar from "../ui/components/homepage/navbar";
 import Hero from "../ui/components/homepage/hero"
 import Hero2 from "../ui/components/homepage/hero2"
 import Partners from "../ui/components/homepage/partners"
@@ -26,15 +25,14 @@ function HomePage() {
 
       <main className={styles.main}>
         <InstitutionsMarquee/>
-        <div style={{ backgroundImage: "url('/background-3.png')", backgroundSize: "cover", backgroundPosition: 'center' }}>
-          <Navbar />
+        <div className="bg-violet" style={{ backgroundImage: "", backgroundSize: "cover", backgroundPosition: 'center' }}>
           <Hero/>
         </div>
         <Hero2/>
         <Partners/>
+        <Roadmap/>
         <Associations/>
         <NFCBanner/>
-        <Roadmap/>
         <Accordion/>
         <hr className="bg-purple glow"/>
         <Footer/>

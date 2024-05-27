@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { config } from "react-spring";
 import CtaGoogleAnalytics from "../cta_google_analytics";
 import dynamic from 'next/dynamic';
+import Navbar from "../../components/homepage/navbar";
 
 const Carousel = dynamic(
   () => import('react-spring-3d-carousel'),
@@ -44,7 +45,9 @@ const Hero = () => {
   return (
     <section id="hero1" className='hero'>
       <div className="hero-overlay custom-hero-overlay"></div>
-      <div className="hero-content grid grid-cols-1 container py-20">
+      <div className="hero-content grid grid-cols-1 container">
+        <Navbar />
+
         <div className="lg:flex lg:justify-between">
           <div className="mx-6 mb-10 lg:mx-0 text-neutral-content">
             <div className="hidden lg:block mb-4">
