@@ -7,7 +7,7 @@ export default function HomePage() {
   return (
     <main>
       <div style={{ backgroundImage: "url('/background-3.png')", backgroundSize: "cover", backgroundPosition: 'center' }}>
-        <Navbar show_logo={true} />
+        <Navbar/>
       </div>
 
       <section
