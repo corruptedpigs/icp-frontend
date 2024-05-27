@@ -9,6 +9,8 @@ const NFCBanner = () => {
         <div className="text-slate-800 max-w-screen-lg space-y-6">
           <h2 className="text-5xl">Show your pride in the Corrupted Pigs community!
           </h2>
+          <p className="mb-5 text-2xl font-bold"> Join Corrupted Pigs' NFTs to support social causes. Game. Earn. Impact Lives.</p>
+
           <p className="text-2xl">
             Our T-shirts are more than just merch — they&#39;re a statement.
           </p>

@@ -45,7 +45,7 @@ const Navbar = ( { show_logo = false }) => {
           </ul>
         </div>
       </div>
-      <div className="navbar-center lg:hidden">
+      <div className="navbar-center">
         <Link href="/">
           <Image src="/logo.png"
             alt="corrupted pigs logo"

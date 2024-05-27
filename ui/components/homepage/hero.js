@@ -50,21 +50,23 @@ const Hero = () => {
 
         <div className="lg:flex lg:justify-between">
           <div className="mx-6 mb-10 lg:mx-0 text-neutral-content">
-            <div className="hidden lg:block mb-4">
-              <Image src="/logo.png"
-                alt="corrupted pigs logo"
-                height={120}
-                width={124}
-                priority
-              />
-            </div>
             <h1 className="mb-5 text-5xl font-bold">Be a Game Changer</h1>
-            <p className="mb-5 text-2xl font-bold"> Join Corrupted Pigs' NFTs to support social causes. Game. Earn. Impact Lives.</p>
+
+            <dd className='mb-8 space-y-4'>
+              <dt className='text-2xl font-bold mt-8'>What?</dt>
+              <dl className='text-xl'>An NFT-based game where players collect, trade, and play with unique Corrupted Pigs NFTs, earning tokens and supporting social causes.</dl>
+
+              <dt className='text-2xl font-bold mt-8'>Why?</dt>
+              <dl className='text-xl'>Corrupted Pigs blends gaming with social impact, aiming to drive positive change through engaging gameplay and blockchain technology.</dl>
+
+              <dl className='text-2xl font-bold mt-8'>How?</dl>
+              <dt className='text-xl'>Launch NFTs, engage in casino-style games, stake Coinks, and allocate proceeds to social causes. Community involvement and future expansions enhance impact.</dt>
+            </dd>
             <CtaGoogleAnalytics
-              buttonText="Join waiting list"
-              buttonClass="btn btn-warning uppercase hover:animate-bounce"
-              url={discordInviteLink}
-              ctaLabel="cta-discord"
+              buttonText="Play the game"
+              buttonClass="btn btn-block btn-lg float-right md:w-auto btn-warning uppercase hover:animate-bounce "
+              url="/games"
+              ctaLabel="cta-game"
             />
           </div>
 
