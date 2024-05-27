@@ -33,19 +33,10 @@ const Navbar = ( { show_logo = false }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
-          <ul tabIndex={0} className="menu dropdown-content mt-3 z-[1] p-2 rounded-box shadow bg-slate-600 text-neutral-content border-solid w-52">
-            <li>
-              <CtaGoogleAnalytics
-                buttonText="Merchandising"
-                buttonClass=""
-                url="https://corruptedpigs.store"
-                ctaLabel="cta-merch-nav"
-              />
-            </li>
-            <li><Link href="#associations">Associations</Link></li>
+          <ul tabIndex={0} className="menu dropdown-content mt-3 z-[1] p-2 rounded-box bg-slate-600 text-neutral-content border-solid w-52">
             <li><Link href="#roadmap">Roadmap</Link></li>
+            <li><Link href="#about">FAQ</Link></li>
             <li><Link href="/about">Team</Link></li>
-            <li><Link href="#about">About</Link></li>
             <li>
               <Link
                 className="btn btn-sm btn-warning uppercase"
@@ -65,24 +56,10 @@ const Navbar = ( { show_logo = false }) => {
         </Link>
       </div>
       <div className="navbar-end hidden lg:flex lg:flex-1">
-        <ul className="menu menu-horizontal px-1 uppercase font-bold">
-          <li>
-            <CtaGoogleAnalytics
-              buttonText="Merchandising"
-              buttonClass=""
-              url="https://corruptedpigs.store"
-              ctaLabel="cta-merch-nav"
-            />
-          </li>
-          <li><Link href="#associations">Associations</Link></li>
-          <li><Link href="#roadmap">Roadmap</Link></li>
-          <li><Link href="/about">Team</Link></li>
-          <li><Link href="#about">About</Link></li>
-          <li>
-            <Link
-              className="btn btn-sm btn-warning uppercase"
-              href="/games">Play the game</Link>
-          </li>
+        <ul className="menu menu-horizontal px-1 uppercase font-bold gap-8">
+          <li className="text-2xl"><Link href="#roadmap">Roadmap</Link></li>
+          <li className="text-2xl"><Link href="/about">Team</Link></li>
+          <li className="text-2xl"><Link href="#about">FAQ</Link></li>
         </ul>
       </div>
     </div>
