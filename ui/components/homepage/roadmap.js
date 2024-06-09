@@ -16,7 +16,7 @@ const Roadmap = () => {
         <div className="hero mx-auto px-4 text-neutral-content">
           <div className="hero-overlay custom-hero-overlay"></div>
 
-          <ul className="timeline mx-auto timeline-vertical max-w-screen-lg">
+          <ul className="timeline timeline-vertical max-w-screen-lg">
             <li>
               <div className="timeline-start md:timeline-end timeline-date">Q1 2024</div>
               <div className="timeline-middle">

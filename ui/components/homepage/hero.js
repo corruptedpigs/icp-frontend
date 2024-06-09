@@ -48,8 +48,8 @@ const Hero = () => {
       <div className="hero-content grid grid-cols-1 container">
         <Navbar />
 
-        <div className="lg:flex lg:justify-between">
-          <div className="mx-6 mb-10 lg:mx-0 text-neutral-content">
+        <div className="xl:flex xl:justify-between">
+          <div className="mb-20 sm:mx-6 lg:mx-0 lg:mb-10 text-neutral-content">
             <h1 className="mb-5 text-5xl font-bold">Be a Game Changer</h1>
 
             <dd className='mb-8 space-y-4'>
