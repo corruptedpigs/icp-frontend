@@ -1,9 +1,8 @@
 import Link from "next/link";
 
-// this marquee is currently hidden as per Eddie's instructions.
 const InstitutionsMarquee = () => {
   return (
-    <div className="relative hidden overflow-x-hidden bg-green-800 text-white">
+    <div className="relative overflow-x-hidden bg-green-800 text-white">
       <div className="py-1 animate-marquee whitespace-nowrap space-x-10">
         <span className="text-xl font-bold ml-8">Institutions:</span>
         <Link href="#associations">Projeto Rios</Link>

@@ -24,7 +24,9 @@ function HomePage() {
       </div>
 
       <main className={styles.main}>
-        <InstitutionsMarquee/>
+        {/* this marquee is currently hidden as per Eddie's instructions. */}
+        {/* <InstitutionsMarquee/> */}
+
         <div className="bg-violet">
           <Hero/>
         </div>
@@ -32,7 +34,9 @@ function HomePage() {
         <Partners/>
         <Roadmap/>
         <Associations/>
-        <NFCBanner/>
+
+        {/* <NFCBanner/> */}
+
         <Accordion/>
         <hr className="bg-purple glow"/>
         <Footer/>
