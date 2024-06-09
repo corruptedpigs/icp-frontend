@@ -6,7 +6,7 @@ import Footer from "../../ui/components/homepage/footer"
 export default function HomePage() {
   return (
     <main>
-      <div style={{ backgroundImage: "url('/background-3.png')", backgroundSize: "cover", backgroundPosition: 'center' }}>
+      <div className="bg-violet">
         <Navbar/>
       </div>
 
@@ -18,7 +18,7 @@ export default function HomePage() {
           backgroundPosition: 'bottom left',
           backgroundRepeat: "no-repeat"
         }}
-        className='hero bg-pig'
+        className='hero bg-pig min-h-[625px]'
       >
         <div className="hero-overlay custom-hero-overlay"></div>
         <div className="hero-content text-neutral-content py-12 max-w-screen-xl">
@@ -28,10 +28,8 @@ export default function HomePage() {
               <Avatar name="Henrik Kinell" role="CEO" src="/images/team/henrik.png"/>
               <Avatar name="Nuno Costa" role="CTO"  src="/images/team/ncosta.webp"/>
               <Avatar name="Tiago Quintans" role="COO" src="/images/team/tiago.webp"/>
-              <Avatar name="Nuno Amiar" role="CMO" src="/images/team/amiar.webp"/>
-              <Avatar name="Eddie Nes" role="NFT Artist" src="/images/team/eddie.webp"/>
-              <Avatar name="Henrique Costa" role="Full stack developer" src="/images/team/henrique.jpeg"/>
-              <Avatar name="Luis Damiao" role="Web Designer" src="/images/team/luis.webp"/>
+              <Avatar name="Nuno Amiar" role="CMO" src="/images/team/amiar.png"/>
+              <Avatar name="Eddie Nes" role="NFT Artist, Designer" src="/images/team/eddie.webp"/>
             </div>
           </div>
         </div>

@@ -25,7 +25,7 @@ function HomePage() {
 
       <main className={styles.main}>
         <InstitutionsMarquee/>
-        <div className="bg-violet" style={{ backgroundImage: "", backgroundSize: "cover", backgroundPosition: 'center' }}>
+        <div className="bg-violet">
           <Hero/>
         </div>
         <Hero2/>

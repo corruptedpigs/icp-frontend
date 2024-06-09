@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+// this marquee is currently hidden as per Eddie's instructions.
 const InstitutionsMarquee = () => {
   return (
     <div className="relative hidden overflow-x-hidden bg-green-800 text-white">
