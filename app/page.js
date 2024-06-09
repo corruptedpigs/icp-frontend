@@ -2,7 +2,6 @@
 
 'use client';
 
-import InstitutionsMarquee from '../ui/components/homepage/institutions_marquee';
 import Hero from "../ui/components/homepage/hero"
 import Hero2 from "../ui/components/homepage/hero2"
 import Partners from "../ui/components/homepage/partners"
