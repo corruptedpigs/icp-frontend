@@ -6,7 +6,6 @@ import InstitutionsMarquee from '../ui/components/homepage/institutions_marquee'
 import Hero from "../ui/components/homepage/hero"
 import Hero2 from "../ui/components/homepage/hero2"
 import Partners from "../ui/components/homepage/partners"
-import NFCBanner from "../ui/components/homepage/nfc_banner"
 import Associations from "../ui/components/homepage/associations"
 import Accordion from "../ui/components/homepage/accordion"
 import Roadmap from "../ui/components/homepage/roadmap"
