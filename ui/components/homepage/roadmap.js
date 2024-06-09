@@ -47,9 +47,6 @@ const Roadmap = () => {
                   <dt className="underline">Project Conceptualization</dt>
                   <dd>Finalize game mechanics and NFT design.</dd>
 
-                  <dt className="underline">Smart Contract Development</dt>
-                  <dd>Develop and test smart contracts for NFTs and in-game transactions.</dd>
-
                   <dt className="underline">Community Building</dt>
                   <dd>Launch social media channels and engage early adopters.</dd>
                 </dl>
@@ -66,6 +63,9 @@ const Roadmap = () => {
 
                   <dt className="underline">Marketplace Integration</dt>
                   <dd>List NFTs on major NFT marketplaces for trading.</dd>
+
+                  <dt className="underline">Smart Contract Development</dt>
+                  <dd>Develop and test smart contracts for NFTs and in-game transactions.</dd>
 
                   <dt className="underline">Beta Game Launch</dt>
                   <dd>Release a beta version of the burning pigs game for selected players.</dd>

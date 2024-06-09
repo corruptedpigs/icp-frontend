@@ -1,4 +1,4 @@
-const Accordion = () => {
+const FAQ = () => {
   return (
     <section id="about" className="bg-violet py-10 md:py-16 text-neutral-content">
       <div className="container mx-auto px-4">
@@ -42,4 +42,4 @@ const Accordion = () => {
   )
 }
 
-export default Accordion;
+export default FAQ;

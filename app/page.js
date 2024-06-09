@@ -7,7 +7,7 @@ import Hero from "../ui/components/homepage/hero"
 import Hero2 from "../ui/components/homepage/hero2"
 import Partners from "../ui/components/homepage/partners"
 import Associations from "../ui/components/homepage/associations"
-import Accordion from "../ui/components/homepage/accordion"
+import FAQ from "../ui/components/homepage/faq"
 import Roadmap from "../ui/components/homepage/roadmap"
 import Footer from "../ui/components/homepage/footer"
 
@@ -36,7 +36,7 @@ function HomePage() {
 
         {/* <NFCBanner/> */}
 
-        <Accordion/>
+        <FAQ/>
         <hr className="bg-purple glow"/>
         <Footer/>
       </main>
