@@ -3,7 +3,7 @@ import GameTimer from "../../components/game_timer";
 import styles from '../../../styles/Game.module.css';
 
 export function generateStaticParams() {
-  return [{ id: '1' }, { id: '2' }, { id: '3' }]
+  return [{ id: 'logic' }, { id: '2' }, { id: '3' }]
 }
 
 export default function Page({ params }) {
@@ -18,7 +18,7 @@ export default function Page({ params }) {
           <div className="hero-overlay bg-opacity-60"></div>
           <h1 className="text-3xl">Logic</h1>
 
-          <div className="container hidden my-24">
+          <div className="container my-24">
             <div className="flex gap-4">
               <div className="flex flex-col">
                 <a className="btn btn-warning btn-sm">Gallery</a>

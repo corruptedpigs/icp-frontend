@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const GameTimer = () => {
+const GameTimer = ({seconds}) => {
   return (
     <ul className="timeline mx-auto timeline-vertical max-w-screen-lg">
       <li>
@@ -18,22 +18,26 @@ const GameTimer = () => {
       </li>
       <li>
         <hr className="bg-orange-700 glow hr_thicker"/>
-
+        <div className="timeline-end h-20"></div>
         <hr className="bg-orange-600 glow hr_thicker"/>
       </li>
       <li>
         <hr/>
+        <div className="timeline-end h-20"></div>
         <hr/>
       </li>
       <li>
         <hr/>
+        <div className="timeline-end h-20"></div>
         <hr/>
       </li>
       <li>
         <hr/>
+        <div className="timeline-end h-20"></div>
         <hr/>
       </li>
       <li>
+        <div className="timeline-end h-20"></div>
         <hr/>
       </li>
     </ul>

@@ -14,8 +14,8 @@ export default function Home() {
             <div className="flex flex-wrap items-center justify-center gap-24">
               <ChooseGameCard bg_image_path="/images/games/guessing-normal-2.png" title="Logic" link="/games/logic"/>
 
-              <ChooseGameCard bg_image_path="/images/games/strength-normal-2.png" title="Strong" />
-              <ChooseGameCard bg_image_path="/images/games/luck-normal-2.png" title="Multiplayer" />
+              <ChooseGameCard bg_image_path="/images/games/strength-normal-2.png" title="Strong" blurred={true}/>
+              <ChooseGameCard bg_image_path="/images/games/luck-normal-2.png" title="Multiplayer" blurred={true}/>
             </div>
           </div>
         </div>
