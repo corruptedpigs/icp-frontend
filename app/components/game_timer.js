@@ -22,16 +22,6 @@ const GameTimer = () => {
   return (
     <ul className="timeline timeline-thicker mx-auto timeline-vertical max-w-screen-lg" id="roadmap">
       <li className="h-20">
-        <div className="timeline-middle">
-          <Image src="/logo.png"
-            alt="corrupted pigs logo"
-            className=""
-            height={50}
-            width={50}
-            priority
-          />
-        </div>
-
         <hr className={`${activeHr > 0 ? timerElapsedColour : "bg-green-600 glow"}`}/>
       </li>
       <li>
@@ -59,6 +49,17 @@ const GameTimer = () => {
         <div className="timeline-end h-20"></div>
         <hr className={`${activeHr > 10 ? timerElapsedColour : "bg-red-500 glow"}`}/>
       </li>
+
+      <div className="timeline-middle">
+          <Image src="/logo.png"
+            alt="corrupted pigs logo"
+            className=""
+            height={100}
+            width={100}
+            priority
+          />
+        </div>
+
     </ul>
   )
 }
