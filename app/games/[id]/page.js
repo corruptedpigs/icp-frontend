@@ -1,6 +1,7 @@
 import NavbarWithConnectWallet from "../../../ui/components/homepage/navbar_with_connect_wallet";
 import GameTimer from "../../components/game_timer";
 import styles from '../../../styles/Game.module.css';
+import Image from "next/image";
 
 export function generateStaticParams() {
   return [{ id: 'logic' }, { id: '2' }, { id: '3' }]
@@ -20,8 +21,12 @@ export default function Page({ params }) {
 
           <div className="container my-24">
             <div className="flex gap-4">
-              <div className="flex flex-col">
+              <div className="flex flex-col gap-6 max-h-screen hover:overflow-scroll">
                 <a className="btn btn-warning btn-sm">Gallery</a>
+                <Image src="/images/games/NFTs/FARMER.png" width={200} height={450}></Image>
+                <Image src="/images/games/NFTs/REFEREE.png" width={200} height={450}></Image>
+                <Image src="/images/games/NFTs/LAWYER.png" width={200} height={450}></Image>
+                <Image src="/images/games/NFTs/BANKER.jpg" width={200} height={450}></Image>
               </div>
 
               <div className="flex flex-row gap-4">

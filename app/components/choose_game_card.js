@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 function ChooseGameCard({ bg_image_path, title, blurred = false, link = '#' }) {
   const cardContent = (
-    <div className={`card xs:w-32 md:w-auto image-full shadow-xl shadow-cyan-700 ${blurred ? 'blur-sm' : ''}`}>
+    <div className={`card xs:w-32 md:w-auto image-full shadow-xl shadow-cyan-700 ${blurred ? 'blur-sm' : 'hover:scale-110 ease-in-out duration-200'}`}>
       <figure>
         <img src={bg_image_path} alt={`${title} Game`} />
       </figure>
