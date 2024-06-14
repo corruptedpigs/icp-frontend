@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 
 const GameTimer = () => {
-
+  const timerElapsedColour = "bg-gray-900";
   const [activeHr, setActiveHr] = useState(0);
 
   useEffect(() => {
@@ -32,32 +32,32 @@ const GameTimer = () => {
           />
         </div>
 
-        <hr className={`${activeHr > 0 ? '' : "bg-green-600 glow"}`}/>
+        <hr className={`${activeHr > 0 ? timerElapsedColour : "bg-green-600 glow"}`}/>
       </li>
       <li>
-        <hr className={`${activeHr > 1 ? '' : "bg-green-500 glow"}`}/>
+        <hr className={`${activeHr > 1 ? timerElapsedColour : "bg-green-500 glow"}`}/>
         <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 2 ? '' : "bg-green-400 glow"}`}/>
+        <hr className={`${activeHr > 2 ? timerElapsedColour : "bg-green-400 glow"}`}/>
       </li>
       <li>
-        <hr className={`${activeHr > 3 ? '' : "bg-amber-500 glow"}`}/>
+        <hr className={`${activeHr > 3 ? timerElapsedColour : "bg-amber-500 glow"}`}/>
         <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 4 ? '' : "bg-amber-400 glow"}`}/>
+        <hr className={`${activeHr > 4 ? timerElapsedColour : "bg-amber-400 glow"}`}/>
       </li>
       <li >
-        <hr className={`${activeHr > 5 ? '' : "bg-orange-500 glow"}`}/>
+        <hr className={`${activeHr > 5 ? timerElapsedColour : "bg-orange-500 glow"}`}/>
         <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 6 ? '' : "bg-orange-900 glow"}`}/>
+        <hr className={`${activeHr > 6 ? timerElapsedColour : "bg-orange-900 glow"}`}/>
       </li>
       <li>
-        <hr className={`${activeHr > 7 ? '' : "bg-red-800 glow"}`}/>
+        <hr className={`${activeHr > 7 ? timerElapsedColour : "bg-red-800 glow"}`}/>
         <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 8 ? '' : "bg-red-700 glow"}`}/>
+        <hr className={`${activeHr > 8 ? timerElapsedColour : "bg-red-700 glow"}`}/>
       </li>
       <li>
-        <hr className={`${activeHr > 9 ? '' : "bg-red-600 glow"}`}/>
+        <hr className={`${activeHr > 9 ? timerElapsedColour : "bg-red-600 glow"}`}/>
         <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 10 ? '' : "bg-red-500 glow"}`}/>
+        <hr className={`${activeHr > 10 ? timerElapsedColour : "bg-red-500 glow"}`}/>
       </li>
     </ul>
   )
