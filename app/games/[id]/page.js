@@ -8,6 +8,13 @@ export function generateStaticParams() {
 }
 
 export default function Page({ params }) {
+  const images = [
+    "/images/games/NFTs/FARMER.png",
+    "/images/games/NFTs/REFEREE.png",
+    "/images/games/NFTs/LAWYER.png",
+    "/images/games/NFTs/BANKER.jpg",
+  ];
+
   return (
     <main className={styles.gameContainer}>
       <div style={{ backgroundImage: 'url(/background.jpeg)', backgroundSize: "cover", backgroundPosition: 'center bottom' }}>
@@ -18,11 +25,16 @@ export default function Page({ params }) {
 
             <div className="flex flex-col">
               <a className="btn btn-ghost glass no-animation mb-4">Gallery</a>
-              <div class="flex-1/3 flex flex-col hover:overflow-auto gap-4">
-                <Image src="/images/games/NFTs/FARMER.png" width={200} height={450}></Image>
-                <Image src="/images/games/NFTs/REFEREE.png" width={200} height={450}></Image>
-                <Image src="/images/games/NFTs/LAWYER.png" width={200} height={450}></Image>
-                <Image src="/images/games/NFTs/BANKER.jpg" width={200} height={450}></Image>
+              <div class="flex-1/3 flex flex-col hover:overflow-auto gap-4 scrollbar-hide">
+                {images.map((src, index) => (
+                  <Image
+                    key={index}
+                    src={src}
+                    width={200}
+                    height={450}
+                    className="hover:scale-95 ease-in-out duration-400"
+                  />
+                ))}
               </div>
             </div>
 
@@ -56,9 +68,9 @@ export default function Page({ params }) {
                 <a className="btn btn-ghost glass no-animation">Your combination</a>
               </div>
             </div>
-              <div className="flex flex-col mx-4">
-                <a className="btn btn-ghost glass no-animation">Player 2</a>
-              </div>
+            <div className="flex flex-col mx-4">
+              <a className="btn btn-ghost glass no-animation">Player 2</a>
+            </div>
           </div>
 
         </div>
