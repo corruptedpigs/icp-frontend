@@ -16,7 +16,7 @@ export default function Page({ params }) {
         <NavbarWithConnectWallet show_logo={true} />
         <div className="hero h-screen text-neutral-content">
           <div className="hero-overlay bg-opacity-60"></div>
-          <h1 className="text-3xl">Logic</h1>
+          { /* <h1 className="text-3xl">Logic</h1> */ }
 
           <div className="container my-24">
             <div className="flex gap-4">

@@ -9,14 +9,14 @@ const Roadmap = () => {
   ]
 
   return (
-    <SectionScrollPlaySound id="roadmap" css="bg-violet py-10 md:py-16" soundUrls={pig_sounds} >
+    <SectionScrollPlaySound css="bg-violet py-10 md:py-16" soundUrls={pig_sounds} >
       <div style={{ backgroundImage: "url('/TRADER-2-faded.png')", backgroundSize: "380px", backgroundPosition: 'bottom left', backgroundRepeat: "no-repeat" }}>
 
         <h2 className="text-4xl font-bold mb-8 text-center text-neutral-content">Roadmap</h2>
         <div className="hero mx-auto px-4 text-neutral-content">
           <div className="hero-overlay custom-hero-overlay"></div>
 
-          <ul className="timeline timeline-vertical max-w-screen-lg">
+          <ul className="timeline timeline-thicker timeline-vertical max-w-screen-lg">
             <li>
               <div className="timeline-start md:timeline-end timeline-date">Q1 2024</div>
               <div className="timeline-middle">
