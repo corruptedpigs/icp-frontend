@@ -7,8 +7,8 @@ const SelectedCardsColumn = ({ selectedCards }) => {
         <Image
           key={index}
           src={src}
-          width={200}
-          height={450}
+          width={150}
+          height={300}
           className="transition-transform duration-400"
           alt="Selected NFT Image"
         />
