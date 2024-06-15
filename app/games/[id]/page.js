@@ -1,6 +1,6 @@
 import NavbarWithConnectWallet from "../../../ui/components/homepage/navbar_with_connect_wallet";
 import GameTimer from "../../components/game_timer";
-import Image from "next/image";
+import Player1 from "../../components/games/logic/Player1";
 
 export function generateStaticParams() {
   return [{ id: 'logic' }, { id: '2' }, { id: '3' }]
@@ -22,28 +22,7 @@ export default function Page() {
 
           {/* Player 1 Game */}
           <div className="pt-24 h-screen flex gap-4">
-
-            <div className="flex flex-col">
-              <a className="btn btn-ghost glass no-animation mb-4">Gallery</a>
-              <div class="flex-1/3 flex flex-col hover:overflow-auto gap-4 scrollbar-hide">
-                {images.map((src, index) => (
-                  <Image
-                    key={index}
-                    src={src}
-                    width={200}
-                    height={450}
-                    className="hover:scale-95 ease-in-out duration-400"
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="flex flex-col">
-              <a className="btn btn-ghost glass no-animation">Player 1</a>
-            </div>
-            <div className="flex flex-col">
-              <a className="btn btn-ghost glass no-animation">Your combination</a>
-            </div>
+            <Player1 images={images} />
           </div>
 
           {/* Game timer */}
