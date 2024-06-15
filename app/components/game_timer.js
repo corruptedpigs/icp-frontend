@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 import ModalTimeIsUp from "./games/modalTimeIsUp"
 
 const GameTimer = ({ seconds }) => {
@@ -9,6 +10,7 @@ const GameTimer = ({ seconds }) => {
   const [activeHr, setActiveHr] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const nrOfPills = 11;
+  const router = useRouter();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,6 +30,11 @@ const GameTimer = ({ seconds }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+
+    // redirects to /games only on prod so that we can more easily develop the UI
+    if(process.env.NODE_ENV === 'production') {
+      router.push('/games');
+    }
   };
 
   return (
