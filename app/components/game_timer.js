@@ -38,38 +38,15 @@ const GameTimer = ({ seconds }) => {
   };
 
   return (
-    <>
+    <div className="h-full pt-24 pb-6">
       <ModalTimeIsUp isOpen={isModalOpen} onClose={handleCloseModal} message="Time is up" />
 
-      <ul className="timeline timeline-thicker mx-auto timeline-vertical max-w-screen-lg" id="roadmap">
-        <li className="h-20">
-          <hr className={`${activeHr > 0 ? timerElapsedColour : "bg-green-600 glow"}`} />
-        </li>
-        <li>
-          <hr className={`${activeHr > 1 ? timerElapsedColour : "bg-green-500 glow"}`} />
-          <div className="timeline-end h-20"></div>
-          <hr className={`${activeHr > 2 ? timerElapsedColour : "bg-green-400 glow"}`} />
-        </li>
-        <li>
-          <hr className={`${activeHr > 3 ? timerElapsedColour : "bg-amber-500 glow"}`} />
-          <div className="timeline-end h-20"></div>
-          <hr className={`${activeHr > 4 ? timerElapsedColour : "bg-amber-400 glow"}`} />
-        </li>
-        <li >
-          <hr className={`${activeHr > 5 ? timerElapsedColour : "bg-orange-500 glow"}`} />
-          <div className="timeline-end h-20"></div>
-          <hr className={`${activeHr > 6 ? timerElapsedColour : "bg-orange-900 glow"}`} />
-        </li>
-        <li>
-          <hr className={`${activeHr > 7 ? timerElapsedColour : "bg-red-800 glow"}`} />
-          <div className="timeline-end h-20"></div>
-          <hr className={`${activeHr > 8 ? timerElapsedColour : "bg-red-700 glow"}`} />
-        </li>
-        <li>
-          <hr className={`${activeHr > 9 ? timerElapsedColour : "bg-red-600 glow"}`} />
-          <div className="timeline-end h-20"></div>
-          <hr className={`${activeHr > 10 ? timerElapsedColour : "bg-red-500 glow"}`} />
-        </li>
+      <ul className="timeline timeline-responsive timeline-thicker timeline-vertical">
+        {Array.from({ length: nrOfPills }, (_, i) => (
+          <li key={i} className="flex-1">
+            <hr className={`${activeHr <= i ? getColor(i) + " glow" : timerElapsedColour}`} />
+          </li>
+        ))}
 
         <div className="timeline-middle">
           <Image src="/logo.png"
@@ -81,8 +58,18 @@ const GameTimer = ({ seconds }) => {
           />
         </div>
       </ul>
-    </>
+    </div>
   )
 }
+
+const getColor = (index) => {
+  const colors = [
+    "bg-green-600", "bg-green-500", "bg-green-400",
+    "bg-amber-500", "bg-amber-400",
+    "bg-orange-500", "bg-orange-900",
+    "bg-red-800", "bg-red-700", "bg-red-600", "bg-red-500"
+  ];
+  return colors[index] || "bg-gray-400";
+};
 
 export default GameTimer;
