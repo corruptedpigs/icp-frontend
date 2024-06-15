@@ -3,18 +3,19 @@
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
-const GameTimer = () => {
+const GameTimer = ({seconds}) => {
   const timerElapsedColour = "bg-gray-900";
   const [activeHr, setActiveHr] = useState(0);
+  const nrOfPills = 11;
 
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveHr(prev => prev + 1);
-    }, (15/11)*1000);
+    }, seconds * 1000 / nrOfPills);
 
     setTimeout(() => {
       clearInterval(interval);
-    }, 15000);
+    }, seconds * 1000);
 
     return () => clearInterval(interval);
   }, [])
