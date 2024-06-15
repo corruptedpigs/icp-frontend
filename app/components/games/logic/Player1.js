@@ -18,7 +18,7 @@ const Player1 = ({ images }) => {
     <>
       <div className="flex flex-col">
         <a className="btn btn-ghost glass no-animation mb-4">Gallery</a>
-        <div class="flex-1/3 flex flex-col hover:overflow-auto gap-4 scrollbar-hide">
+        <div className="flex-1/3 flex flex-col hover:overflow-auto gap-4 scrollbar-hide">
           {images.map((src, index) => (
             <NFTGalleryCard key={index} src={src} onSelect={handleSelect} canSelect={canSelect} />
           ))}

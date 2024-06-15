@@ -2,10 +2,12 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import ModalTimeIsUp from "./games/modalTimeIsUp"
 
-const GameTimer = ({seconds}) => {
+const GameTimer = ({ seconds }) => {
   const timerElapsedColour = "bg-gray-900";
   const [activeHr, setActiveHr] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const nrOfPills = 11;
 
   useEffect(() => {
@@ -13,45 +15,56 @@ const GameTimer = ({seconds}) => {
       setActiveHr(prev => prev + 1);
     }, seconds * 1000 / nrOfPills);
 
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       clearInterval(interval);
+      setIsModalOpen(true);
     }, seconds * 1000);
 
-    return () => clearInterval(interval);
-  }, [])
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [seconds, nrOfPills]);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
-    <ul className="timeline timeline-thicker mx-auto timeline-vertical max-w-screen-lg" id="roadmap">
-      <li className="h-20">
-        <hr className={`${activeHr > 0 ? timerElapsedColour : "bg-green-600 glow"}`}/>
-      </li>
-      <li>
-        <hr className={`${activeHr > 1 ? timerElapsedColour : "bg-green-500 glow"}`}/>
-        <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 2 ? timerElapsedColour : "bg-green-400 glow"}`}/>
-      </li>
-      <li>
-        <hr className={`${activeHr > 3 ? timerElapsedColour : "bg-amber-500 glow"}`}/>
-        <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 4 ? timerElapsedColour : "bg-amber-400 glow"}`}/>
-      </li>
-      <li >
-        <hr className={`${activeHr > 5 ? timerElapsedColour : "bg-orange-500 glow"}`}/>
-        <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 6 ? timerElapsedColour : "bg-orange-900 glow"}`}/>
-      </li>
-      <li>
-        <hr className={`${activeHr > 7 ? timerElapsedColour : "bg-red-800 glow"}`}/>
-        <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 8 ? timerElapsedColour : "bg-red-700 glow"}`}/>
-      </li>
-      <li>
-        <hr className={`${activeHr > 9 ? timerElapsedColour : "bg-red-600 glow"}`}/>
-        <div className="timeline-end h-20"></div>
-        <hr className={`${activeHr > 10 ? timerElapsedColour : "bg-red-500 glow"}`}/>
-      </li>
+    <>
+      <ModalTimeIsUp isOpen={isModalOpen} onClose={handleCloseModal} message="Time is up" />
 
-      <div className="timeline-middle">
+      <ul className="timeline timeline-thicker mx-auto timeline-vertical max-w-screen-lg" id="roadmap">
+        <li className="h-20">
+          <hr className={`${activeHr > 0 ? timerElapsedColour : "bg-green-600 glow"}`} />
+        </li>
+        <li>
+          <hr className={`${activeHr > 1 ? timerElapsedColour : "bg-green-500 glow"}`} />
+          <div className="timeline-end h-20"></div>
+          <hr className={`${activeHr > 2 ? timerElapsedColour : "bg-green-400 glow"}`} />
+        </li>
+        <li>
+          <hr className={`${activeHr > 3 ? timerElapsedColour : "bg-amber-500 glow"}`} />
+          <div className="timeline-end h-20"></div>
+          <hr className={`${activeHr > 4 ? timerElapsedColour : "bg-amber-400 glow"}`} />
+        </li>
+        <li >
+          <hr className={`${activeHr > 5 ? timerElapsedColour : "bg-orange-500 glow"}`} />
+          <div className="timeline-end h-20"></div>
+          <hr className={`${activeHr > 6 ? timerElapsedColour : "bg-orange-900 glow"}`} />
+        </li>
+        <li>
+          <hr className={`${activeHr > 7 ? timerElapsedColour : "bg-red-800 glow"}`} />
+          <div className="timeline-end h-20"></div>
+          <hr className={`${activeHr > 8 ? timerElapsedColour : "bg-red-700 glow"}`} />
+        </li>
+        <li>
+          <hr className={`${activeHr > 9 ? timerElapsedColour : "bg-red-600 glow"}`} />
+          <div className="timeline-end h-20"></div>
+          <hr className={`${activeHr > 10 ? timerElapsedColour : "bg-red-500 glow"}`} />
+        </li>
+
+        <div className="timeline-middle">
           <Image src="/logo.png"
             alt="corrupted pigs logo"
             className=""
@@ -60,8 +73,8 @@ const GameTimer = ({seconds}) => {
             priority
           />
         </div>
-
-    </ul>
+      </ul>
+    </>
   )
 }
 
