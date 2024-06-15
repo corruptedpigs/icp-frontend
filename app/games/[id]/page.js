@@ -15,7 +15,7 @@ export default function Page() {
   ];
 
   return (
-    <main style={{ backgroundImage: 'url(/background.jpeg)', backgroundSize: "cover", backgroundPosition: 'center bottom' }}>
+    <main style={{ backgroundImage: 'url(/background-2.jpeg)', backgroundSize: "cover", backgroundPosition: 'center bottom' }}>
       <NavbarWithConnectWallet show_logo={true} />
       <div className="flex justify-between hero hero-overlay h-screen text-neutral-content overflow-hidden px-6">
 
