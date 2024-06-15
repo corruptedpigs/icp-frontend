@@ -15,33 +15,30 @@ export default function Page() {
   ];
 
   return (
-    <main>
-      <div style={{ backgroundImage: 'url(/background.jpeg)', backgroundSize: "cover", backgroundPosition: 'center bottom' }} className="flex justify-center">
-        <NavbarWithConnectWallet show_logo={true} />
-        <div className="hero hero-overlay h-screen text-neutral-content overflow-hidden flex justify-around">
+    <main style={{ backgroundImage: 'url(/background.jpeg)', backgroundSize: "cover", backgroundPosition: 'center bottom' }}>
+      <NavbarWithConnectWallet show_logo={true} />
+      <div className="flex justify-between hero hero-overlay h-screen text-neutral-content overflow-hidden px-6">
 
-          {/* Player 1 Game */}
-          <div className="pt-24 h-screen flex gap-4">
-            <Player1 images={images} />
+        {/* Player 1 Game */}
+        <Player1 images={images} />
+
+        {/* Game timer */}
+        <GameTimer seconds={6} />
+
+        {/* Player 2 Game */}
+        <div className="flex flex-1 pt-24 h-screen justify-around">
+          <div>
+            <div className="flex flex-col">
+              <a className="btn btn-ghost glass no-animation">Your combination</a>
+            </div>
           </div>
-
-          {/* Game timer */}
-          <div className="flex">
-            <GameTimer seconds={8} />
-          </div>
-
-          {/* Player 2 Game */}
-          <div className="pt-24 h-screen flex gap-4">
-              <div className="flex flex-col">
-                <a className="btn btn-ghost glass no-animation">Your combination</a>
-              </div>
+          <div>
             <div className="flex flex-col">
               <a className="btn btn-ghost glass no-animation">Player 2</a>
             </div>
           </div>
-
         </div>
       </div>
-    </main >
+    </main>
   );
 }

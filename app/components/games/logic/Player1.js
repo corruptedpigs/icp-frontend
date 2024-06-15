@@ -15,8 +15,9 @@ const Player1 = ({ images }) => {
   };
 
   return (
-    <>
-      <div className="flex flex-col">
+    <div className='flex flex-1 pt-24 h-screen justify-around'>
+
+      <div>
         <a className="btn btn-ghost glass no-animation mb-4">Gallery</a>
         <div className="flex-1/3 flex flex-col hover:overflow-auto gap-4 scrollbar-hide">
           {images.map((src, index) => (
@@ -25,18 +26,19 @@ const Player1 = ({ images }) => {
         </div>
       </div>
 
-      <div className="flex flex-col">
-        <a className="btn btn-ghost glass no-animation mb-4">Player 1</a>
-        <SelectedCardsColumn selectedCards={selectedCards} />
-      </div>
-      <div className="flex flex-col">
-        <a className="btn btn-ghost glass no-animation mb-4">Your combination</a>
+      <div>
+        <div className="flex flex-col">
+          <a className="btn btn-ghost glass no-animation mb-4">Player 1</a>
+          <SelectedCardsColumn selectedCards={selectedCards} />
+        </div>
       </div>
 
-      <div className="flex flex-col mx-4">
-
+      <div>
+        <div className="flex flex-col">
+          <a className="btn btn-ghost glass no-animation mb-4">Your combination</a>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
