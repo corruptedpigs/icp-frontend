@@ -33,8 +33,10 @@ shared actor class GameFunctionality() = Self {
     id: Nat;
     player1 : Player;
     player2 : Player;
-    card1: ?Nat;
-    card2: ?Nat;
+    selectedCards1 : [Card];
+    selectedCards2 : [Card];
+    guessedOrder1 : [Card];
+    guessedOrder2 : [Card];
     winner : ?Player;
   };
 
@@ -64,27 +66,22 @@ shared actor class GameFunctionality() = Self {
   public func checkWinner(matchId: Nat) : async Text {
     switch(Map.get(matches, nhash, matchId)){
       case(?match){
-        switch(match.card1){
-          case(?card1){
-            switch(match.card2){
-              case(?card2){
-                if(card1 > card2) {
-                  return match.player1.id;
-                };
-                if(card2 > card1) {
-                  return match.player2.id;
-                };
-                return "Tie";
-              };
-              case(null){
-                return "Error";
-              };
-            };
-          };
-          case(null){
-            return "Error";
-          };
-        };
+        // Calculate the correct guesses for both players
+        let correctGuesses1 = List.length(List.filter((index) -> {
+          match.selectedCards1[index] == match.guessedOrder2[index]
+        }, List.range(0, 2)));
+        
+        let correctGuesses2 = List.length(List.filter((index) -> {
+          match.selectedCards2[index] == match.guessedOrder1[index]
+        }, List.range(0, 2)));
+
+        if(correctGuesses1 > correctGuesses2) {
+          return match.player1.id;
+        } else if(correctGuesses2 > correctGuesses1) {
+          return match.player2.id;
+        } else {
+          return "Tie";
+        }
       };
       case(null){
         return "Error";
@@ -92,22 +89,53 @@ shared actor class GameFunctionality() = Self {
     };
   };
 
-  public func makePlay(playerId: Text, matchId: Nat, play: Nat) : async Result.Result<Text, Text> {
+  public func selectCards(playerId: Text, matchId: Nat, cards: [Card]) : async Result.Result<Text, Text> {
+    if(List.length(cards) != 3) {
+      return #err("You must select exactly 3 cards");
+    };
     switch(Map.get(matches, nhash, matchId)){
       case(?match){
         if(playerId == match.player1.id) {
           let newMatch : Match = {
-            match with card1 = ?play;
+            match with selectedCards1 = cards;
           };
           Map.set(matches, nhash, matchId, newMatch);
-          return #ok("Play successfull");
+          return #ok("Cards selected successfully");
         };
         if(playerId == match.player2.id) {
           let newMatch : Match = {
-            match with card2 = ?play;
+            match with selectedCards2 = cards;
           };
           Map.set(matches, nhash, matchId, newMatch);
-          return #ok("Play successfull");
+          return #ok("Cards selected successfully");
+        };
+        return #err("Player is not in the match provided");
+      };
+      case(null) {
+        return #err("Match not found");
+      };
+    };
+  };
+
+  public func guessOrder(playerId: Text, matchId: Nat, guessedOrder: [Card]) : async Result.Result<Text, Text> {
+    if(List.length(guessedOrder) != 3) {
+      return #err("You must guess the order of exactly 3 cards");
+    };
+    switch(Map.get(matches, nhash, matchId)){
+      case(?match){
+        if(playerId == match.player1.id) {
+          let newMatch : Match = {
+            match with guessedOrder1 = guessedOrder;
+          };
+          Map.set(matches, nhash, matchId, newMatch);
+          return #ok("Order guessed successfully");
+        };
+        if(playerId == match.player2.id) {
+          let newMatch : Match = {
+            match with guessedOrder2 = guessedOrder;
+          };
+          Map.set(matches, nhash, matchId, newMatch);
+          return #ok("Order guessed successfully");
         };
         return #err("Player is not in the match provided");
       };
@@ -166,8 +194,10 @@ shared actor class GameFunctionality() = Self {
         id = nextMatchId;
         player1;
         player2;
-        card1 = null;
-        card2 = null;
+        selectedCards1 = [];
+        selectedCards2 = [];
+        guessedOrder1 = [];
+        guessedOrder2 = [];
         winner = null;
       };
 
@@ -189,22 +219,3 @@ shared actor class GameFunctionality() = Self {
     return "Cleared Queue";
   };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
