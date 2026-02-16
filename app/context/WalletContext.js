@@ -29,6 +29,10 @@ const POLYGON_AMOY = {
   blockExplorerUrls: ['https://amoy.polygonscan.com/']
 };
 
+// Chain IDs as constants for reuse
+const POLYGON_MAINNET_ID = 137;
+const POLYGON_AMOY_ID = 80002;
+
 export function WalletProvider({ children }) {
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
@@ -63,10 +67,7 @@ export function WalletProvider({ children }) {
       setChainId(Number(network.chainId));
 
       // Check if on Polygon network
-      const polygonMainnetId = 137;
-      const polygonAmoyId = 80002;
-      
-      if (network.chainId !== BigInt(polygonMainnetId) && network.chainId !== BigInt(polygonAmoyId)) {
+      if (network.chainId !== BigInt(POLYGON_MAINNET_ID) && network.chainId !== BigInt(POLYGON_AMOY_ID)) {
         // Try to switch to Polygon Mainnet
         try {
           await window.ethereum.request({
@@ -138,9 +139,9 @@ export function WalletProvider({ children }) {
     initWallet();
 
     return () => {
-      if (typeof window !== 'undefined' && window.ethereum) {
-        window.ethereum.removeEventListener('accountsChanged', handleAccountsChanged);
-        window.ethereum.removeEventListener('chainChanged', handleChainChanged);
+      if (typeof window !== 'undefined' && window.ethereum && window.ethereum.removeListener) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener('chainChanged', handleChainChanged);
       }
     };
   }, [handleAccountsChanged, handleChainChanged]);
@@ -170,7 +171,7 @@ export function WalletProvider({ children }) {
   };
 
   const isPolygonNetwork = () => {
-    return chainId === 137 || chainId === 80002;
+    return chainId === POLYGON_MAINNET_ID || chainId === POLYGON_AMOY_ID;
   };
 
   const value = {
