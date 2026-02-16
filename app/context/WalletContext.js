@@ -43,8 +43,8 @@ export function WalletProvider({ children }) {
 
   const connectWallet = useCallback(async () => {
     if (typeof window === 'undefined' || !window.ethereum) {
-      alert('Please install MetaMask or another Web3 wallet to use this feature.');
-      return;
+      console.error('Web3 wallet not found. Please install MetaMask or another Web3 wallet.');
+      return false;
     }
 
     try {
@@ -89,9 +89,10 @@ export function WalletProvider({ children }) {
           }
         }
       }
+      return true;
     } catch (error) {
       console.error('Error connecting wallet:', error);
-      alert('Failed to connect wallet. Please try again.');
+      return false;
     } finally {
       setIsConnecting(false);
     }
@@ -107,31 +108,42 @@ export function WalletProvider({ children }) {
 
   const handleChainChanged = useCallback((newChainId) => {
     setChainId(parseInt(newChainId, 16));
-    window.location.reload();
   }, []);
 
   // Check if wallet is already connected on mount
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.ethereum) {
-      window.ethereum.request({ method: 'eth_accounts' })
-        .then(accounts => {
+    const initWallet = async () => {
+      if (typeof window !== 'undefined' && window.ethereum) {
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           if (accounts.length > 0) {
-            connectWallet();
+            // Initialize wallet connection without calling connectWallet to avoid infinite loop
+            const browserProvider = new BrowserProvider(window.ethereum);
+            const network = await browserProvider.getNetwork();
+            
+            setAccount(accounts[0]);
+            setProvider(browserProvider);
+            setChainId(Number(network.chainId));
           }
-        });
-
-      // Listen for account changes
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', handleChainChanged);
-
-      return () => {
-        if (window.ethereum.removeListener) {
-          window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-          window.ethereum.removeListener('chainChanged', handleChainChanged);
+        } catch (error) {
+          console.error('Error checking wallet connection:', error);
         }
-      };
-    }
-  }, [connectWallet, handleAccountsChanged, handleChainChanged]);
+
+        // Listen for account changes
+        window.ethereum.on('accountsChanged', handleAccountsChanged);
+        window.ethereum.on('chainChanged', handleChainChanged);
+      }
+    };
+
+    initWallet();
+
+    return () => {
+      if (typeof window !== 'undefined' && window.ethereum && window.ethereum.removeListener) {
+        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener('chainChanged', handleChainChanged);
+      }
+    };
+  }, [handleAccountsChanged, handleChainChanged]);
 
   const switchToPolygon = async (testnet = false) => {
     if (!window.ethereum) return;
