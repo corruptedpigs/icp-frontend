@@ -2,10 +2,25 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import CtaGoogleAnalytics from "../cta_google_analytics";
 import ToggleMuteButton from "../../../app/components/toggle_mute_button";
+import { useWallet } from "../../../app/context/WalletContext";
 
 const NavbarWithConnectWallet = ( { show_logo = false }) => {
+  const { account, isConnecting, connectWallet, disconnectWallet, isPolygonNetwork } = useWallet();
+
+  const formatAddress = (address) => {
+    if (!address) return '';
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const handleWalletAction = () => {
+    if (account) {
+      disconnectWallet();
+    } else {
+      connectWallet();
+    }
+  };
+
   return (
     <div className="navbar absolute text-neutral-content">
       <div className="navbar-start lg:w-20">
@@ -36,13 +51,19 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
           </div>
           <ul tabIndex={0} className="menu dropdown-content mt-3 z-[1] p-2 rounded-box shadow bg-slate-600 text-neutral-content border-solid w-52">
             <li>
-              <CtaGoogleAnalytics
-                buttonText="Connect Wallet"
-                buttonClass="btn btn-warning uppercase"
-                url="#"
-                ctaLabel="cta-play-game"
-              />
+              <button 
+                onClick={handleWalletAction}
+                disabled={isConnecting}
+                className={`btn ${account ? 'btn-error' : 'btn-warning'} uppercase`}
+              >
+                {isConnecting ? 'Connecting...' : account ? `Disconnect ${formatAddress(account)}` : 'Connect Wallet'}
+              </button>
             </li>
+            {account && !isPolygonNetwork() && (
+              <li className="text-xs text-warning mt-2 px-2">
+                ⚠ Please switch to Polygon network
+              </li>
+            )}
           </ul>
         </div>
       </div>
@@ -64,13 +85,19 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
             </div>
           </li>
           <li>
-            <CtaGoogleAnalytics
-              buttonText="Connect wallet"
-              buttonClass="btn btn-sm btn-warning uppercase"
-              url="#"
-              ctaLabel="cta-play-game"
-            />
+            <button 
+              onClick={handleWalletAction}
+              disabled={isConnecting}
+              className={`btn btn-sm ${account ? 'btn-error' : 'btn-warning'} uppercase`}
+            >
+              {isConnecting ? 'Connecting...' : account ? formatAddress(account) : 'Connect wallet'}
+            </button>
           </li>
+          {account && !isPolygonNetwork() && (
+            <li className="text-xs text-warning">
+              ⚠ Switch to Polygon
+            </li>
+          )}
         </ul>
       </div>
     </div>
