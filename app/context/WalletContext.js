@@ -17,16 +17,16 @@ const POLYGON_MAINNET = {
   blockExplorerUrls: ['https://polygonscan.com/']
 };
 
-const POLYGON_MUMBAI = {
-  chainId: '0x13881', // 80001 in decimal
-  chainName: 'Polygon Mumbai Testnet',
+const POLYGON_AMOY = {
+  chainId: '0x13882', // 80002 in decimal
+  chainName: 'Polygon Amoy Testnet',
   nativeCurrency: {
     name: 'MATIC',
     symbol: 'MATIC',
     decimals: 18
   },
-  rpcUrls: ['https://rpc-mumbai.maticvigil.com/'],
-  blockExplorerUrls: ['https://mumbai.polygonscan.com/']
+  rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+  blockExplorerUrls: ['https://amoy.polygonscan.com/']
 };
 
 export function WalletProvider({ children }) {
@@ -64,9 +64,9 @@ export function WalletProvider({ children }) {
 
       // Check if on Polygon network
       const polygonMainnetId = 137;
-      const polygonMumbaiId = 80001;
+      const polygonAmoyId = 80002;
       
-      if (network.chainId !== BigInt(polygonMainnetId) && network.chainId !== BigInt(polygonMumbaiId)) {
+      if (network.chainId !== BigInt(polygonMainnetId) && network.chainId !== BigInt(polygonAmoyId)) {
         // Try to switch to Polygon Mainnet
         try {
           await window.ethereum.request({
@@ -138,9 +138,9 @@ export function WalletProvider({ children }) {
     initWallet();
 
     return () => {
-      if (typeof window !== 'undefined' && window.ethereum && window.ethereum.removeListener) {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-        window.ethereum.removeListener('chainChanged', handleChainChanged);
+      if (typeof window !== 'undefined' && window.ethereum) {
+        window.ethereum.removeEventListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeEventListener('chainChanged', handleChainChanged);
       }
     };
   }, [handleAccountsChanged, handleChainChanged]);
@@ -148,7 +148,7 @@ export function WalletProvider({ children }) {
   const switchToPolygon = async (testnet = false) => {
     if (!window.ethereum) return;
 
-    const network = testnet ? POLYGON_MUMBAI : POLYGON_MAINNET;
+    const network = testnet ? POLYGON_AMOY : POLYGON_MAINNET;
 
     try {
       await window.ethereum.request({
@@ -170,7 +170,7 @@ export function WalletProvider({ children }) {
   };
 
   const isPolygonNetwork = () => {
-    return chainId === 137 || chainId === 80001;
+    return chainId === 137 || chainId === 80002;
   };
 
   const value = {
