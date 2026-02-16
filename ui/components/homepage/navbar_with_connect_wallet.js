@@ -60,8 +60,8 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
               </button>
             </li>
             {account && !isPolygonNetwork() && (
-              <li className="text-xs text-warning mt-2 px-2">
-                ⚠ Please switch to Polygon network
+              <li className="text-xs text-warning mt-2 px-2" role="alert">
+                <span aria-label="Warning">⚠</span> Please switch to Polygon network
               </li>
             )}
           </ul>
@@ -94,8 +94,8 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
             </button>
           </li>
           {account && !isPolygonNetwork() && (
-            <li className="text-xs text-warning">
-              ⚠ Switch to Polygon
+            <li className="text-xs text-warning" role="alert">
+              <span aria-label="Warning">⚠</span> Switch to Polygon
             </li>
           )}
         </ul>
