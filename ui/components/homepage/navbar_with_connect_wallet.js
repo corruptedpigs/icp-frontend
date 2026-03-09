@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ToggleMuteButton from "../../../app/components/toggle_mute_button";
@@ -7,6 +8,11 @@ import { useWallet } from "../../../app/context/WalletContext";
 
 const NavbarWithConnectWallet = ( { show_logo = false }) => {
   const { account, isConnecting, connectWallet, disconnectWallet, isPolygonNetwork } = useWallet();
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const formatAddress = (address) => {
     if (!address) return '';
@@ -53,13 +59,13 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
             <li>
               <button 
                 onClick={handleWalletAction}
-                disabled={isConnecting}
+                disabled={isConnecting || !isMounted}
                 className={`btn ${account ? 'btn-error' : 'btn-warning'} uppercase`}
               >
-                {isConnecting ? 'Connecting...' : account ? `Disconnect ${formatAddress(account)}` : 'Connect Wallet'}
+                {!isMounted ? 'Loading...' : isConnecting ? 'Connecting...' : account ? `Disconnect ${formatAddress(account)}` : 'Connect Wallet'}
               </button>
             </li>
-            {account && !isPolygonNetwork() && (
+            {isMounted && account && !isPolygonNetwork() && (
               <li className="text-xs text-warning mt-2 px-2" role="alert">
                 <span aria-label="Warning">⚠</span> Please switch to Polygon network
               </li>
@@ -87,13 +93,13 @@ const NavbarWithConnectWallet = ( { show_logo = false }) => {
           <li>
             <button 
               onClick={handleWalletAction}
-              disabled={isConnecting}
+              disabled={isConnecting || !isMounted}
               className={`btn btn-sm ${account ? 'btn-error' : 'btn-warning'} uppercase`}
             >
-              {isConnecting ? 'Connecting...' : account ? formatAddress(account) : 'Connect wallet'}
+              {!isMounted ? 'Loading...' : isConnecting ? 'Connecting...' : account ? formatAddress(account) : 'Connect wallet'}
             </button>
           </li>
-          {account && !isPolygonNetwork() && (
+          {isMounted && account && !isPolygonNetwork() && (
             <li className="text-xs text-warning" role="alert">
               <span aria-label="Warning">⚠</span> Switch to Polygon
             </li>

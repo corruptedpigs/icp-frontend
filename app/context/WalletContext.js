@@ -38,6 +38,7 @@ export function WalletProvider({ children }) {
   const [provider, setProvider] = useState(null);
   const [chainId, setChainId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const disconnectWallet = useCallback(() => {
     setAccount(null);
@@ -111,11 +112,20 @@ export function WalletProvider({ children }) {
     setChainId(parseInt(newChainId, 16));
   }, []);
 
-  // Check if wallet is already connected on mount
+  // Set mounted state to avoid hydration errors
   useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Check if wallet is already connected on mount (only after component is mounted)
+  useEffect(() => {
+    if (!isMounted) return;
+
     const initWallet = async () => {
       if (typeof window !== 'undefined' && window.ethereum) {
         try {
+          // Check if already connected without triggering MetaMask popup
+          // This will only return accounts if user previously connected to this site
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
           if (accounts.length > 0) {
             // Initialize wallet connection without calling connectWallet to avoid infinite loop
@@ -144,7 +154,7 @@ export function WalletProvider({ children }) {
         window.ethereum.removeListener('chainChanged', handleChainChanged);
       }
     };
-  }, [handleAccountsChanged, handleChainChanged]);
+  }, [isMounted, handleAccountsChanged, handleChainChanged]);
 
   const switchToPolygon = async (testnet = false) => {
     if (!window.ethereum) return;
