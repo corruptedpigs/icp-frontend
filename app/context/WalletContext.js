@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { BrowserProvider } from 'ethers';
+import { BrowserProvider, Contract, formatUnits } from 'ethers';
 
 const WalletContext = createContext();
 
@@ -32,6 +32,14 @@ const POLYGON_AMOY = {
 // Chain IDs as constants for reuse
 const POLYGON_MAINNET_ID = 137;
 const POLYGON_AMOY_ID = 80002;
+const DEFAULT_TRACKED_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_TOKEN_ADDRESS || '0x1E60032C0b93b5A8A0F3eD485cb35DBfE86972a5';
+const DEFAULT_TRACKED_TOKEN_SYMBOL = process.env.NEXT_PUBLIC_TRACKED_TOKEN_SYMBOL || 'TOKEN';
+const DEFAULT_TRACKED_TOKEN_DECIMALS = Number(process.env.NEXT_PUBLIC_TRACKED_TOKEN_DECIMALS || 18);
+const ERC20_ABI = [
+  'function balanceOf(address owner) view returns (uint256)',
+  'function decimals() view returns (uint8)',
+  'function symbol() view returns (string)'
+];
 
 export function WalletProvider({ children }) {
   const [account, setAccount] = useState(null);
@@ -39,12 +47,81 @@ export function WalletProvider({ children }) {
   const [chainId, setChainId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [trackedTokenAddress, setTrackedTokenAddress] = useState(DEFAULT_TRACKED_TOKEN_ADDRESS);
+  const [trackedTokenDecimals, setTrackedTokenDecimals] = useState(Number.isFinite(DEFAULT_TRACKED_TOKEN_DECIMALS) ? DEFAULT_TRACKED_TOKEN_DECIMALS : 18);
+  const [tokenBalance, setTokenBalance] = useState(null);
+  const [tokenSymbol, setTokenSymbol] = useState(DEFAULT_TRACKED_TOKEN_SYMBOL);
+  const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
 
   const disconnectWallet = useCallback(() => {
     setAccount(null);
     setProvider(null);
     setChainId(null);
+    setTokenBalance(null);
   }, []);
+
+  const setTrackedToken = useCallback((address, defaultSymbol = DEFAULT_TRACKED_TOKEN_SYMBOL, defaultDecimals = 18) => {
+    setTrackedTokenAddress(address || '');
+    setTokenSymbol(defaultSymbol || DEFAULT_TRACKED_TOKEN_SYMBOL);
+    setTrackedTokenDecimals(Number.isFinite(Number(defaultDecimals)) ? Number(defaultDecimals) : 18);
+    setTokenBalance(null);
+  }, []);
+
+  const isPolygonNetwork = useCallback(() => {
+    return chainId === POLYGON_MAINNET_ID || chainId === POLYGON_AMOY_ID;
+  }, [chainId]);
+
+  const refreshTrackedTokenBalance = useCallback(async (walletAddress = account, walletProvider = provider) => {
+    if (!walletAddress || !walletProvider || !trackedTokenAddress) {
+      setTokenBalance(null);
+      return;
+    }
+
+    try {
+      setIsTokenBalanceLoading(true);
+      const tokenContract = new Contract(trackedTokenAddress, ERC20_ABI, walletProvider);
+      const [rawBalance, decimals, symbol] = await Promise.all([
+        tokenContract.balanceOf(walletAddress),
+        tokenContract.decimals().catch(() => 18),
+        tokenContract.symbol().catch(() => tokenSymbol || DEFAULT_TRACKED_TOKEN_SYMBOL)
+      ]);
+
+      const formattedBalance = Number(formatUnits(rawBalance, decimals));
+      setTokenBalance(formattedBalance);
+      setTokenSymbol(symbol || tokenSymbol || DEFAULT_TRACKED_TOKEN_SYMBOL);
+      setTrackedTokenDecimals(Number(decimals));
+    } catch (error) {
+      console.error('Error fetching tracked token balance:', error);
+      setTokenBalance(null);
+    } finally {
+      setIsTokenBalanceLoading(false);
+    }
+  }, [account, provider, trackedTokenAddress, tokenSymbol]);
+
+  const addTrackedTokenToWallet = useCallback(async () => {
+    if (typeof window === 'undefined' || !window.ethereum || !trackedTokenAddress) {
+      return false;
+    }
+
+    try {
+      const wasAdded = await window.ethereum.request({
+        method: 'wallet_watchAsset',
+        params: {
+          type: 'ERC20',
+          options: {
+            address: trackedTokenAddress,
+            symbol: tokenSymbol || DEFAULT_TRACKED_TOKEN_SYMBOL,
+            decimals: trackedTokenDecimals,
+          },
+        },
+      });
+
+      return Boolean(wasAdded);
+    } catch (error) {
+      console.error('Error adding tracked token to wallet:', error);
+      return false;
+    }
+  }, [trackedTokenAddress, tokenSymbol, trackedTokenDecimals]);
 
   const connectWallet = useCallback(async () => {
     if (typeof window === 'undefined' || !window.ethereum) {
@@ -54,15 +131,15 @@ export function WalletProvider({ children }) {
 
     try {
       setIsConnecting(true);
-      
+
       // Request account access
-      const accounts = await window.ethereum.request({ 
-        method: 'eth_requestAccounts' 
+      const accounts = await window.ethereum.request({
+        method: 'eth_requestAccounts'
       });
-      
+
       const browserProvider = new BrowserProvider(window.ethereum);
       const network = await browserProvider.getNetwork();
-      
+
       setAccount(accounts[0]);
       setProvider(browserProvider);
       setChainId(Number(network.chainId));
@@ -75,6 +152,9 @@ export function WalletProvider({ children }) {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: POLYGON_MAINNET.chainId }],
           });
+
+          const updatedChainId = await window.ethereum.request({ method: 'eth_chainId' });
+          setChainId(parseInt(updatedChainId, 16));
         } catch (switchError) {
           // This error code indicates that the chain has not been added to MetaMask
           if (switchError.code === 4902) {
@@ -83,6 +163,9 @@ export function WalletProvider({ children }) {
                 method: 'wallet_addEthereumChain',
                 params: [POLYGON_MAINNET],
               });
+
+              const updatedChainId = await window.ethereum.request({ method: 'eth_chainId' });
+              setChainId(parseInt(updatedChainId, 16));
             } catch (addError) {
               console.error('Error adding Polygon network:', addError);
             }
@@ -110,6 +193,7 @@ export function WalletProvider({ children }) {
 
   const handleChainChanged = useCallback((newChainId) => {
     setChainId(parseInt(newChainId, 16));
+    setProvider(new BrowserProvider(window.ethereum));
   }, []);
 
   // Set mounted state to avoid hydration errors
@@ -131,7 +215,7 @@ export function WalletProvider({ children }) {
             // Initialize wallet connection without calling connectWallet to avoid infinite loop
             const browserProvider = new BrowserProvider(window.ethereum);
             const network = await browserProvider.getNetwork();
-            
+
             setAccount(accounts[0]);
             setProvider(browserProvider);
             setChainId(Number(network.chainId));
@@ -156,6 +240,20 @@ export function WalletProvider({ children }) {
     };
   }, [isMounted, handleAccountsChanged, handleChainChanged]);
 
+  useEffect(() => {
+    if (!account || !provider) {
+      setTokenBalance(null);
+      return;
+    }
+
+    if (!isPolygonNetwork()) {
+      setTokenBalance(null);
+      return;
+    }
+
+    refreshTrackedTokenBalance(account, provider);
+  }, [account, provider, chainId, isPolygonNetwork, refreshTrackedTokenBalance]);
+
   const switchToPolygon = async (testnet = false) => {
     if (!window.ethereum) return;
 
@@ -166,6 +264,9 @@ export function WalletProvider({ children }) {
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: network.chainId }],
       });
+
+      const updatedChainId = await window.ethereum.request({ method: 'eth_chainId' });
+      setChainId(parseInt(updatedChainId, 16));
     } catch (switchError) {
       if (switchError.code === 4902) {
         try {
@@ -173,6 +274,9 @@ export function WalletProvider({ children }) {
             method: 'wallet_addEthereumChain',
             params: [network],
           });
+
+          const updatedChainId = await window.ethereum.request({ method: 'eth_chainId' });
+          setChainId(parseInt(updatedChainId, 16));
         } catch (addError) {
           console.error('Error adding network:', addError);
         }
@@ -180,19 +284,23 @@ export function WalletProvider({ children }) {
     }
   };
 
-  const isPolygonNetwork = () => {
-    return chainId === POLYGON_MAINNET_ID || chainId === POLYGON_AMOY_ID;
-  };
-
   const value = {
     account,
     provider,
     chainId,
+    trackedTokenAddress,
+    trackedTokenDecimals,
+    tokenBalance,
+    tokenSymbol,
+    isTokenBalanceLoading,
     isConnecting,
     connectWallet,
     disconnectWallet,
     switchToPolygon,
-    isPolygonNetwork
+    isPolygonNetwork,
+    setTrackedToken,
+    refreshTrackedTokenBalance,
+    addTrackedTokenToWallet
   };
 
   return (
