@@ -17,17 +17,17 @@ const POLYGON_MAINNET = {
   blockExplorerUrls: ['https://polygonscan.com/']
 };
 
-const POLYGON_AMOY = {
-  chainId: '0x13882', // 80002 in decimal
-  chainName: 'Polygon Amoy Testnet',
-  nativeCurrency: {
-    name: 'MATIC',
-    symbol: 'MATIC',
-    decimals: 18
-  },
-  rpcUrls: ['https://rpc-amoy.polygon.technology/'],
-  blockExplorerUrls: ['https://amoy.polygonscan.com/']
-};
+// const POLYGON_AMOY = {
+//   chainId: '0x13882', // 80002 in decimal
+//   chainName: 'Polygon Amoy Testnet',
+//   nativeCurrency: {
+//     name: 'MATIC',
+//     symbol: 'MATIC',
+//     decimals: 18
+//   },
+//   rpcUrls: ['https://rpc-amoy.polygon.technology/'],
+//   blockExplorerUrls: ['https://amoy.polygonscan.com/']
+// };
 
 // Chain IDs as constants for reuse
 const POLYGON_MAINNET_ID = 137;
@@ -53,7 +53,17 @@ export function WalletProvider({ children }) {
   const [tokenSymbol, setTokenSymbol] = useState(DEFAULT_TRACKED_TOKEN_SYMBOL);
   const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
 
-  const disconnectWallet = useCallback(() => {
+  const disconnectWallet = useCallback(async () => {
+    if (typeof window !== 'undefined' && window.ethereum) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_revokePermissions',
+          params: [{ eth_accounts: {} }],
+        });
+      } catch {
+        // wallet_revokePermissions is not supported by all wallets; state is cleared regardless
+      }
+    }
     setAccount(null);
     setProvider(null);
     setChainId(null);
@@ -68,6 +78,7 @@ export function WalletProvider({ children }) {
   }, []);
 
   const isPolygonNetwork = useCallback(() => {
+    console.log('Checking if on Polygon network. Current chainId:', chainId);
     return chainId === POLYGON_MAINNET_ID || chainId === POLYGON_AMOY_ID;
   }, [chainId]);
 
@@ -254,10 +265,11 @@ export function WalletProvider({ children }) {
     refreshTrackedTokenBalance(account, provider);
   }, [account, provider, chainId, isPolygonNetwork, refreshTrackedTokenBalance]);
 
-  const switchToPolygon = async (testnet = false) => {
+  const switchToPolygon = async () => {
     if (!window.ethereum) return;
 
-    const network = testnet ? POLYGON_AMOY : POLYGON_MAINNET;
+    // const network = testnet ? POLYGON_AMOY : POLYGON_MAINNET;
+    const network = POLYGON_MAINNET;
 
     try {
       await window.ethereum.request({
