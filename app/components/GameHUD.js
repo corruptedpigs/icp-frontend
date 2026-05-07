@@ -8,7 +8,7 @@ export default function GameHUD() {
   const { nftImages } = useWalletNFTs();
 
   return (
-    <div className="fixed top-40 left-4 z-40 flex flex-col gap-2">
+    <div id="game-hud" className="flex flex-col gap-2 w-max">
 
       {/* Your $COINK */}
       <div className="bg-black/60 backdrop-blur-md border border-yellow-400/30 rounded-xl px-4 py-2 flex items-center gap-3 shadow-[0_0_15px_rgba(244,182,37,0.2)]">
