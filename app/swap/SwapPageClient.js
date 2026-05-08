@@ -119,7 +119,7 @@ function LockedState() {
         If you have an access link, please use it to unlock this page.
       </p>
       <div className="rounded-xl bg-black/40 border border-pink-500/20 px-4 py-3 text-xs text-purple-400/50 font-mono">
-        Requires: <span className="text-pink-400/70">?swap=unlocked</span>
+        <span className="text-pink-400/70">Talk to an Administrator to unlock access</span>
       </div>
     </div>
   );
