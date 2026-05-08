@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 const navItems = ["About", "Game Modes", "Tokenomics", "Community", "Backers"];
 
@@ -29,6 +30,9 @@ const NewNavbar = () => {
               {item}
             </button>
           ))}
+          <Link href="/swap" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors font-heading">
+            Swap
+          </Link>
           <a href="//discord.gg/mX4hDzyYPT" target="_blank" rel="noopener noreferrer" className="px-5 py-2 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity">
             Join Community
           </a>
@@ -44,6 +48,9 @@ const NewNavbar = () => {
               {item}
             </button>
           ))}
+          <Link href="/swap" onClick={() => setMobileOpen(false)} className="block w-full text-left py-3 text-primary font-heading hover:text-primary/80 transition-colors">
+            Swap
+          </Link>
         </div>
       )}
     </nav>

@@ -6,13 +6,16 @@ import Link from "next/link";
 import ToggleMuteButton from "../../../app/components/toggle_mute_button";
 import { useWallet } from "../../../app/context/WalletContext";
 import AddTokenButton from "./AddTokenButton";
+import { isSwapUnlocked } from "../../../app/utils/swapFeatureFlag";
 
 const NavbarWithConnectWallet = ({ show_logo = false }) => {
   const { account, isConnecting, connectWallet, disconnectWallet, isPolygonNetwork, tokenBalance, tokenSymbol, isTokenBalanceLoading } = useWallet();
   const [isMounted, setIsMounted] = useState(false);
+  const [swapUnlocked, setSwapUnlocked] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
+    setSwapUnlocked(isSwapUnlocked());
   }, []);
 
   const formatAddress = (address) => {
@@ -81,6 +84,13 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
                 {tokenBalanceLabel}
               </li>
             )}
+            {isMounted && swapUnlocked && (
+              <li className="mt-2 px-2">
+                <Link href="/swap" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">
+                  Swap
+                </Link>
+              </li>
+            )}
             {isMounted && (
               <li className="mt-2 px-2">
                 <AddTokenButton id="navbar-mobile-add-token-btn" />
@@ -119,6 +129,13 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
           {isMounted && account && !isPolygonNetwork() && (
             <li id="navbar-desktop-network-warning" className="text-xs text-warning normal-case" role="alert">
               <span aria-label="Warning">⚠</span> Switch to Polygon
+            </li>
+          )}
+          {isMounted && swapUnlocked && (
+            <li>
+              <Link href="/swap" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">
+                Swap
+              </Link>
             </li>
           )}
           {isMounted && (
