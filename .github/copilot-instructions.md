@@ -12,7 +12,7 @@
 
 4. **Tailwind + DaisyUI only** — no new CSS frameworks. Prefer utility classes over new custom CSS. Extend `globals.css` utilities (`@layer utilities`) for reusable patterns.
 
-5. **Feature flags via `app/utils/swapFeatureFlag.js`** — any feature not ready for public release must be gated. The swap page is a reference implementation.
+5. **Feature flags via `app/utils/featureFlags.js`** — any feature not ready for public release must be gated. The swap page is the reference implementation.
 
 6. **No inline `<script>` or `<style>` tags** in JSX/TSX files.
 
@@ -30,7 +30,7 @@
 
 - **Wallet connect**: Use `useWallet()` from `app/context/WalletContext.js`. Never instantiate `BrowserProvider` directly in components.
 - **NFT fetching**: Use `useWalletNFTs()` from `app/hooks/useWalletNFTs.js` (Alchemy API).
-- **Feature flags**: Gate unreleased features using `checkAndPersistSwapFlag` / `isSwapUnlocked` pattern.
+- **Feature flags**: Gate unreleased features using `checkAndPersistFlag(flag, searchParams)` / `isFlagUnlocked(flag)` from `app/utils/featureFlags.js`. The swap page is the reference implementation.
 - **Suspense boundary**: Wrap any client component that uses `useSearchParams()` in a `<Suspense>` in the server page component.
 
 ## Start Here

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import SwapWidget from "../components/SwapWidget";
 import NavbarWithConnectWallet from "../../ui/components/homepage/navbar_with_connect_wallet";
-import { checkAndPersistSwapFlag } from "../utils/swapFeatureFlag";
+import { checkAndPersistFlag } from "../utils/featureFlags";
 
 export default function SwapPageClient() {
   const searchParams = useSearchParams();
@@ -12,7 +12,7 @@ export default function SwapPageClient() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    const isUnlocked = checkAndPersistSwapFlag(searchParams);
+    const isUnlocked = checkAndPersistFlag("swap", searchParams);
     setUnlocked(isUnlocked);
     setChecking(false);
   }, [searchParams]);

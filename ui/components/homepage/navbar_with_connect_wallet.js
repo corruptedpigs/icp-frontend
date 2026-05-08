@@ -6,7 +6,7 @@ import Link from "next/link";
 import ToggleMuteButton from "../../../app/components/toggle_mute_button";
 import { useWallet } from "../../../app/context/WalletContext";
 import AddTokenButton from "./AddTokenButton";
-import { isSwapUnlocked } from "../../../app/utils/swapFeatureFlag";
+import { isFlagUnlocked } from "../../../app/utils/featureFlags";
 
 const NavbarWithConnectWallet = ({ show_logo = false }) => {
   const { account, isConnecting, connectWallet, disconnectWallet, isPolygonNetwork, tokenBalance, tokenSymbol, isTokenBalanceLoading } = useWallet();
@@ -15,7 +15,7 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
 
   useEffect(() => {
     setIsMounted(true);
-    setSwapUnlocked(isSwapUnlocked());
+    setSwapUnlocked(isFlagUnlocked("swap"));
   }, []);
 
   const formatAddress = (address) => {

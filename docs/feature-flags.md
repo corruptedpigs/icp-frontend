@@ -13,23 +13,25 @@ Reference implementation: the Swap page (`/swap`).
 3. The flag persists across page reloads and browser restarts
 4. To revoke: visit `/swap?swap=locked`, or clear `localStorage.removeItem("swap_unlocked")`
 
-## Utility — `app/utils/swapFeatureFlag.js`
+## Utility — `app/utils/featureFlags.js`
 
 ```js
-import { checkAndPersistSwapFlag, isSwapUnlocked } from "@/app/utils/swapFeatureFlag";
+import { checkAndPersistFlag, isFlagUnlocked } from "@/app/utils/featureFlags";
 ```
 
 | Function | When to use |
 |---|---|
-| `checkAndPersistSwapFlag(searchParams)` | Call in `useEffect` with `useSearchParams()` — reads URL param, persists to localStorage, returns boolean |
-| `isSwapUnlocked()` | Pure read — use in components that just need to check (e.g. navbar link visibility) |
+| `checkAndPersistFlag(flag, searchParams)` | Call in `useEffect` with `useSearchParams()` — reads URL param, persists to localStorage, returns boolean |
+| `isFlagUnlocked(flag)` | Pure read — use in components that just need to check (e.g. navbar link visibility) |
+
+The `flag` argument is the URL param name and the localStorage key prefix (e.g. `"swap"` → param `?swap=unlocked`, key `swap_unlocked`).
 
 ## Adding a New Feature Flag
 
-1. Add a new storage key and param pair to `swapFeatureFlag.js` (or create a new utils file for the feature)
-2. In the page client component, call `checkAndPersistSwapFlag` in a `useEffect` and gate rendering behind the result
+1. Choose a short flag name — it becomes both the URL param and the localStorage key prefix (e.g. `"marketplace"`)
+2. In the page client component, call `checkAndPersistFlag("marketplace", searchParams)` in a `useEffect`
 3. Show a clear locked state UI when not unlocked (see `LockedState` in `app/swap/SwapPageClient.js`)
-4. Add the feature nav link to the appropriate navbar, gated behind `isSwapUnlocked()` (or equivalent)
+4. Add the feature nav link gated behind `isFlagUnlocked("marketplace")` in the appropriate navbar
 
 ## Example Pattern
 
@@ -38,7 +40,7 @@ import { checkAndPersistSwapFlag, isSwapUnlocked } from "@/app/utils/swapFeature
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { checkAndPersistSwapFlag } from "../utils/swapFeatureFlag";
+import { checkAndPersistFlag } from "../utils/featureFlags";
 
 export default function MyFeaturePageClient() {
   const searchParams = useSearchParams();
@@ -46,7 +48,7 @@ export default function MyFeaturePageClient() {
   const [checking, setChecking] = useState(true);
 
   useEffect(() => {
-    setUnlocked(checkAndPersistSwapFlag(searchParams));
+    setUnlocked(checkAndPersistFlag("myfeature", searchParams));
     setChecking(false);
   }, [searchParams]);
 
