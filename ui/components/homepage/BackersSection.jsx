@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 
 const tiers = [
   {
@@ -119,9 +120,9 @@ const BackersSection = () => {
                   </li>
                 ))}
               </ul>
-              <button className="mt-6 w-full py-3 rounded-lg bg-secondary text-secondary-foreground font-heading text-sm hover:bg-secondary/80 transition-colors">
+              <Link href="/swap" className="mt-6 w-full py-3 rounded-lg bg-secondary text-secondary-foreground font-heading text-sm hover:bg-secondary/80 transition-colors text-center block">
                 GET STARTED
-              </button>
+              </Link>
             </div>
           ))}
         </div>
