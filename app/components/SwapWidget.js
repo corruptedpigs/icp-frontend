@@ -140,8 +140,6 @@ export default function SwapWidget() {
       ? tokenBalance.toLocaleString(undefined, { maximumFractionDigits: 4 })
       : null;
 
-  const isReady = isMounted && account && isPolygonNetwork();
-
   return (
     <div className="w-full max-w-md mx-auto">
       {/* Widget card */}
