@@ -50,11 +50,16 @@ export default function GamePageClient() {
         </div>
 
         {/* Game content */}
-        <div id="game-content" className="flex flex-1 justify-between hero hero-overlay text-neutral-content overflow-hidden px-6">
+        <div id="game-content" className="flex flex-1 flex-col bg-black/40 text-white overflow-y-auto px-6">
 
-          {/* Player 1 */}
+          {/* Game timer */}
+          <div className="flex justify-end pt-2 pr-2">
+            <GameTimer seconds={60} />
+          </div>
+
+          {/* Player 1 — full-width centered selection phase */}
           {isLoading ? (
-            <div className="flex flex-1 pt-8 h-full justify-around items-center">
+            <div className="flex flex-1 h-full justify-around items-center">
               <span className="loading loading-spinner loading-lg"></span>
             </div>
           ) : !account || !hasEnoughNFTs ? (
@@ -62,23 +67,6 @@ export default function GamePageClient() {
           ) : (
             <Player1 nfts={nfts} images={nftImages} />
           )}
-
-          {/* Game timer */}
-          <GameTimer seconds={60} />
-
-          {/* Player 2 */}
-          <div id="game-player2" className="flex flex-1 pt-8 h-full justify-around">
-            <div>
-              <div className="flex flex-col">
-                <a className="btn btn-ghost glass no-animation">Your combination</a>
-              </div>
-            </div>
-            <div>
-              <div className="flex flex-col">
-                <a className="btn btn-ghost glass no-animation">Player 2</a>
-              </div>
-            </div>
-          </div>
 
         </div>
       </div>

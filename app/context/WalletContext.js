@@ -78,7 +78,7 @@ export function WalletProvider({ children }) {
   }, []);
 
   const isPolygonNetwork = useCallback(() => {
-    console.log('Checking if on Polygon network. Current chainId:', chainId);
+    // console.log('Checking if on Polygon network. Current chainId:', chainId);
     return chainId === POLYGON_MAINNET_ID || chainId === POLYGON_AMOY_ID;
   }, [chainId]);
 

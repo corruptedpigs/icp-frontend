@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import ModalTimeIsUp from "./games/modalTimeIsUp"
@@ -47,16 +46,6 @@ const GameTimer = ({ seconds }) => {
             <hr className={`${activeHr <= i ? getColor(i) + " glow" : timerElapsedColour}`} />
           </li>
         ))}
-
-        <div className="timeline-middle">
-          <Image src="/logo.png"
-            alt="corrupted pigs logo"
-            className=""
-            height={100}
-            width={100}
-            priority
-          />
-        </div>
       </ul>
     </div>
   )
