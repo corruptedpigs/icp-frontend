@@ -45,12 +45,36 @@ const HeroSection = () => {
       <div className="relative z-10 container mx-auto px-4 pt-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left">
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl tracking-wider text-glow-pink text-primary mb-4">
-              CORRUPTED PIGS™
+            <h1 className="sr-only">
+              CORRUPTED PIGS™ - NFT TRADING CARD GAME
             </h1>
-            <p className="font-heading text-lg md:text-xl text-accent mb-4">
-              NFT TRADING CARD GAME
-            </p>
+
+            <div className="flex justify-center lg:justify-start mb-8">
+              <div className="relative w-[300px] h-[300px]">
+                {/* Logo in center */}
+                <div className="absolute inset-0 flex items-center justify-center z-10">
+                  <Image src="/logo.png" alt="Corrupted Pigs Logo" width={160} height={160} className="object-contain drop-shadow-[0_0_20px_rgba(255,51,187,0.4)]" />
+                </div>
+                {/* Spinning Text */}
+                <div className="absolute inset-0 animate-[spin_25s_linear_infinite_reverse]">
+                  <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
+                    <defs>
+                      <path
+                        id="circlePathOuter"
+                        d="M100,100 m-90,0 a90,90 0 1,1 180,0 a90,90 0 1,1 -180,0"
+                      />
+                    </defs>
+                    <text className="font-display text-[15px] fill-white" style={{ filter: "drop-shadow(0 0 6px rgba(255,51,187,0.8))", textTransform: "uppercase" }}>
+                      <textPath href="#circlePathOuter" startOffset="0%" textLength="560" lengthAdjust="spacing">
+                        • Social Impact • NFT TRADING CARD GAME
+                        • Social Impact • NFT TRADING CARD GAME
+                      </textPath>
+                    </text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
             <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
               An NFT-based social impact game that blends fun, strategy, and purpose. Collect unique pig cards, earn <span className="text-accent font-bold">$COINK</span> memecoins, and burn NFTs to unlock rewards — all while contributing to meaningful social causes.
             </p>
