@@ -5,7 +5,7 @@ function ChooseGameCard({ bg_image_path, title, blurred = false, link = '#' }) {
   const cardContent = (
     <div className={`card xs:w-32 md:w-auto image-full shadow-xl shadow-cyan-700 ${blurred ? 'blur-sm' : 'hover:scale-110 ease-in-out duration-200'}`}>
       <figure>
-        <Image src={bg_image_path} alt={`${title} Game`} fill className="object-cover" />
+        <Image src={bg_image_path} alt={`${title} Game`} width={350} height={446} className="w-full h-auto object-cover" />
       </figure>
       <div className="card-body items-center uppercase">
         <h2 className="card-title text-4xl font-mono italic font-bold pt-16 ">{title}</h2>
