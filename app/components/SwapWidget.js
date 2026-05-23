@@ -3,28 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useWallet } from "../../app/context/WalletContext";
-
-// $COINK token on Polygon
-const COINK_ADDRESS =
-  process.env.NEXT_PUBLIC_TRACKED_TOKEN_ADDRESS ||
-  "0x1E60032C0b93b5A8A0F3eD485cb35DBfE86972a5";
-const COINK_SYMBOL =
-  process.env.NEXT_PUBLIC_TRACKED_TOKEN_SYMBOL || "COINK";
-
-// Build Uniswap v3 URL on Polygon for USDC → COINK
-function buildUniswapUrl(inputToken, outputToken, exactAmount) {
-  const base = "https://app.uniswap.org/swap";
-  const params = new URLSearchParams({
-    inputCurrency: inputToken,
-    outputCurrency: outputToken,
-    chain: "polygon",
-  });
-  if (exactAmount && Number(exactAmount) > 0) {
-    params.set("exactAmount", exactAmount);
-    params.set("exactField", "input");
-  }
-  return `${base}?${params.toString()}`;
-}
+import { buildUniswapUrl, COINK_ADDRESS, COINK_SYMBOL } from "../utils/uniswap";
 
 // Only USDC/COINK pair is supported
 const USDC_ADDRESS = "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359";
