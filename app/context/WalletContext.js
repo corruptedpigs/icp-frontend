@@ -54,7 +54,8 @@ const NFT_ABI = [
   'function unityPrice() view returns (uint256)',
   'function packPrice() view returns (uint256)',
   'function PACK_SIZE() view returns (uint256)',
-  'function totalMinted() view returns (uint256)'
+  'function totalMinted() view returns (uint256)',
+  'function MAX_SUPPLY() view returns (uint256)'
 ];
 
 export function WalletProvider({ children }) {
@@ -287,22 +288,28 @@ export function WalletProvider({ children }) {
   const [nftPackPrice, setNftPackPrice] = useState(null);
   const [nftPackSize, setNftPackSize] = useState(null);
   const [saleActive, setSaleActive] = useState(null);
+  const [totalMinted, setTotalMinted] = useState(null);
+  const [maxSupply, setMaxSupply] = useState(null);
 
   const refreshNftPrices = useCallback(async () => {
     if (!provider || !account || !isPolygonNetwork()) return;
     const nftContract = new Contract(DEFAULT_NFT_ADDRESS, NFT_ABI, provider);
 
     try {
-      const [active, singlePrice, packPrice, packSize] = await Promise.all([
+      const [active, singlePrice, packPrice, packSize, minted, supply] = await Promise.all([
         nftContract.saleActive(),
         nftContract.unityPrice(),
         nftContract.packPrice(),
-        nftContract.PACK_SIZE()
+        nftContract.PACK_SIZE(),
+        nftContract.totalMinted(),
+        nftContract.MAX_SUPPLY()
       ]);
       setSaleActive(active);
       setNftSinglePrice(singlePrice);
       setNftPackPrice(packPrice);
       setNftPackSize(packSize);
+      setTotalMinted(minted);
+      setMaxSupply(supply);
     } catch (error) {
       console.error('Error fetching NFT data:', error);
     }
@@ -399,6 +406,8 @@ export function WalletProvider({ children }) {
     nftPackPrice,
     nftPackSize,
     saleActive,
+    totalMinted,
+    maxSupply,
     refreshNftPrices,
     approveToken,
     mintOneNft,

@@ -23,19 +23,28 @@ export default function MintPageClient() {
     account, isPolygonNetwork, connectWallet, isConnecting,
     tokenBalance, tokenSymbol, refreshNftPrices,
     approveToken, mintOneNft, mintNftPacks, calculateMintCost,
-    nftSinglePrice, nftPackPrice, nftPackSize, saleActive, provider
+    nftSinglePrice, nftPackPrice, nftPackSize, saleActive, provider,
+    totalMinted, maxSupply, DEFAULT_NFT_ADDRESS
   } = useWallet();
 
   const { nfts } = useWalletNFTs();
 
+  const isPreviewSuccess = searchParams.get("preview_success") === "1";
   const [quantity, setQuantity] = useState(1);
-  const [txState, setTxState] = useState("idle");
+  const [txState, setTxState] = useState(isPreviewSuccess ? "success" : "idle");
   const [txHash, setTxHash] = useState(null);
   const [txError, setTxError] = useState(null);
   const [mintProgress, setMintProgress] = useState({ current: 0, total: 0 });
+  const [preMintTotal, setPreMintTotal] = useState(null);
   const [pricesLoaded, setPricesLoaded] = useState(false);
 
   const packSize = nftPackSize ? Number(nftPackSize) : DEFAULT_PACK_SIZE;
+  const remainingSupply = totalMinted !== null && maxSupply !== null
+    ? Number(maxSupply) - Number(totalMinted)
+    : null;
+  const effectiveMax = remainingSupply !== null
+    ? Math.min(MAX_QUANTITY, remainingSupply)
+    : MAX_QUANTITY;
 
   useEffect(() => { setIsMounted(true); }, []);
 
@@ -50,6 +59,12 @@ export default function MintPageClient() {
       setPricesLoaded(true);
     }
   }, [nftSinglePrice, nftPackPrice]);
+
+  useEffect(() => {
+    if (effectiveMax < quantity) {
+      setQuantity(effectiveMax);
+    }
+  }, [effectiveMax, quantity]);
 
   useEffect(() => {
     setUnlocked(checkAndPersistFlag("mint", searchParams));
@@ -77,6 +92,9 @@ export default function MintPageClient() {
     setTxHash(null);
 
     try {
+      const mintedBefore = Number(totalMinted ?? 0);
+      setPreMintTotal(mintedBefore);
+
       const size = nftPackSize ? Number(nftPackSize) : DEFAULT_PACK_SIZE;
       const packCount = Math.floor(quantity / size);
       const singleCount = quantity % size;
@@ -123,7 +141,7 @@ export default function MintPageClient() {
       }
       setTxState("error");
     }
-  }, [account, provider, quantity, approveToken, mintOneNft, mintNftPacks, calculateMintCost, totalTxCount, nftPackSize]);
+  }, [account, provider, quantity, approveToken, mintOneNft, mintNftPacks, calculateMintCost, totalTxCount, nftPackSize, totalMinted]);
 
   const reset = () => {
     setTxState("idle");
@@ -200,7 +218,7 @@ export default function MintPageClient() {
           </div>
 
           {txState === "success" ? (
-            <SuccessState nfts={nfts} onReset={reset} />
+            <SuccessState nfts={nfts} onReset={reset} preMintTotal={preMintTotal} nftContractAddress={DEFAULT_NFT_ADDRESS} />
           ) : (
             <div className="relative rounded-2xl border border-pink-500/30
               bg-black/60 backdrop-blur-xl
@@ -216,7 +234,7 @@ export default function MintPageClient() {
                 <input
                   type="range"
                   min={1}
-                  max={MAX_QUANTITY}
+                  max={effectiveMax}
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
                   className="range range-primary w-full"
@@ -224,15 +242,15 @@ export default function MintPageClient() {
                 />
                 <div className="flex justify-between text-xs text-purple-400/40 font-heading mt-1">
                   <span>1</span>
-                  <span>{MAX_QUANTITY}</span>
+                  <span>{effectiveMax}{remainingSupply !== null && remainingSupply < MAX_QUANTITY ? " (supply)" : ""}</span>
                 </div>
                 <input
                   type="number"
                   min={1}
-                  max={MAX_QUANTITY}
+                  max={effectiveMax}
                   value={quantity}
                   onChange={(e) => {
-                    const v = Math.min(MAX_QUANTITY, Math.max(1, Number(e.target.value) || 1));
+                    const v = Math.min(effectiveMax, Math.max(1, Number(e.target.value) || 1));
                     setQuantity(v);
                   }}
                   className="w-full mt-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2
@@ -242,6 +260,13 @@ export default function MintPageClient() {
                   disabled={txState === "approving" || txState === "minting"}
                 />
               </div>
+
+              {/* Supply warning */}
+              {remainingSupply !== null && remainingSupply < MAX_QUANTITY && (
+                <div className="mb-4 text-xs text-amber-400/80 font-heading text-center">
+                  Only {remainingSupply} NFT{remainingSupply !== 1 ? "s" : ""} remaining
+                </div>
+              )}
 
               {/* Price breakdown */}
               <div className="mb-6 space-y-2 text-sm">
@@ -409,7 +434,36 @@ function LockedState() {
   );
 }
 
-function SuccessState({ nfts, onReset }) {
+function SuccessState({ nfts, onReset, preMintTotal, nftContractAddress }) {
+  const [addingNfts, setAddingNfts] = useState(false);
+
+  const addNftsToMetaMask = useCallback(async () => {
+    if (!window.ethereum || preMintTotal === null) return;
+    setAddingNfts(true);
+    const quantity = nfts.length;
+      for (let i = 1; i <= quantity; i++) {
+        const tokenId = preMintTotal + i;
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          await window.ethereum.request({
+          method: "wallet_watchAsset",
+          params: {
+            type: "ERC721",
+            options: {
+              address: nftContractAddress,
+              tokenId: tokenId.toString(),
+            },
+          },
+        });
+      } catch (err) {
+        if (err.code !== 4001) {
+          console.error("Failed to add token", tokenId, err);
+        }
+      }
+    }
+    setAddingNfts(false);
+  }, [nfts.length, preMintTotal, nftContractAddress]);
+
   return (
     <div className="text-center">
       <div className="animate-float mb-4 text-7xl">🎉</div>
@@ -421,23 +475,34 @@ function SuccessState({ nfts, onReset }) {
       {nfts.length > 0 && (
         <div className="flex flex-wrap justify-center gap-3 mb-8">
           {nfts.slice(-12).reverse().map((nft, i) => (
-            <div key={i} className="w-20 h-20 rounded-xl overflow-hidden border border-pink-500/30
+            <div key={i} className="w-28 h-28 sm:w-36 sm:h-36 rounded-xl overflow-hidden border border-pink-500/30
               shadow-[0_0_15px_rgba(255,51,187,0.2)]"
               style={{ animation: `fadeInUp 0.3s ease-out ${i * 0.05}s both` }}>
-              <Image src={nft.image} alt={nft.name || "NFT"} width={80} height={80}
+              <Image src={nft.image} alt={nft.name || "NFT"} width={144} height={144}
                 className="w-full h-full object-cover" />
             </div>
           ))}
         </div>
       )}
 
-      <button onClick={onReset}
-        className="py-4 px-8 rounded-xl font-display text-xl tracking-wide
-          bg-gradient-to-r from-pink-600 to-purple-600
-          hover:from-pink-500 hover:to-purple-500
-          hover:shadow-[0_0_25px_rgba(255,51,187,0.5)] transition-all text-white">
-        Mint More
-      </button>
+      <div className="flex flex-col gap-3">
+        {preMintTotal !== null && (
+          <button onClick={addNftsToMetaMask} disabled={addingNfts}
+            className="w-full py-3 rounded-xl font-display text-lg tracking-wide
+              bg-white/5 border border-white/10 text-white hover:bg-white/10
+              disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+            {addingNfts ? "Adding..." : "Add NFTs to MetaMask"}
+          </button>
+        )}
+
+        <button onClick={onReset}
+          className="w-full py-4 rounded-xl font-display text-xl tracking-wide
+            bg-gradient-to-r from-pink-600 to-purple-600
+            hover:from-pink-500 hover:to-purple-500
+            hover:shadow-[0_0_25px_rgba(255,51,187,0.5)] transition-all text-white">
+          Mint More
+        </button>
+      </div>
 
       <style>{`
         @keyframes fadeInUp {
@@ -448,3 +513,4 @@ function SuccessState({ nfts, onReset }) {
     </div>
   );
 }
+
