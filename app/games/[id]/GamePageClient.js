@@ -8,7 +8,7 @@ import { useWallet } from "../../context/WalletContext";
 import GameHUD from "../../components/GameHUD";
 
 const MIN_NFTS_REQUIRED = 3;
-const ACQUIRE_NFTS_URL = "#"; // TODO: replace with actual URL
+const ACQUIRE_NFTS_URL = "/mint";
 
 function NotEnoughNFTs({ count }) {
   return (

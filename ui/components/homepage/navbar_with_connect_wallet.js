@@ -12,10 +12,12 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
   const { account, isConnecting, connectWallet, disconnectWallet, isPolygonNetwork, tokenBalance, tokenSymbol, isTokenBalanceLoading } = useWallet();
   const [isMounted, setIsMounted] = useState(false);
   const [swapUnlocked, setSwapUnlocked] = useState(false);
+  const [mintUnlocked, setMintUnlocked] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     setSwapUnlocked(isFlagUnlocked("swap"));
+    setMintUnlocked(isFlagUnlocked("mint"));
   }, []);
 
   const formatAddress = (address) => {
@@ -42,16 +44,15 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
 
   return (
     <div id="navbar-main" className="navbar absolute text-neutral-content">
-      <div className="navbar-start lg:w-20">
+      <div className="navbar-start">
         {show_logo && (
-          <Link href="/">
+          <Link href="/" className="hidden lg:block">
             <Image
               src="/logo.png"
               alt="corrupted pigs logo"
               height={70}
               width={88}
               priority
-              className="hidden lg:block"
             />
           </Link>
         )}
@@ -88,6 +89,13 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
               <li className="mt-2 px-2">
                 <Link href="/swap" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">
                   Swap
+                </Link>
+              </li>
+            )}
+            {isMounted && mintUnlocked && (
+              <li className="mt-2 px-2">
+                <Link href="/mint" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">
+                  Mint
                 </Link>
               </li>
             )}
@@ -135,6 +143,13 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
             <li>
               <Link href="/swap" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">
                 Swap
+              </Link>
+            </li>
+          )}
+          {isMounted && mintUnlocked && (
+            <li>
+              <Link href="/mint" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">
+                Mint
               </Link>
             </li>
           )}

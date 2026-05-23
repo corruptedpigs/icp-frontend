@@ -35,10 +35,26 @@ const POLYGON_AMOY_ID = 80002;
 const DEFAULT_TRACKED_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_TOKEN_ADDRESS || '0x1E60032C0b93b5A8A0F3eD485cb35DBfE86972a5';
 const DEFAULT_TRACKED_TOKEN_SYMBOL = process.env.NEXT_PUBLIC_TRACKED_TOKEN_SYMBOL || 'TOKEN';
 const DEFAULT_TRACKED_TOKEN_DECIMALS = Number(process.env.NEXT_PUBLIC_TRACKED_TOKEN_DECIMALS || 18);
+const DEFAULT_NFT_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_NFT_ADDRESS || '0xc03B2ed81Cfce282D5cd921D429262f7cca3651f';
+
 const ERC20_ABI = [
-  'function balanceOf(address owner) view returns (uint256)',
+  'function balanceOf(address) view returns (uint256)',
   'function decimals() view returns (uint8)',
-  'function symbol() view returns (string)'
+  'function symbol() view returns (string)',
+  'function approve(address,uint256) returns (bool)',
+  'function allowance(address,address) view returns (uint256)'
+];
+
+const NFT_ABI = [
+  'function mintOne()',
+  'function mintPacks(uint256)',
+  'function name() view returns (string)',
+  'function saleActive() view returns (bool)',
+  'function ownerOf(uint256) view returns (address)',
+  'function unityPrice() view returns (uint256)',
+  'function packPrice() view returns (uint256)',
+  'function PACK_SIZE() view returns (uint256)',
+  'function totalMinted() view returns (uint256)'
 ];
 
 export function WalletProvider({ children }) {
@@ -265,6 +281,70 @@ export function WalletProvider({ children }) {
     refreshTrackedTokenBalance(account, provider);
   }, [account, provider, chainId, isPolygonNetwork, refreshTrackedTokenBalance]);
 
+  // ── NFT Minting ──────────────────────────────────────────────
+
+  const [nftSinglePrice, setNftSinglePrice] = useState(null);
+  const [nftPackPrice, setNftPackPrice] = useState(null);
+  const [nftPackSize, setNftPackSize] = useState(null);
+  const [saleActive, setSaleActive] = useState(null);
+
+  const refreshNftPrices = useCallback(async () => {
+    if (!provider || !account || !isPolygonNetwork()) return;
+    const nftContract = new Contract(DEFAULT_NFT_ADDRESS, NFT_ABI, provider);
+
+    try {
+      const [active, singlePrice, packPrice, packSize] = await Promise.all([
+        nftContract.saleActive(),
+        nftContract.unityPrice(),
+        nftContract.packPrice(),
+        nftContract.PACK_SIZE()
+      ]);
+      setSaleActive(active);
+      setNftSinglePrice(singlePrice);
+      setNftPackPrice(packPrice);
+      setNftPackSize(packSize);
+    } catch (error) {
+      console.error('Error fetching NFT data:', error);
+    }
+  }, [provider, account, isPolygonNetwork]);
+
+  const approveToken = useCallback(async (spender, amount) => {
+    if (!provider || !account) throw new Error('Wallet not connected');
+    const signer = await provider.getSigner();
+    const tokenContract = new Contract(trackedTokenAddress, ERC20_ABI, signer);
+    const tx = await tokenContract.approve(spender, amount);
+    return tx;
+  }, [provider, account, trackedTokenAddress]);
+
+  const mintOneNft = useCallback(async () => {
+    if (!provider || !account) throw new Error('Wallet not connected');
+    const signer = await provider.getSigner();
+    const nftContract = new Contract(DEFAULT_NFT_ADDRESS, NFT_ABI, signer);
+    const tx = await nftContract.mintOne();
+    return tx;
+  }, [provider, account]);
+
+  const mintNftPacks = useCallback(async (packs) => {
+    if (!provider || !account) throw new Error('Wallet not connected');
+    const signer = await provider.getSigner();
+    const nftContract = new Contract(DEFAULT_NFT_ADDRESS, NFT_ABI, signer);
+    const tx = await nftContract.mintPacks(packs);
+    return tx;
+  }, [provider, account]);
+
+  const calculateMintCost = useCallback((packCount, singleCount) => {
+    let total = BigInt(0);
+    if (packCount > 0) {
+      if (!nftPackPrice) throw new Error('Pack price not available');
+      total += nftPackPrice * BigInt(packCount);
+    }
+    if (singleCount > 0) {
+      if (!nftSinglePrice) throw new Error('Single mint price not available');
+      total += nftSinglePrice * BigInt(singleCount);
+    }
+    return total;
+  }, [nftSinglePrice, nftPackPrice]);
+
   const switchToPolygon = async () => {
     if (!window.ethereum) return;
 
@@ -312,7 +392,19 @@ export function WalletProvider({ children }) {
     isPolygonNetwork,
     setTrackedToken,
     refreshTrackedTokenBalance,
-    addTrackedTokenToWallet
+    addTrackedTokenToWallet,
+
+    // NFT minting
+    nftSinglePrice,
+    nftPackPrice,
+    nftPackSize,
+    saleActive,
+    refreshNftPrices,
+    approveToken,
+    mintOneNft,
+    mintNftPacks,
+    calculateMintCost,
+    DEFAULT_NFT_ADDRESS
   };
 
   return (
