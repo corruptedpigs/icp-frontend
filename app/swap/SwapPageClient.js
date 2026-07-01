@@ -95,7 +95,7 @@ export default function SwapPageClient() {
                 SWAP
               </h1>
               <p className="text-purple-300/60 font-heading text-sm uppercase tracking-widest">
-                Get $COINK on Polygon
+                Get ${process.env.NEXT_PUBLIC_TRACKED_TOKEN_SYMBOL || "COINK"} on Polygon
               </p>
             </div>
 

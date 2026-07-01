@@ -30,9 +30,6 @@ const NewNavbar = () => {
               {item}
             </button>
           ))}
-          <Link href="/swap" className="text-sm font-medium text-primary hover:text-primary/80 transition-colors font-heading">
-            Swap
-          </Link>
           <a href="//discord.gg/mX4hDzyYPT" target="_blank" rel="noopener noreferrer" className="px-5 py-2 rounded-lg bg-secondary text-secondary-foreground font-semibold text-sm hover:opacity-90 transition-opacity">
             Join Community
           </a>
