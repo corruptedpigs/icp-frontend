@@ -76,14 +76,14 @@ const HeroSection = () => {
             </div>
 
             <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
-              An NFT-based social impact game that blends fun, strategy, and purpose. Collect unique pig cards, earn <span className="text-accent font-bold">$COINK</span> memecoins, and burn NFTs to unlock rewards — all while contributing to meaningful social causes.
+              An NFT-based social impact game that blends fun, strategy, and purpose. Collect unique pig cards, earn <span className="text-accent font-bold">$COINK</span> Social Token, and burn NFTs to unlock rewards — all while contributing to meaningful social causes.
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <a href="/games" className="px-8 py-3 rounded-lg bg-primary text-primary-foreground font-heading text-sm hover:opacity-90 transition-opacity">
                 PLAY NOW
               </a>
               <a href="#tokenomics" className="px-8 py-3 rounded-lg border-2 border-accent text-accent font-heading text-sm hover:bg-accent/10 transition-colors">
-                $COINK TOKEN
+                $COINK SOCIAL TOKEN
               </a>
             </div>
 

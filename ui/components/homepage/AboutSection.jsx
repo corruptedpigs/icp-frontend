@@ -4,10 +4,10 @@ const AboutSection = () => {
   const features = [
     { icon: "🎴", title: "NFT Cards", desc: "Collect unique pig cards with special abilities and Burn Power" },
     { icon: "🔥", title: "Burn Mechanic", desc: "Burn NFTs to double Burn Power in other cards" },
-    { icon: "💰", title: "$COINK Memecoin", desc: "Earn real cryptocurrency through gameplay" },
+    { icon: "💰", title: "$COINK Social Token", desc: "Earn real cryptocurrency through gameplay" },
     { icon: "🤝", title: "Social Impact", desc: "Every transaction supports charitable causes" },
     { icon: "🔗", title: "Multichain", desc: "Solana, BTC Ordinals, and Polygon NFT support" },
-    { icon: "🎰", title: "Casino-Style", desc: "Strategic card games with real stakes" },
+    { icon: "🪙", title: "Probabilistic reward system", desc: "Strategic card games with real stakes" },
   ];
 
   return (

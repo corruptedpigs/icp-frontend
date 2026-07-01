@@ -29,13 +29,9 @@ const TokenomicsSection = () => {
           <img src="/coin.png" alt="$COINK" loading="lazy" className="w-20 h-20 animate-float" />
           <div>
             <h2 className="font-display text-4xl md:text-5xl text-accent text-glow-gold">$COINK</h2>
-            <p className="font-heading text-lg text-foreground">MEMECOIN</p>
+            <p className="font-heading text-lg text-foreground">Social Token</p>
           </div>
         </div>
-        
-        <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-6 text-sm leading-relaxed">
-          Memecoins represent 2.24% of the total cryptocurrency market cap, projected to grow at a <span className="text-primary font-bold">CAGR of 28.2%</span> from 2023 to 2030, potentially reaching a market value of $337 billion.
-        </p>
 
         <div className="grid lg:grid-cols-2 gap-12 items-start mt-12">
           <div className="glass-card p-8">
