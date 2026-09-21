@@ -1,0 +1,125 @@
+{
+  "hero": {
+    "srTitle": "CPigs \u2014 S\u00e1tira, Jogos & Tecnologia Contra a Corrup\u00e7\u00e3o",
+    "spinningText": "Impacto Social \u00b7 Cartas Colecion\u00e1veis",
+    "description": "Um projeto art\u00edstico e educativo que utiliza s\u00e1tira, jogos e cartas colecion\u00e1veis para tornar a corrup\u00e7\u00e3o mais f\u00e1cil de compreender, questionar e discutir. Pegamos em assuntos s\u00e9rios e abordamo-los de outra forma.",
+    "playNow": "JOGAR AGORA",
+    "discoverHow": "DESCOBRE COMO",
+    "tags": ["S\u00e1tira", "Impacto Social", "Cartas Colecion\u00e1veis"]
+  },
+  "nav": {
+    "games": "Jogos",
+    "goodDeeds": "Boas A\u00e7\u00f5es",
+    "tokenomics": "Tokenomics",
+    "community": "Comunidade",
+    "backers": "Apoiantes",
+    "joinCommunity": "Juntar \u00e0 Comunidade",
+    "swap": "Trocar"
+  },
+  "games": {
+    "title": "N\u00e3o Te Dizemos O Que Pensar.",
+    "titleHighlight": "Damos-te Raz\u00f5es Para Questionar.",
+    "description": "O CPigs cria um espa\u00e7o descontra\u00eddo onde \u00e9 poss\u00edvel reconhecer comportamentos corruptos sem dedos apontados. Jogando, cada pessoa percebe como pequenas decis\u00f5es \u2014 atalhos, favores, sil\u00eancio \u2014 se transformam em sistemas inteiros.",
+    "description2": "N\u00e3o damos respostas. Damos situa\u00e7\u00f5es, escolhas e consequ\u00eancias. O resto \u00e9 uma conversa que fica contigo depois do jogo acabar.",
+    "game1": {
+      "tag": "Dedu\u00e7\u00e3o & Consequ\u00eancia",
+      "title": "A Culpa N\u00e3o \u00e9 dos Porcos",
+      "description": "Um jogo de dedu\u00e7\u00e3o estrat\u00e9gica: descobre quem move os cordelinhos, mede o custo de cada escolha e vive as consequ\u00eancias das tuas decis\u00f5es.",
+      "cta": "Jogar Agora"
+    },
+    "game2": {
+      "tag": "Card Clash \u00b7 Burn Power",
+      "title": "Jogo da For\u00e7a",
+      "description": "Confronto de cartas baseado no Burn Power. Quanto mais forte a tua m\u00e3o, maior o impacto \u2014 dentro e fora do jogo.",
+      "cta": "Entrar no Jogo da For\u00e7a"
+    },
+    "moreThanGame": {
+      "title": "Mais do que um Jogo",
+      "description": "Por tr\u00e1s das cartas est\u00e1 uma reflex\u00e3o sobre poder, gan\u00e2ncia e a facilidade com que normalizamos o que devia chocar-nos.",
+      "quote": "E se a culpa n\u00e3o for dos porcos? Ser\u00e1 que cada um de n\u00f3s tem um porquinho corrupto dentro de si pr\u00f3prio?"
+    }
+  },
+  "tokenomics": {
+    "title": "Social Token",
+    "description": "E se ajudar for mais descontra\u00eddo e divertido...? Os Coinks s\u00e3o a energia da comunidade CPigs. Quando queimas uma carta, ela sai de circula\u00e7\u00e3o e os Coinks correspondentes seguem diretamente para uma associa\u00e7\u00e3o parceira escolhida pela comunidade. Menos burocracia, mais impacto \u2014 e uma boa dose de humor pelo caminho.",
+    "distribution": "DISTRIBUI\u00c7\u00c3O TOKENOMICS",
+    "distributionNote": "Cada Coink tem destino definido. A maior fatia volta para quem age: comunidade e associa\u00e7\u00f5es.",
+    "categories": {
+      "social": "Associa\u00e7\u00f5es Sociais",
+      "community": "Comunidade & Recompensas",
+      "dev": "Desenvolvimento & Jogos",
+      "education": "Educa\u00e7\u00e3o & Conte\u00fados",
+      "ops": "Opera\u00e7\u00e3o"
+    },
+    "notes": {
+      "social": "Enviado por burn direto",
+      "community": "Jogos, desafios, boas a\u00e7\u00f5es",
+      "dev": "Novas cartas e mec\u00e2nicas",
+      "education": "Manual, v\u00eddeos, workshops",
+      "ops": "Custos de manuten\u00e7\u00e3o"
+    },
+    "burn": {
+      "title": "SIMULADOR DE BURN",
+      "cardsToBurn": "Cartas a queimar",
+      "associationToSupport": "Associa\u00e7\u00e3o a apoiar",
+      "coinksGenerated": "Coinks gerados",
+      "burnAndSend": "Queimar e enviar",
+      "disclaimer": "Simula\u00e7\u00e3o demonstrativa. Nenhuma carta \u00e9 queimada aqui."
+    },
+    "associations": ["Banco Alimentar", "Refood", "Associa\u00e7\u00e3o Salvador", "SOS Animal"]
+  },
+  "community": {
+    "title": "COMUNIDADE",
+    "subtitle": "ENGAJAMENTO & IMPACTO",
+    "quote": "Nem por um Cabelo do Meu Queixo-Chin-Chin",
+    "items": {
+      "guerrilla": {
+        "title": "Guerilha Marketing \u2014 Queima o Papel",
+        "desc": "A\u00e7\u00f5es de rua filmadas: papel a arder, perguntas a ficar. Das campanhas flash mob \u00e0s feiras de gaming, interven\u00e7\u00f5es no mundo real fazem parte da marca desde o primeiro dia."
+      },
+      "spaces": {
+        "title": "X Spaces \u2014 Semana de Boas A\u00e7\u00f5es",
+        "desc": "Todos os domingos, uma conversa aberta sobre a semana de boas a\u00e7\u00f5es. A corrup\u00e7\u00e3o a ser dissectada, problemas reais expostos e desafios sist\u00e9micos questionados."
+      },
+      "journalism": {
+        "title": "Jornalismo de Solu\u00e7\u00f5es",
+        "desc": "Entrevistas com quem procura respostas em vez de culpados. Reportagens sobre respostas a problemas sociais ancoradas em evid\u00eancias cred\u00edveis."
+      }
+    },
+    "goodDeeds": {
+      "title": "Mural das Boas A\u00e7\u00f5es",
+      "description": "Escreve a tua boa a\u00e7\u00e3o do dia. L\u00ea as dos outros. Deixa-te contagiar."
+    },
+    "followUs": "Seguir @CorruptedPigs"
+  },
+  "backers": {
+    "title": "ENTRA NO MUNDO CPIGS",
+    "subtitle": "Para jogares \u201cA Culpa N\u00e3o \u00e9 dos Porcos\u201d precisas de 1 Carta. Para o \u201cJogo da For\u00e7a\u201d precisar\u00e3s de 3 Cartas.",
+    "description": "As cartas d\u00e3o acesso aos jogos e alimentam o burn que financia associa\u00e7\u00f5es.",
+    "popular": "POPULAR",
+    "getStarted": "COME\u00c7AR",
+    "tiers": {
+      "piglet": {
+        "perks": ["1 pack de 5 NFTs", "1.000.000 COINKs"]
+      },
+      "pig": {
+        "perks": ["3 packs de 15 NFTs", "10.000.000 COINKs"]
+      },
+      "hog": {
+        "perks": ["6 packs de 30 NFTs", "20.000.000 COINKs", "Merchandising b\u00e1sico"]
+      },
+      "boar": {
+        "perks": ["20 packs de 100 NFTs", "50.000.000 COINKs", "Merchandising premium", "Acesso VIP (Very Important Pig)"]
+      },
+      "orc": {
+        "perks": ["30 packs de 150 NFTs", "100.000.000 COINKs", "Merchandising premium", "Acesso VIP (Very Important Pig)", "NFT f\u00edsico com ouro"]
+      },
+      "cpig": {
+        "perks": ["Entrada por caso / convite apenas", "Junta-te aos co-fundadores na constru\u00e7\u00e3o da marca"]
+      }
+    }
+  },
+  "footer": {
+    "copyright": "\u00a9 {year} CPigs\u2122. Todos os direitos reservados."
+  }
+}
