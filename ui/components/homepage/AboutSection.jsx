@@ -42,23 +42,23 @@ const AboutSection = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-8 mb-16">
-          {games.map((game) => (
+        <div className="space-y-8 mb-16">
+          {games.map((game, i) => (
             <div
               key={game.title}
-              className="glass-card overflow-hidden group hover:border-primary/60 transition-all duration-300"
+              className="glass-card overflow-hidden group hover:border-primary/60 transition-all duration-300 flex flex-col md:flex-row"
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className={`relative w-full md:w-2/5 h-56 md:h-auto overflow-hidden flex-shrink-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
                 <Image
                   src={game.image}
                   alt={game.title}
                   fill
                   className="object-contain group-hover:scale-105 transition-transform duration-500 p-4"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) 100vw, 40vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent md:bg-gradient-to-r md:from-transparent md:to-card md:via-transparent" />
               </div>
-              <div className="p-6">
+              <div className="p-6 md:p-8 flex flex-col justify-center flex-1">
                 <p className="text-xs text-accent font-heading mb-2 uppercase tracking-wider">
                   {game.tag}
                 </p>
@@ -72,7 +72,7 @@ const AboutSection = () => {
                   href={game.cta.href}
                   target={game.cta.href.startsWith("http") ? "_blank" : undefined}
                   rel={game.cta.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-heading text-sm hover:opacity-90 transition-opacity"
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-heading text-sm hover:opacity-90 transition-opacity self-start"
                 >
                   {game.cta.label}
                 </a>
@@ -95,12 +95,12 @@ const AboutSection = () => {
           </div>
         </div>
 
-        <div className="relative mt-16 rounded-2xl overflow-hidden max-w-4xl mx-auto">
+        <div className="relative mt-16 rounded-2xl overflow-hidden max-w-sm mx-auto">
           <Image
             src="/pigres-demoniacos.png"
             alt="Corrupted Pigs surrounded by flaming boars"
-            width={1200}
-            height={800}
+            width={400}
+            height={267}
             className="w-full h-auto object-cover"
             loading="lazy"
           />
