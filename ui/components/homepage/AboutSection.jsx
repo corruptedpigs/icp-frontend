@@ -95,9 +95,9 @@ const AboutSection = () => {
             <Image
               src="/pigres-demoniacos.png"
               alt="Corrupted Pigs surrounded by flaming boars"
-              fill
               className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 50vw"
+              height={350}
+              width={250}
               loading="lazy"
             />
           </div>
