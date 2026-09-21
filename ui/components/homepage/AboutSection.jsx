@@ -48,13 +48,13 @@ const AboutSection = () => {
               key={game.title}
               className="glass-card overflow-hidden group hover:border-primary/60 transition-all duration-300 flex flex-col md:flex-row"
             >
-              <div className={`relative w-full md:w-2/5 h-56 md:h-auto overflow-hidden flex-shrink-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
+              <div className={`relative w-full md:w-2/5 lg:w-1/2 h-56 md:h-auto overflow-hidden flex-shrink-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
                 <Image
                   src={game.image}
                   alt={game.title}
                   fill
                   className="object-contain group-hover:scale-105 transition-transform duration-500 p-4"
-                  sizes="(max-width: 768px) 100vw, 40vw"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 50vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent md:bg-gradient-to-r md:from-transparent md:to-card md:via-transparent" />
               </div>
@@ -81,27 +81,26 @@ const AboutSection = () => {
           ))}
         </div>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="glass-card p-8 text-center">
+        <div className="glass-card overflow-hidden flex flex-col md:flex-row">
+          <div className="p-8 flex flex-col justify-center flex-1">
             <h3 className="font-display text-xl text-foreground mb-4">{t("games.moreThanGame.title")}</h3>
-            <p className="text-muted-foreground leading-relaxed mb-6">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
               {t("games.moreThanGame.description")}
             </p>
             <blockquote className="text-lg italic text-accent font-medium">
               &ldquo;{t("games.moreThanGame.quote")}&rdquo;
             </blockquote>
           </div>
-        </div>
-
-        <div className="glass-card p-8 max-w-sm mx-auto text-center">
-          <Image
-            src="/pigres-demoniacos.png"
-            alt="Corrupted Pigs surrounded by flaming boars"
-            width={400}
-            height={267}
-            className="w-full h-auto object-cover rounded-lg mb-4"
-            loading="lazy"
-          />
+          <div className="relative w-full md:w-2/5 lg:w-1/2 h-56 md:h-auto overflow-hidden flex-shrink-0">
+            <Image
+              src="/pigres-demoniacos.png"
+              alt="Corrupted Pigs surrounded by flaming boars"
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 50vw"
+              loading="lazy"
+            />
+          </div>
         </div>
       </div>
     </section>
