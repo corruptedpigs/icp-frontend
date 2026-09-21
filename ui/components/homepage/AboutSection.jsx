@@ -81,26 +81,14 @@ const AboutSection = () => {
           ))}
         </div>
 
-        <div className="glass-card overflow-hidden flex flex-col md:flex-row">
-          <div className="p-8 flex flex-col justify-center flex-1">
-            <h3 className="font-display text-xl text-foreground mb-4">{t("games.moreThanGame.title")}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              {t("games.moreThanGame.description")}
-            </p>
-            <blockquote className="text-lg italic text-accent font-medium">
-              &ldquo;{t("games.moreThanGame.quote")}&rdquo;
-            </blockquote>
-          </div>
-          <div className="relative w-full md:w-2/5 lg:w-1/2 h-56 md:h-auto overflow-hidden flex-shrink-0">
-            <Image
-              src="/pigres-demoniacos.png"
-              alt="Corrupted Pigs surrounded by flaming boars"
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(max-width: 768px) 100vw, (max-width: 1024px) 40vw, 50vw"
-              loading="lazy"
-            />
-          </div>
+        <div className="glass-card p-8 text-center max-w-3xl mx-auto">
+          <h3 className="font-display text-xl text-foreground mb-4">{t("games.moreThanGame.title")}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+            {t("games.moreThanGame.description")}
+          </p>
+          <blockquote className="text-lg italic text-accent font-medium">
+            &ldquo;{t("games.moreThanGame.quote")}&rdquo;
+          </blockquote>
         </div>
       </div>
     </section>
