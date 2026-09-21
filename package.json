@@ -52,5 +52,9 @@
     "use-sound": "^4.0.1",
     "util": "^0.12.5",
     "uuid": "^9.0.1"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.1.0",
+    "utf-8-validate": "^5.0.10"
   }
 }

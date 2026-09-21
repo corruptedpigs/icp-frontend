@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 import { config } from "react-spring";
+import { useTranslations } from "../../../app/components/LanguageContext";
 
 const Carousel = dynamic(
   () => import('react-spring-3d-carousel'),
@@ -12,6 +13,7 @@ const Carousel = dynamic(
 );
 
 const HeroSection = () => {
+  const { t, ready } = useTranslations();
   const [activeSlide, setActiveSlide] = useState(0);
 
   const slides = [
@@ -37,6 +39,11 @@ const HeroSection = () => {
     return () => clearInterval(intervalId);
   }, [slides.length]);
 
+  if (!ready) return null;
+
+  const spinningText = t("hero.spinningText");
+  const tags = t("hero.tags");
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <img src="/hero-bg.jpg" alt="" className="absolute inset-0 w-full h-full object-cover" width={1920} height={1080} />
@@ -46,16 +53,14 @@ const HeroSection = () => {
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="text-center lg:text-left">
             <h1 className="sr-only">
-              CPigs — Satire, Games &amp; Technology Against Corruption
+              {t("hero.srTitle")}
             </h1>
 
             <div className="flex justify-center lg:justify-start mb-8">
               <div className="relative w-[300px] h-[300px]">
-                {/* Logo in center */}
                 <div className="absolute inset-0 flex items-center justify-center z-10">
                   <Image src="/logo.png" alt="Corrupted Pigs Logo" width={160} height={160} className="object-contain drop-shadow-[0_0_20px_rgba(255,51,187,0.4)]" />
                 </div>
-                {/* Spinning Text */}
                 <div className="absolute inset-0 animate-[spin_25s_linear_infinite_reverse]">
                   <svg viewBox="0 0 200 200" className="w-full h-full overflow-visible">
                     <defs>
@@ -66,8 +71,7 @@ const HeroSection = () => {
                     </defs>
                     <text className="font-display text-[15px] fill-white" style={{ filter: "drop-shadow(0 0 6px rgba(255,51,187,0.8))", textTransform: "uppercase" }}>
                       <textPath href="#circlePathOuter" startOffset="0%" textLength="560" lengthAdjust="spacing">
-                        • Social Impact • Collectible Cards
-                        • Social Impact • Collectible Cards
+                        {`• ${spinningText} • ${spinningText}`}
                       </textPath>
                     </text>
                   </svg>
@@ -76,19 +80,19 @@ const HeroSection = () => {
             </div>
 
             <p className="text-muted-foreground text-base md:text-lg max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
-              An artistic and educational project that uses satire, games, and collectible cards to make corruption easier to understand, question, and discuss. We take serious subjects and approach them differently.
+              {t("hero.description")}
             </p>
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
               <a href="/games" className="px-8 py-3 rounded-lg bg-primary text-primary-foreground font-heading text-sm hover:opacity-90 transition-opacity">
-                PLAY NOW
+                {t("hero.playNow")}
               </a>
               <a href="#games" className="px-8 py-3 rounded-lg border-2 border-accent text-accent font-heading text-sm hover:bg-accent/10 transition-colors">
-                DISCOVER HOW
+                {t("hero.discoverHow")}
               </a>
             </div>
 
             <div className="flex gap-6 mt-10 justify-center lg:justify-start">
-              {["Satire", "Social Impact", "Collectible Cards"].map((tag) => (
+              {(Array.isArray(tags) ? tags : []).map((tag) => (
                 <span key={tag} className="text-xs font-medium text-muted-foreground border border-border/60 rounded-full px-4 py-1.5">
                   {tag}
                 </span>
