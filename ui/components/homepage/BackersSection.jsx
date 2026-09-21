@@ -77,10 +77,14 @@ const BackersSection = () => {
     <section id="backers" className="py-24 section-gradient">
       <div className="container mx-auto px-4">
         <h2 className="font-display text-4xl md:text-5xl text-center text-accent text-glow-gold mb-2">
-          BECOME A BACKER
+          ENTER THE CPIGS WORLD
         </h2>
+        <p className="text-center text-muted-foreground mb-6 max-w-2xl mx-auto text-sm">
+          To play &ldquo;Not the Pigs&apos; Fault&rdquo; you need 1 Card.
+          For the &ldquo;Force Game&rdquo; you&apos;ll need 3 Cards.
+        </p>
         <p className="text-center text-muted-foreground mb-16 max-w-xl mx-auto text-sm">
-          Join the revolution. Choose your tier and help transform corruption into transparency.
+          Cards give access to games and fuel the burn that funds associations.
         </p>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

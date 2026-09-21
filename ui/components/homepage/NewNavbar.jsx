@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-const navItems = ["About", "Game Modes", "Tokenomics", "Community", "Backers"];
+const navItems = ["Games", "Good Deeds", "Tokenomics", "Community", "Backers"];
 
 const NewNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -16,7 +16,9 @@ const NewNavbar = () => {
   }, []);
 
   const scrollTo = (id) => {
-    document.getElementById(id.toLowerCase().replace(" ", "-"))?.scrollIntoView({ behavior: "smooth" });
+    const sectionMap = { "Good Deeds": "good-deeds", "Tokenomics": "tokenomics" };
+    const targetId = sectionMap[id] || id.toLowerCase().replace(" ", "-");
+    document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
     setMobileOpen(false);
   };
 

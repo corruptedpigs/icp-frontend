@@ -9,7 +9,7 @@
  *
  * Convention:
  *   - URL param name  = the flag name          (e.g. "swap")
- *   - URL param value = "unlocked" to enable   (?swap=unlocked)
+ *   - URL param value = "berardo" to enable   (?swap=berardo)
  *                       "locked"   to disable  (?swap=locked)
  *   - localStorage key = "<flag>_unlocked"     ("swap_unlocked")
  *
@@ -24,7 +24,7 @@
  *   const enabled = isFlagUnlocked("swap");
  */
 
-const UNLOCK_VALUE = "unlocked";
+const UNLOCK_VALUE = "berardo";
 const LOCK_VALUE = "locked";
 
 function storageKey(flag) {

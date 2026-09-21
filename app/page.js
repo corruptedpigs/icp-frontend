@@ -4,7 +4,6 @@
 
 import HeroSection from "../ui/components/homepage/HeroSection"
 import AboutSection from "../ui/components/homepage/AboutSection"
-import GameModesSection from "../ui/components/homepage/GameModesSection"
 import TokenomicsSection from "../ui/components/homepage/TokenomicsSection"
 import CommunitySection from "../ui/components/homepage/CommunitySection"
 import BackersSection from "../ui/components/homepage/BackersSection"
@@ -21,7 +20,6 @@ function HomePage() {
         <NewNavbar />
         <HeroSection />
         <AboutSection />
-        <GameModesSection />
         <TokenomicsSection />
         <CommunitySection />
         <BackersSection />

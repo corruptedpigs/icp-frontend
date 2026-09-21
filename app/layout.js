@@ -8,15 +8,15 @@ const baseUrl = process.env.HOST_URL
   ? `https://${process.env.HOST_URL}`
   : `http://localhost:${process.env.PORT || 3000}`;
 
-const title = "CorruptedPigs - NFT Collection & Social Game";
-const description = "Welcome to the official home of Corrupted Pigs. Join us to explore our unique NFT collection and engaging social game. Log in to access exclusive perks, participate in the burning pigs game, and discover the benefits of holding our NFTs and $COINK tokens.";
+const title = "CPigs — Satire, Games & Technology Against Corruption";
+const description = "An artistic and educational project that uses satire, games, and collectible cards to make corruption easier to understand, question, and discuss.";
 const imageUrl = `${baseUrl}/image-twitter-CP-launching-soon.jpg`;
 const logoUrl = `${baseUrl}/images/favicon.png`
 
 export const metadata = {
   title: title,
   description: description,
-  keywords: "NFT game, social good, donate to institutions, crowdfunding, animal farm, fight corruption",
+  keywords: "satire, social impact, collectible cards, corruption, education, games, burn to donate",
   openGraph: {
     description: description,
     logo: logoUrl,

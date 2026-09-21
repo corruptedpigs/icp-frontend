@@ -1,55 +1,109 @@
 "use client";
 
+import Image from "next/image";
+
+const games = [
+  {
+    tag: "Deduction & Consequence",
+    title: "Not the Pigs' Fault",
+    description:
+      "A strategic deduction game: discover who pulls the strings, measure the cost of each choice, and face the consequences of your decisions.",
+    image: "/not-the-pigs-fault.png",
+    cta: { label: "Play Now", href: "https://pigs-blame-game.base44.app/" },
+  },
+  {
+    tag: "Card Clash · Burn Power",
+    title: "Force Game",
+    description:
+      "Card confrontation based on Burn Power. The stronger your hand, the greater the impact — inside and outside the game.",
+    image: "/cpigs-card-back.png",
+    cta: { label: "Enter the Force Game", href: "/games" },
+  },
+];
+
 const AboutSection = () => {
-  const features = [
-    { icon: "🎴", title: "NFT Cards", desc: "Collect unique pig cards with special abilities and Burn Power" },
-    { icon: "🔥", title: "Burn Mechanic", desc: "Burn NFTs to double Burn Power in other cards" },
-    { icon: "💰", title: "$COINK Social Token", desc: "Earn real cryptocurrency through gameplay" },
-    { icon: "🤝", title: "Social Impact", desc: "Every transaction supports charitable causes" },
-    { icon: "🔗", title: "Multichain", desc: "Solana, BTC Ordinals, and Polygon NFT support" },
-    { icon: "🪙", title: "Probabilistic reward system", desc: "Strategic card games with real stakes" },
-  ];
-
   return (
-    <section id="about" className="py-24 section-gradient">
+    <section id="games" className="py-24 section-gradient">
       <div className="container mx-auto px-4">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div>
-            <h2 className="font-display text-4xl md:text-5xl text-primary text-glow-pink mb-2">
-              PLAY-TO-EARN
-            </h2>
-            <p className="font-heading text-xl text-accent mb-6">MEETS SOCIAL GOODS</p>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              For each corrupted pig NFT card players burn and for every in-game transaction, a percentage is dedicated to supporting various social causes and community-vetted charitable organizations.
-            </p>
-            <p className="text-foreground font-medium italic mb-8">
-              Yes, it is possible to transform corruption into transparency, earning money, and sharing it with the ones that also need it, <span className="text-primary font-bold">while playing a game!!!</span>
-            </p>
-            <div className="glass-card p-6">
-              <h3 className="font-heading text-sm text-accent mb-3">HOW TO START</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li>→ Connect your wallet</li>
-                <li>→ Own at least 3 NFT cards to play</li>
-                <li>→ Each card has a <span className="text-accent font-semibold">Burn Power</span></li>
-                <li>→ Burn cards to double power in others</li>
-                <li>→ Win opponents&apos; cards in game modes!</li>
-              </ul>
-            </div>
-          </div>
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <h2 className="font-display text-3xl md:text-4xl text-foreground mb-6 leading-tight">
+            We Don&apos;t Tell You What To Think.
+            <br />
+            <span className="text-primary">We Give You Reasons To Question.</span>
+          </h2>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            CPigs creates a relaxed space where it&apos;s possible to recognize corrupt
+            behavior without pointing fingers. Through play, each person understands how
+            small decisions — shortcuts, favors, silence — transform into entire systems.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            We don&apos;t give answers. We give situations, choices, and consequences. The
+            rest is a conversation that stays with you after the game ends.
+          </p>
+        </div>
 
-          <div className="relative">
-            <img src="/pig-suit.jpg" alt="Pig in a suit" loading="lazy" className="w-full max-w-md mx-auto rounded-2xl border-2 border-border/50 shadow-2xl" />
+        <div className="space-y-8 mb-16">
+          {games.map((game, i) => (
+            <div
+              key={game.title}
+              className="glass-card overflow-hidden group hover:border-primary/60 transition-all duration-300 flex flex-col md:flex-row"
+            >
+              <div className={`relative w-full md:w-2/5 h-56 md:h-auto overflow-hidden flex-shrink-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
+                <Image
+                  src={game.image}
+                  alt={game.title}
+                  fill
+                  className="object-contain group-hover:scale-105 transition-transform duration-500 p-4"
+                  sizes="(max-width: 768px) 100vw, 40vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-card to-transparent md:bg-gradient-to-r md:from-transparent md:to-card md:via-transparent" />
+              </div>
+              <div className="p-6 md:p-8 flex flex-col justify-center flex-1">
+                <p className="text-xs text-accent font-heading mb-2 uppercase tracking-wider">
+                  {game.tag}
+                </p>
+                <h3 className="font-display text-2xl text-foreground mb-3">
+                  {game.title}
+                </h3>
+                <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+                  {game.description}
+                </p>
+                <a
+                  href={game.cta.href}
+                  target={game.cta.href.startsWith("http") ? "_blank" : undefined}
+                  rel={game.cta.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-primary text-primary-foreground font-heading text-sm hover:opacity-90 transition-opacity self-start"
+                >
+                  {game.cta.label}
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="max-w-3xl mx-auto">
+          <div className="glass-card p-8 text-center">
+            <h3 className="font-display text-xl text-foreground mb-4">More Than a Game</h3>
+            <p className="text-muted-foreground leading-relaxed mb-6">
+              Behind the cards is a reflection on power, greed, and how easily we normalize
+              what should shock us.
+            </p>
+            <blockquote className="text-lg italic text-accent font-medium">
+              &ldquo;What if it&apos;s not the pigs&apos; fault? What if each of us has a
+              corrupt little pig inside?&rdquo;
+            </blockquote>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-20">
-          {features.map((f) => (
-            <div key={f.title} className="glass-card p-6 text-center hover:border-primary/50 transition-colors">
-              <span className="text-3xl mb-3 block">{f.icon}</span>
-              <h3 className="font-heading text-sm text-foreground mb-1">{f.title}</h3>
-              <p className="text-xs text-muted-foreground">{f.desc}</p>
-            </div>
-          ))}
+        <div className="relative mt-16 rounded-2xl overflow-hidden max-w-sm mx-auto">
+          <Image
+            src="/pigres-demoniacos.png"
+            alt="Corrupted Pigs surrounded by flaming boars"
+            width={400}
+            height={267}
+            className="w-full h-auto object-cover"
+            loading="lazy"
+          />
         </div>
       </div>
     </section>
