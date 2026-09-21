@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import { useTranslations } from "../../../app/components/LanguageContext";
 
 const icons = ["🔥", "𝕏", "📰"];
@@ -69,16 +68,6 @@ const CommunitySection = () => {
                 Tweets by @corruptedpigs
               </a>
             </div>
-          </div>
-          <div className="mt-6 rounded-2xl overflow-hidden">
-            <Image
-              src="/pigres-demoniacos.png"
-              alt="Corrupted Pigs surrounded by flaming boars"
-              width={800}
-              height={534}
-              className="w-full h-auto object-cover"
-              loading="lazy"
-            />
           </div>
         </div>
 
