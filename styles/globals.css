@@ -223,4 +223,5 @@ hr {
 :root {
   --shadow-gold: 0 0 20px rgba(255,194,45,0.15);
   --shadow-glow: 0 0 30px rgba(255,51,187,0.12);
+  --gradient-heat: linear-gradient(135deg, hsl(320 100% 60%), hsl(42 90% 55%));
 }
