@@ -84,8 +84,45 @@ h1, h2, h3 {
     @apply bg-card/60 backdrop-blur-md border border-border/50 rounded-xl;
   }
 
+  .glass-card-gold {
+    @apply bg-card/60 backdrop-blur-md border border-accent/30 rounded-xl;
+    box-shadow: 0 0 20px rgba(255,194,45,0.08);
+  }
+
+  .text-heat {
+    background: linear-gradient(135deg, hsl(320 100% 60%), hsl(42 90% 55%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
   .section-gradient {
     background: linear-gradient(180deg, hsl(var(--background)) 0%, hsl(270 45% 10%) 50%, hsl(var(--background)) 100%);
+  }
+
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    pointer-events: none;
+    background-image: radial-gradient(circle, currentColor 1px, transparent 1px);
+    background-size: 4px 4px;
+  }
+
+  .rise {
+    animation: rise 0.7s ease-out both;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -171,5 +208,19 @@ hr {
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes badge-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.badge-spin {
+  animation: badge-spin 18s linear infinite;
+}
+
+:root {
+  --shadow-gold: 0 0 20px rgba(255,194,45,0.15);
+  --shadow-glow: 0 0 30px rgba(255,51,187,0.12);
 }
