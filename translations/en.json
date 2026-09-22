@@ -1,125 +1,121 @@
 {
   "hero": {
     "srTitle": "CPigs — Satire, Games & Technology Against Corruption",
-    "spinningText": "Social Impact · Collectible Cards",
-    "description": "An artistic and educational project that uses satire, games, and collectible cards to make corruption easier to understand, question, and discuss. We take serious subjects and approach them differently.",
-    "playNow": "PLAY NOW",
-    "discoverHow": "DISCOVER HOW",
-    "tags": ["Satire", "Social Impact", "Collectible Cards"]
+    "kicker": "Satire · Games · Technology",
+    "headline": "CPigs is an artistic and educational project that uses satire, games, and technology to make corruption easier to understand, question, and discuss.",
+    "subtitle": "We take serious subjects and approach them differently.",
+    "scroll": "Discover how"
   },
   "nav": {
     "games": "Games",
-    "goodDeeds": "Good Deeds",
-    "tokenomics": "Tokenomics",
-    "community": "Community",
-    "backers": "Backers",
-    "joinCommunity": "Join Community",
-    "swap": "Swap"
+    "manual": "Good Deeds Manual",
+    "community": "Community & Chat",
+    "burn": "Burn & Coinks",
+    "media": "Media",
+    "enter": "Enter the World",
+    "soundOn": "Sound off",
+    "soundOff": "Sound on"
   },
+  "badge": "Social Impact · Collectible Cards · Social Impact · Collectible Cards",
   "games": {
-    "title": "We Don\u0027t Tell You What To Think.",
-    "titleHighlight": "We Give You Reasons To Question.",
-    "description": "CPigs creates a relaxed space where it\u0027s possible to recognize corrupt behavior without pointing fingers. Through play, each person understands how small decisions \u2014 shortcuts, favors, silence \u2014 transform into entire systems.",
-    "description2": "We don\u0027t give answers. We give situations, choices, and consequences. The rest is a conversation that stays with you after the game ends.",
-    "game1": {
+    "title": "We Don't Tell You What To Think. We Give You Reasons To Question.",
+    "intro": "CPigs creates a relaxed space where it's possible to recognize corrupt behavior without pointing fingers. Through play, each person understands how small decisions — shortcuts, favors, silence — transform into entire systems.",
+    "intro2": "We don't give answers. We give situations, choices, and consequences. The rest is a conversation that stays with you after the game ends.",
+    "card1": {
       "tag": "Deduction & Consequence",
-      "title": "Not the Pigs\u0027 Fault",
-      "description": "A strategic deduction game: discover who pulls the strings, measure the cost of each choice, and face the consequences of your decisions.",
+      "title": "Not the Pigs' Fault",
+      "text": "A strategic deduction game: discover who pulls the strings, measure the cost of each choice, and face the consequences of your decisions.",
       "cta": "Play Now"
     },
-    "game2": {
+    "card2": {
       "tag": "Card Clash · Burn Power",
       "title": "Force Game",
-      "description": "Card confrontation based on Burn Power. The stronger your hand, the greater the impact \u2014 inside and outside the game.",
+      "text": "Card confrontation based on Burn Power. The stronger your hand, the greater the impact — inside and outside the game.",
       "cta": "Enter the Force Game"
     },
-    "moreThanGame": {
-      "title": "More Than a Game",
-      "description": "Behind the cards is a reflection on power, greed, and how easily we normalize what should shock us.",
-      "quote": "What if it\u0027s not the pigs\u0027 fault? What if each of us has a corrupt little pig inside?"
-    }
+    "moreTitle": "More Than a Game",
+    "moreText": "Behind the cards is a reflection on power, greed, and how easily we normalize what should shock us.",
+    "moreQuote": "What if it's not the pigs' fault? What if each of us has a corrupt little pig inside?"
   },
-  "tokenomics": {
-    "title": "Social Token",
-    "description": "What if helping could be more relaxed and fun? Coinks are the energy of the CPigs community. When you burn a card, it leaves circulation and the corresponding Coinks go directly to a partner association chosen by the community. Less bureaucracy, more impact \u2014 and a good dose of humor along the way.",
-    "distribution": "TOKENOMICS DISTRIBUTION",
-    "distributionNote": "Each Coink has a defined destination. The largest share goes back to those who act: community and associations.",
-    "categories": {
-      "social": "Social Associations",
-      "community": "Community & Rewards",
-      "dev": "Development & Games",
-      "education": "Education & Content",
-      "ops": "Operations"
-    },
-    "notes": {
-      "social": "Sent via direct burn",
-      "community": "Games, challenges, good deeds",
-      "dev": "New cards and mechanics",
-      "education": "Manual, videos, workshops",
-      "ops": "Maintenance costs"
-    },
-    "burn": {
-      "title": "BURN SIMULATOR",
-      "cardsToBurn": "Cards to burn",
-      "associationToSupport": "Association to support",
-      "coinksGenerated": "Coinks generated",
-      "burnAndSend": "Burn & Send",
-      "disclaimer": "Demo simulation. No cards are burned here."
-    },
+  "manual": {
+    "title": "From the Game to Real Life",
+    "subtitle": "The game's questions only matter if they leave the screen. That's why the Manual exists.",
+    "bookTitle": "The Good Deeds Manual",
+    "bookText": "We transform CPigs values into real-world challenges: small concrete actions, within anyone's reach, that restore trust in the community.",
+    "preorder": "Pre-order",
+    "preorderNote": "Pre-order open — shipping with the first edition.",
+    "dailyTitle": "One Good Deed a Day",
+    "dailySteps": ["Stop.", "Think.", "Do.", "Share."],
+    "dailyLine1": "QUESTIONING IS THE FIRST STEP.",
+    "dailyLine2": "DOING IS WHAT CHANGES THINGS.",
+    "wallTitle": "Good Deeds Wall",
+    "wallSubtitle": "Write your good deed of the day. Read others. Let yourself be contagioned.",
+    "namePlaceholder": "Your name",
+    "deedPlaceholder": "Write your good deed...",
+    "submit": "Share",
+    "sending": "Sending...",
+    "empty": "No deeds yet. Be the first!",
+    "success": "Good deed shared!",
+    "error": "Something went wrong. Try again.",
+    "validation": "Name and message are required."
+  },
+  "burn": {
+    "title": "Burn & Social Economy",
+    "leftTitle": "What if helping could be more relaxed and fun?",
+    "leftText": "Coinks are the energy of the CPigs community. When you burn a card, it leaves circulation and the corresponding Coinks go directly to a partner association chosen by the community.",
+    "simTitle": "Burn Simulator",
+    "simCards": "Cards to burn",
+    "simAssoc": "Association to support",
+    "simResult": "Coinks generated",
+    "simSend": "Burn & Send",
+    "simNote": "Demo simulation. No cards are burned here.",
+    "simDone": "{coinks} Coinks sent to {assoc}!",
+    "tokenTitle": "Tokenomics",
+    "tokenText": "Each Coink has a defined destination. The largest share goes back to those who act: community and associations.",
+    "tokenItems": [
+      { "label": "Social Associations", "value": 40, "note": "Sent via direct burn" },
+      { "label": "Community & Rewards", "value": 25, "note": "Games, challenges, good deeds" },
+      { "label": "Development & Games", "value": 20, "note": "New cards and mechanics" },
+      { "label": "Education & Content", "value": 10, "note": "Manual, videos, workshops" },
+      { "label": "Operations", "value": 5, "note": "Maintenance costs" }
+    ],
     "associations": ["Food Bank", "Refood", "Salvador Assoc.", "SOS Animal"]
   },
-  "community": {
-    "title": "COMMUNITY",
-    "subtitle": "ENGAGEMENT & IMPACT",
-    "quote": "Not by the Hair of My Chinny-chin-chin",
-    "items": {
-      "guerrilla": {
-        "title": "Guerrilla Marketing \u2014 Burn the Paper",
-        "desc": "Filmed street actions: paper burning, questions lingering. From flash mob campaigns to gaming fairs, real-world interventions are part of the brand from day one."
-      },
-      "spaces": {
-        "title": "X Spaces \u2014 Good Deed Week",
-        "desc": "Every Sunday, an open conversation about the week of good deeds. Dissecting corruption, exposing real-world issues, and challenging systemic problems."
-      },
-      "journalism": {
-        "title": "Solutions Journalism",
-        "desc": "Interviews with those seeking answers rather than blame. Reporting responses to social issues anchored in credible evidence."
-      }
-    },
-    "goodDeeds": {
-      "title": "Good Deeds Wall",
-      "description": "Write your good deed of the day. Read others. Let yourself be contagioned."
-    },
-    "followUs": "Follow @CorruptedPigs"
+  "media": {
+    "title": "Media & Community",
+    "subtitle": "CPigs also lives outside the screen: on the street, in audio, and in difficult conversations.",
+    "guerrillaTitle": "Guerrilla Marketing — Burn the Paper",
+    "guerrillaText": "Filmed street actions: paper burning, questions lingering.",
+    "videos": ["Burn the Paper · Lisbon", "Burn the Paper · Porto", "Burn the Paper · Behind the Scenes"],
+    "placeholder": "Coming soon",
+    "spacesTitle": "X Spaces — Good Deed Week",
+    "spacesText": "Every Sunday, an open conversation about the week of good deeds.",
+    "spacesLive": "Sunday · 9PM",
+    "journalismTitle": "Solutions Journalism",
+    "journalismText": "Interviews with those seeking answers rather than blame."
   },
-  "backers": {
-    "title": "ENTER THE CPIGS WORLD",
-    "subtitle": "To play \u201cNot the Pigs\u0027 Fault\u201d you need 1 Card. For the \u201cForce Game\u201d you\u0027ll need 3 Cards.",
-    "description": "Cards give access to games and fuel the burn that funds associations.",
-    "popular": "POPULAR",
-    "getStarted": "GET STARTED",
-    "tiers": {
-      "piglet": {
-        "perks": ["1 pack of 5 NFTs", "1,000,000 COINKs"]
-      },
-      "pig": {
-        "perks": ["3 packs of 15 NFTs", "10,000,000 COINKs"]
-      },
-      "hog": {
-        "perks": ["6 packs of 30 NFTs", "20,000,000 COINKs", "Basic merchandise"]
-      },
-      "boar": {
-        "perks": ["20 packs of 100 NFTs", "50,000,000 COINKs", "Premium merchandise", "VIP access (Very Important Pig)"]
-      },
-      "orc": {
-        "perks": ["30 packs of 150 NFTs", "100,000,000 COINKs", "Premium merchandise", "VIP access (Very Important Pig)", "Physical NFT with gold"]
-      },
-      "cpig": {
-        "perks": ["Entry by case / invitation only", "Join the co-founders in building the brand"]
-      }
-    }
+  "enter": {
+    "title": "Enter the CPigs World",
+    "guide": "To play \"Not the Pigs' Fault\" you need 1 Card. For the \"Force Game\" you'll need 3 Cards.",
+    "need1": "1 Card",
+    "need1sub": "Not the Pigs' Fault",
+    "need3": "3 Cards",
+    "need3sub": "Force Game",
+    "button": "Get Cards",
+    "note": "Cards give access to games and fuel the burn that funds associations."
   },
   "footer": {
-    "copyright": "\u00a9 {year} CPigs\u2122. All rights reserved."
+    "tagline": "Satire · Games · Technology",
+    "rights": "All rights reserved."
+  },
+  "chat": {
+    "open": "Ask CPigs",
+    "title": "CPigs",
+    "subtitle": "Your guide to the corruption game",
+    "placeholder": "Ask me anything...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "error": "Sorry, I couldn't process that. Try again.",
+    "suggestions": ["How do I play?", "What is Burn Power?", "How does the burn work?", "Tell me about $COINK"]
   }
 }

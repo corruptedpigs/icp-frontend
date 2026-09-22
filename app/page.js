@@ -3,10 +3,11 @@
 'use client';
 
 import HeroSection from "../ui/components/homepage/HeroSection"
-import AboutSection from "../ui/components/homepage/AboutSection"
-import TokenomicsSection from "../ui/components/homepage/TokenomicsSection"
-import CommunitySection from "../ui/components/homepage/CommunitySection"
-import BackersSection from "../ui/components/homepage/BackersSection"
+import GamesSection from "../ui/components/homepage/GamesSection"
+import ManualSection from "../ui/components/homepage/ManualSection"
+import BurnSection from "../ui/components/homepage/BurnSection"
+import MediaSection from "../ui/components/homepage/MediaSection"
+import EnterSection from "../ui/components/homepage/EnterSection"
 import NewNavbar from "../ui/components/homepage/NewNavbar"
 import NewFooter from "../ui/components/homepage/NewFooter"
 
@@ -19,10 +20,11 @@ function HomePage() {
       <main className={styles.main}>
         <NewNavbar />
         <HeroSection />
-        <AboutSection />
-        <TokenomicsSection />
-        <CommunitySection />
-        <BackersSection />
+        <GamesSection />
+        <ManualSection />
+        <BurnSection />
+        <MediaSection />
+        <EnterSection />
         <NewFooter />
       </main>
     </div>
