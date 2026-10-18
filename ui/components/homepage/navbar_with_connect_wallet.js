@@ -13,6 +13,7 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [swapUnlocked, setSwapUnlocked] = useState(false);
   const [mintUnlocked, setMintUnlocked] = useState(false);
+  const [walletMenuOpen, setWalletMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -25,12 +26,18 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
-  const handleWalletAction = () => {
+  const handleWalletAction = async () => {
     if (account) {
-      disconnectWallet();
-    } else {
-      connectWallet();
+      setWalletMenuOpen((open) => !open);
+      return;
     }
+    setWalletMenuOpen(false);
+    await connectWallet();
+  };
+
+  const handleDisconnect = () => {
+    setWalletMenuOpen(false);
+    disconnectWallet();
   };
 
   const formatTokenBalance = () => {
@@ -69,12 +76,21 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
                 id="navbar-mobile-wallet-btn"
                 onClick={handleWalletAction}
                 disabled={isConnecting || !isMounted}
+                aria-expanded={account ? walletMenuOpen : undefined}
+                aria-haspopup={account ? "menu" : undefined}
                 className={`btn ${account ? 'btn-error' : 'btn-warning'} uppercase`}
                 title={tokenBalanceLabel || undefined}
               >
-                {!isMounted ? 'Loading...' : isConnecting ? 'Connecting...' : account ? `Disconnect ${formatAddress(account)}` : 'Connect Wallet'}
+                {!isMounted ? 'Loading...' : isConnecting ? 'Connecting...' : account ? formatAddress(account) : 'Connect Wallet'}
               </button>
             </li>
+            {account && walletMenuOpen && (
+              <li className="mt-2">
+                <button id="navbar-mobile-disconnect-btn" role="menuitem" onClick={handleDisconnect} className="btn btn-sm btn-outline w-full">
+                  Disconnect wallet
+                </button>
+              </li>
+            )}
             {isMounted && account && !isPolygonNetwork() && (
               <li id="navbar-mobile-network-warning" className="text-xs text-warning mt-2 px-2" role="alert">
                 <span aria-label="Warning">⚠</span> Please switch to Polygon network
@@ -123,16 +139,31 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
               <ToggleMuteButton />
             </div>
           </li>
-          <li>
+          <li className="relative">
             <button
               id="navbar-desktop-wallet-btn"
               onClick={handleWalletAction}
               disabled={isConnecting || !isMounted}
+              aria-expanded={account ? walletMenuOpen : undefined}
+              aria-haspopup={account ? "menu" : undefined}
               className={`btn btn-sm ${account ? 'btn-error' : 'btn-warning'} uppercase`}
               title={tokenBalanceLabel || undefined}
             >
               {!isMounted ? 'Loading...' : isConnecting ? 'Connecting...' : account ? formatAddress(account) : 'Connect wallet'}
             </button>
+            {account && walletMenuOpen && (
+              <div role="menu" className="absolute right-0 top-full z-50 mt-2 w-72 max-w-[calc(100vw-1rem)] rounded-box bg-slate-700 p-3 shadow-xl">
+                <div className="mb-2 break-words px-1 py-1 text-xs normal-case opacity-80">Connected: {formatAddress(account)}</div>
+                <button
+                  id="navbar-desktop-disconnect-btn"
+                  role="menuitem"
+                  onClick={handleDisconnect}
+                  className="btn btn-sm btn-outline w-full whitespace-nowrap normal-case"
+                >
+                  Disconnect
+                </button>
+              </div>
+            )}
           </li>
           {isMounted && account && !isPolygonNetwork() && (
             <li id="navbar-desktop-network-warning" className="text-xs text-warning normal-case" role="alert">

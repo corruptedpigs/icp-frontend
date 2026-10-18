@@ -71,20 +71,29 @@ export function WalletProvider({ children }) {
   const [isTokenBalanceLoading, setIsTokenBalanceLoading] = useState(false);
 
   const disconnectWallet = useCallback(async () => {
-    if (typeof window !== 'undefined' && window.ethereum) {
-      try {
-        await window.ethereum.request({
-          method: 'wallet_revokePermissions',
-          params: [{ eth_accounts: {} }],
-        });
-      } catch {
-        // wallet_revokePermissions is not supported by all wallets; state is cleared regardless
-      }
-    }
+    // Clear the app's connection immediately. `wallet_revokePermissions` is
+    // optional and may be unsupported or never resolve (notably in Phantom).
     setAccount(null);
     setProvider(null);
     setChainId(null);
     setTokenBalance(null);
+
+    if (typeof window !== 'undefined') {
+      window.sessionStorage.setItem('wallet-disconnected', 'true');
+      const injectedProvider = window.ethereum;
+      if (injectedProvider?.request) {
+        try {
+          Promise.resolve(injectedProvider.request({
+            method: 'wallet_revokePermissions',
+            params: [{ eth_accounts: {} }],
+          })).catch(() => {
+            // Many injected wallets do not implement permission revocation.
+          });
+        } catch {
+          // A provider may throw synchronously for this optional method.
+        }
+      }
+    }
   }, []);
 
   const setTrackedToken = useCallback((address, defaultSymbol = DEFAULT_TRACKED_TOKEN_SYMBOL, defaultDecimals = 18) => {
@@ -159,6 +168,7 @@ export function WalletProvider({ children }) {
 
     try {
       setIsConnecting(true);
+      window.sessionStorage.removeItem('wallet-disconnected');
 
       // Request account access
       const accounts = await window.ethereum.request({
@@ -239,7 +249,8 @@ export function WalletProvider({ children }) {
           // Check if already connected without triggering MetaMask popup
           // This will only return accounts if user previously connected to this site
           const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          if (accounts.length > 0) {
+          const explicitlyDisconnected = window.sessionStorage.getItem('wallet-disconnected') === 'true';
+          if (accounts.length > 0 && !explicitlyDisconnected) {
             // Initialize wallet connection without calling connectWallet to avoid infinite loop
             const browserProvider = new BrowserProvider(window.ethereum);
             const network = await browserProvider.getNetwork();
