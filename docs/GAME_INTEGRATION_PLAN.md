@@ -224,3 +224,10 @@ Confirm `Status: Running` and note the starting cycles balance.
       and `checkWinner` on the deployed canister ID
 - [ ] Set up a cycles-balance alert (e.g. via IC monitoring or a cron that calls
       `dfx canister status` and pages if balance drops below a threshold)
+
+- [ ] Implement waiting for opponent during join flow
+-   The `useJoinGame` hook now polls `/api/v1/game_sessions/:id` until an
+-   opponent joins or a timeout occurs. See the hook implementation in
+-   `app/hooks/useJoinGame.js`.
+-   The UI shows a spinner while waiting.
+
