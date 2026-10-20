@@ -10,14 +10,16 @@
  * 4. POST /api/v1/matchmaking { game_type } with Authorization header.
  * 5. If the response indicates a match already exists (matched:true or vs_cpu)
  *    → return immediately.
- * 6. Else poll GET /api/v1/game_sessions/:session_id every 2 s until the
- *    session becomes matched or active, or until a 90 s timeout.
+ * 6. Else subscribe to MatchmakingChannel until a matched event arrives,
+ *    or until a 90 s timeout. The polling helper below is retained for reuse,
+ *    but is not used by this flow.
  *
  * Returns an object:
  * { joinGame(), isLoading, isWaiting, error, token, match }
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { waitForCableMatch } from '../utils/matchmaking';
 import { useWallet } from "../context/WalletContext";
 import { useTranslations } from "../components/LanguageContext";
 import { getAddress, verifyMessage } from "ethers";
@@ -30,7 +32,8 @@ const MAX_WAIT_ATTEMPTS = 45; // ~90 seconds
 async function fetchGameApi(path, options, serviceUnavailableMessage) {
   let response;
   try {
-    response = await fetch(`${GAME_API_BASE}${path}`, options);
+    const origin = new URL(GAME_API_BASE).origin;
+    response = await fetch(`${origin}${path}`, options);
   } catch {
     // Browsers report offline, DNS, CORS, and connection-refused failures as
     // generic TypeErrors (often just "Failed to fetch"). Keep that detail out
@@ -119,6 +122,9 @@ export function useJoinGame() {
   const [error, setError] = useState(null);
   const [token, setToken] = useState(null);
   const [match, setMatch] = useState(null);
+  const pendingWait = useRef(null);
+
+  useEffect(() => () => pendingWait.current?.abort(), [account, provider]);
 
   const joinGame = useCallback(async () => {
     if (!provider || !account) {
@@ -196,8 +202,19 @@ export function useJoinGame() {
         return { token: bearerToken, match: matchData, matched: true };
       }
       // Else wait for opponent
+      if (!matchData.matchmaking_token) throw new Error(t('game.errors.matchmaking'));
       setIsWaiting(true);
-      const waitingMatch = await waitForMatch(matchData.session_id, bearerToken, t);
+      const controller = new AbortController();
+      pendingWait.current?.abort();
+      pendingWait.current = controller;
+      const waitingMatch = await waitForCableMatch({
+        apiUrl: GAME_API_BASE,
+        token: matchData.matchmaking_token,
+        signal: controller.signal,
+        timeoutMessage: t('game.errors.opponentTimeout'),
+        failureMessage: t('game.errors.matchmaking'),
+      });
+      pendingWait.current = null;
       setIsWaiting(false);
       setMatch(waitingMatch);
       return { token: bearerToken, match: waitingMatch, matched: true };

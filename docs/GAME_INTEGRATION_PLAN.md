@@ -1,6 +1,99 @@
 # Game Integration Plan
 
-## Overview
+## Action Cable matchmaking notifications
+
+The frontend now waits through Action Cable in `app/utils/matchmaking.js`, used
+by `app/hooks/useJoinGame.js`. It subscribes using the HTTP matchmaking response's
+`matchmaking_token`, resolves on `matched`, and times out after 90 seconds.
+Action Cable reconnects automatically. Polling is not used in this flow.
+
+### Running locally, in production, and through Cloudflare Tunnel
+
+- Local: Rails on port 3000, frontend on port 3001. Set
+  `NEXT_PUBLIC_GAME_API_URL=http://localhost:3000` in `.env.local` and start Next
+  with `npm run dev -- --port 3001`. Cable uses `ws://localhost:3000/cable`.
+- Production: set `NEXT_PUBLIC_GAME_API_URL=https://api.corruptedpigs.com`.
+  Cable uses `wss://api.corruptedpigs.com/cable`. Rails must allow
+  `https://corruptedpigs.com` in both HTTP CORS and Action Cable allowed origins.
+  Allow `https://www.corruptedpigs.com` too if serving that frontend origin.
+- Tunnel testing: run `cloudflared tunnel --url http://localhost:3000` for Rails
+  and `cloudflared tunnel --url http://localhost:3001` for Next.js. Set
+  `NEXT_PUBLIC_GAME_API_URL=https://<backend-tunnel>.trycloudflare.com` in
+  `.env.local`, restart Next.js, and share the **frontend** tunnel URL.
+  Remote players cannot reach your `localhost`; both browsers must use the
+  public backend URL. HTTPS tunnels automatically use secure `wss` cable URLs.
+- Rails must allow the exact **frontend tunnel origin** for both CORS and
+  `config.action_cable.allowed_request_origins`, and accept the backend tunnel
+  hostname in its host authorization configuration. Quick-tunnel URLs change
+  when restarted: update these settings and the frontend API URL accordingly.
+  Do not broadly disable origin checks for production. CORS alone does not
+  configure WebSocket access.
+- `NEXT_PUBLIC_*` values are embedded in the frontend: restart the development
+  server after changes, and rebuild for production changes. An API URL ending
+  in `/api/v1` also works: HTTP requests use the existing `/api/v1/...` paths
+  from its origin, and cable always uses `/cable` from that origin.
+
+Use browser DevTools → Network → WS to confirm a `/cable` connection, subscription
+confirmation, and a `matched` message when the second player joins. Test two
+different wallets. `npm test -- --runInBand __tests__/matchmaking.test.js` tests
+URL derivation, matched events, rejection, timeout, and cancellation without Rails.
+
+### Endpoint configuration
+
+`NEXT_PUBLIC_GAME_API_URL` is the HTTP API base URL. Action Cable usually runs
+on the same server, but at a separate endpoint, conventionally `/cable`:
+
+| HTTP API base | Conventional WebSocket endpoint |
+| --- | --- |
+| `http://localhost:3000` | `ws://localhost:3000/cable` |
+| `https://api.example.com` | `wss://api.example.com/cable` |
+
+Derive the default from the API origin, replacing `http`/`https` with `ws`/`wss`
+and setting the path to `/cable`. Allow an explicit
+`NEXT_PUBLIC_GAME_CABLE_URL` override for deployments with a different cable host
+or path. Confirm Rails mounts Action Cable there and permits the frontend origin
+in `config.action_cable.allowed_request_origins`; the production proxy must
+support WebSocket upgrades. These public URLs are not credentials.
+
+### Backend contract
+
+- The waiting response from `POST /api/v1/matchmaking` must expose the
+  `matchmaking_token` expected by `MatchmakingChannel` (confirm the JSON key).
+  The SIWE bearer token and `session_id` are **not** substitutes for this token.
+- Subscribe with `{ channel: "MatchmakingChannel", token: matchmakingToken }`.
+- The backend broadcasts `{ type: "matched", vs_cpu: boolean, session_id: string }`
+  when another player joins. The channel also transmits this message on
+  subscription if the session is no longer waiting, closing the race between
+  joining matchmaking and subscribing.
+- Confirm whether statuses other than waiting include cancelled/expired games:
+  the supplied channel treats every non-waiting status as matched. Cancelled or
+  expired sessions should not cause the frontend to start a game.
+
+### Frontend implementation
+
+1. Add the official `@rails/actioncable` client; do not use a plain WebSocket
+   without implementing Action Cable's subscription protocol.
+2. Keep HTTP nonce retrieval, SIWE verification, and joining matchmaking.
+3. Keep immediate-match/CPU responses working without opening a subscription.
+4. For waiting responses, set `isWaiting`, subscribe using the matchmaking token,
+   and resolve `joinGame()` on the first valid `matched` message. Normalize
+   `vs_cpu` and `session_id` to the existing result shape before navigating.
+5. Preserve the waiting overlay and timeout. Handle subscription rejection and
+   connection failure; optionally use the existing polling as a fallback, not
+   concurrently during a healthy subscription.
+6. Unsubscribe, disconnect the consumer, and clear timers on success, timeout,
+   error, wallet changes, and component unmount. Ignore duplicate/late messages.
+
+### Tests and manual verification
+
+Mock the Action Cable consumer to test subscription parameters, immediate matches,
+matched events, duplicate messages, rejection, timeout, reconnect delivery, and
+cleanup on unmount. Assert that healthy WebSocket matchmaking does not poll.
+Test in two real browser sessions against Rails: the first player sees
+“Waiting for opponent…” and both enter the game after the second player joins.
+Also test losing and restoring the connection after a match has been created.
+
+## Result reporting overview
 
 When a Corrupted Pigs logic/strength match ends, the result must be reported to an
 external off-chain API so that on-chain NFT state (ownership transfers, burn-power
@@ -230,4 +323,3 @@ Confirm `Status: Running` and note the starting cycles balance.
 -   opponent joins or a timeout occurs. See the hook implementation in
 -   `app/hooks/useJoinGame.js`.
 -   The UI shows a spinner while waiting.
-
