@@ -63,7 +63,7 @@ export default function GamesPageClient() {
                 className={isLoading || isWaiting || isConnecting ? "cursor-not-allowed" : "cursor-pointer"}
                 aria-busy={isLoading || isWaiting || isConnecting}
                 title={isLoading || isWaiting || isConnecting
-                  ? (isConnecting ? "Connecting wallet…" : isLoading ? "Signing…" : "Waiting for opponent…")
+                  ? (isConnecting ? "Connecting wallet…" : isWaiting ? "Waiting for opponent…" : "Signing in…")
                   : undefined}
               >
                 {isLoading || isWaiting || isConnecting ? (
@@ -74,9 +74,9 @@ export default function GamesPageClient() {
                       <span className="font-mono font-bold uppercase text-center px-2">
                         {isConnecting
                           ? "Connecting wallet…"
-                          : isLoading
-                          ? "Signing in…"
-                          : "Waiting for opponent…"}
+                          : isWaiting
+                          ? "Waiting for opponent…"
+                          : "Signing in…"}
                       </span>
                     </div>
                   </div>
