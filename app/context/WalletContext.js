@@ -80,6 +80,7 @@ export function WalletProvider({ children }) {
 
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem('wallet-disconnected', 'true');
+      window.localStorage.removeItem('wallet-connected');
       const injectedProvider = window.ethereum;
       if (injectedProvider?.request) {
         try {
@@ -174,6 +175,8 @@ export function WalletProvider({ children }) {
       const accounts = await window.ethereum.request({
         method: 'eth_requestAccounts'
       });
+      if (!accounts?.length) return false;
+      window.localStorage.setItem('wallet-connected', 'true');
 
       const browserProvider = new BrowserProvider(window.ethereum);
       const network = await browserProvider.getNetwork();
@@ -245,25 +248,28 @@ export function WalletProvider({ children }) {
 
     const initWallet = async () => {
       if (typeof window !== 'undefined' && window.ethereum) {
-        try {
-          // Check if already connected without triggering MetaMask popup
-          // This will only return accounts if user previously connected to this site
-          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-          const explicitlyDisconnected = window.sessionStorage.getItem('wallet-disconnected') === 'true';
-          if (accounts.length > 0 && !explicitlyDisconnected) {
-            // Initialize wallet connection without calling connectWallet to avoid infinite loop
-            const browserProvider = new BrowserProvider(window.ethereum);
-            const network = await browserProvider.getNetwork();
-
-            setAccount(accounts[0]);
-            setProvider(browserProvider);
-            setChainId(Number(network.chainId));
+        // Restore only after this app previously connected through an explicit
+        // user action. This avoids prompting wallets on first visit while
+        // allowing an authorized account to survive a page refresh.
+        const wasConnected = window.localStorage.getItem('wallet-connected') === 'true';
+        const explicitlyDisconnected = window.sessionStorage.getItem('wallet-disconnected') === 'true';
+        if (wasConnected && !explicitlyDisconnected) {
+          try {
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+            if (accounts.length > 0) {
+              const browserProvider = new BrowserProvider(window.ethereum);
+              const network = await browserProvider.getNetwork();
+              setAccount(accounts[0]);
+              setProvider(browserProvider);
+              setChainId(Number(network.chainId));
+            } else {
+              window.localStorage.removeItem('wallet-connected');
+            }
+          } catch (error) {
+            console.error('Error restoring wallet connection:', error);
           }
-        } catch (error) {
-          console.error('Error checking wallet connection:', error);
         }
 
-        // Listen for account changes
         window.ethereum.on('accountsChanged', handleAccountsChanged);
         window.ethereum.on('chainChanged', handleChainChanged);
       }

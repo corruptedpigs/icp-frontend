@@ -18,7 +18,7 @@ function getJoinErrorMessage(error) {
 
 export default function GamesPageClient() {
   const router = useRouter();
-  const { account, connectWallet } = useWallet();
+  const { account, connectWallet, isConnecting } = useWallet();
   const { joinGame, isLoading, error, isWaiting } = useJoinGame();
 
   const handleJoinLogic = async (e) => {
@@ -59,18 +59,25 @@ export default function GamesPageClient() {
             <div className="flex flex-wrap items-center justify-center gap-24">
 
               <div
-                onClick={handleJoinLogic}
-                className={isLoading || isWaiting ? "cursor-not-allowed" : "cursor-pointer"}
-                title={isLoading || isWaiting ? (isLoading ? "Signing…" : "Waiting for opponent…") : undefined}
+                onClick={isLoading || isWaiting || isConnecting ? undefined : handleJoinLogic}
+                className={isLoading || isWaiting || isConnecting ? "cursor-not-allowed" : "cursor-pointer"}
+                aria-busy={isLoading || isWaiting || isConnecting}
+                title={isLoading || isWaiting || isConnecting
+                  ? (isConnecting ? "Connecting wallet…" : isLoading ? "Signing…" : "Waiting for opponent…")
+                  : undefined}
               >
-                {isLoading || isWaiting ? (
-                  <span className="loading loading-spinner loading-lg text-white" />
+                {isLoading || isWaiting || isConnecting ? (
+                  <div className="card xs:w-32 md:w-auto image-full shadow-xl shadow-cyan-700 relative">
+                    <img src="/images/games/guessing-normal-2.png" alt="Logic Game" className="w-full h-auto object-cover" />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70 text-white">
+                      <span className="loading loading-spinner loading-lg" />
+                      <span className="font-mono font-bold uppercase text-center px-2">
+                        {isConnecting ? "Connecting wallet…" : isLoading ? "Signing…" : "Waiting for opponent…"}
+                      </span>
+                    </div>
+                  </div>
                 ) : (
-                  <ChooseGameCard
-                    bg_image_path="/images/games/guessing-normal-2.png"
-                    title="Logic"
-                    link="#"
-                  />
+                  <ChooseGameCard bg_image_path="/images/games/guessing-normal-2.png" title="Logic" link="#" />
                 )}
               </div>
 
