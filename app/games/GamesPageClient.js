@@ -67,12 +67,16 @@ export default function GamesPageClient() {
                   : undefined}
               >
                 {isLoading || isWaiting || isConnecting ? (
-                  <div className="card xs:w-32 md:w-auto image-full shadow-xl shadow-cyan-700 relative">
+                  <div className="relative card xs:w-32 md:w-auto image-full shadow-xl shadow-cyan-700 overflow-hidden">
                     <img src="/images/games/guessing-normal-2.png" alt="Logic Game" className="w-full h-auto object-cover" />
-                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-black/70 text-white">
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center gap-3 text-white">
                       <span className="loading loading-spinner loading-lg" />
                       <span className="font-mono font-bold uppercase text-center px-2">
-                        {isConnecting ? "Connecting wallet…" : isLoading ? "Signing…" : "Waiting for opponent…"}
+                        {isConnecting
+                          ? "Connecting wallet…"
+                          : isLoading
+                          ? "Signing in…"
+                          : "Waiting for opponent…"}
                       </span>
                     </div>
                   </div>
