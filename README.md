@@ -14,6 +14,16 @@ https://corruptedpigs.store/
 
 # Next.js Internet Computer Starter Template
 
+## Tests
+
+Install project dependencies with `npm install`, then run the frontend test suite with:
+
+```bash
+npm test
+```
+
+For a single-process run, use `npm test -- --runInBand`. Tests mock the injected wallet provider and do not require a wallet extension. See [docs/TESTING.md](docs/TESTING.md) for details.
+
 This project provides a simple starter template for Dfinity Internet Computer using Next.js framework as frontend.
 
 **The Most Recent Updates**
