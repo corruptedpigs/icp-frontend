@@ -2,13 +2,18 @@ const DFXWebPackConfig = require("./dfx.webpack.config")
 DFXWebPackConfig.initCanisterIds()
 
 const webpack = require("webpack")
+const { PHASE_DEVELOPMENT_SERVER } = require("next/constants")
 
 // Make DFX_NETWORK available to Web Browser with default "local" if DFX_NETWORK is undefined
 const EnvPlugin = new webpack.EnvironmentPlugin({
   DFX_NETWORK: "local"
 })
 
-module.exports = {
+module.exports = (phase) => ({
+  // Keep `next build` output separate from the `.next` cache used by
+  // `next dev`; building while the dev server is running must not replace its
+  // generated CSS, manifests, or hot-reload state.
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next" : "next-build",
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
     // Plugin
     config.plugins.push(EnvPlugin)
@@ -26,4 +31,4 @@ module.exports = {
       },
     ],
   },
-}
+})
