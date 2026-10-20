@@ -217,7 +217,7 @@ hr {
 }
 
 .badge-spin {
-  animation: badge-spin 18s linear infinite;
+  animation: badge-spin 18s linear infinite reverse;
 }
 
 :root {
