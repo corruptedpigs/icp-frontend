@@ -54,7 +54,13 @@ export function useWalletNFTs() {
         // console.log(`Alchemy: account ${account} owns ${data.totalCount} NFT(s) from this collection`);
 
         const nfts = data.ownedNfts.map(nft => {
-          const image = resolveIpfsUrl(nft.image?.cachedUrl || nft.image?.originalUrl || nft.rawMetadata?.image);
+          const image = resolveIpfsUrl(
+            nft.raw?.metadata?.image ||
+            nft.image?.originalUrl ||
+            nft.rawMetadata?.image ||
+            nft.image?.cachedUrl
+          );
+
           const attributes = nft.rawMetadata?.attributes || nft.raw?.metadata?.attributes || [];
 
           // console.log(`NFT ${nft.tokenId}: image=${image}, attributes=`, attributes);
