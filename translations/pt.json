@@ -17,6 +17,19 @@
     "soundOff": "Ligar som"
   },
   "badge": "Impacto Social · Cartas Colecionáveis · Impacto Social · Cartas Colecionáveis",
+  "game": {
+    "errors": {
+      "serviceUnavailable": "O serviço de jogo está temporariamente indisponível. Tenta novamente em breve.",
+      "signInStart": "Não foi possível iniciar a ligação da carteira. Tenta novamente.",
+      "walletNotConnected": "Liga a tua carteira para entrares num jogo.",
+      "walletChanged": "A carteira ligada foi alterada. Liga novamente e tenta outra vez.",
+      "signatureAccountMismatch": "A carteira assinou com uma conta diferente. Liga novamente e tenta outra vez.",
+      "walletVerification": "Não foi possível verificar a tua carteira. Liga novamente e tenta outra vez.",
+      "matchmaking": "Não foi possível entrar num jogo. Tenta novamente.",
+      "matchStatus": "Não foi possível verificar o estado do jogo. Tenta novamente.",
+      "opponentTimeout": "Nenhum adversário entrou a tempo. Tenta novamente."
+    }
+  },
   "games": {
     "title": "Não Te Dizemos O Que Pensar. Damos-te Razões Para Questionar.",
     "intro": "O CPigs cria um espaço descontraído onde é possível reconhecer comportamentos corruptos sem dedos apontados. Jogando, cada pessoa percebe como pequenas decisões — atalhos, favores, silêncio — se transformam em sistemas inteiros.",

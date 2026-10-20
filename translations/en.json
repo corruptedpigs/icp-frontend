@@ -17,6 +17,19 @@
     "soundOff": "Sound on"
   },
   "badge": "Social Impact · Collectible Cards · Social Impact · Collectible Cards",
+  "game": {
+    "errors": {
+      "serviceUnavailable": "The game service is temporarily unavailable. Please try again shortly.",
+      "signInStart": "Could not start wallet sign-in. Please try again.",
+      "walletNotConnected": "Connect your wallet to join a game.",
+      "walletChanged": "Your connected wallet changed. Reconnect and try again.",
+      "signatureAccountMismatch": "The wallet signed with a different account. Reconnect and try again.",
+      "walletVerification": "Could not verify your wallet. Please reconnect and try again.",
+      "matchmaking": "Could not join a game. Please try again.",
+      "matchStatus": "Could not check the match status. Please try again.",
+      "opponentTimeout": "No opponent joined in time. Please try again."
+    }
+  },
   "games": {
     "title": "We Don't Tell You What To Think. We Give You Reasons To Question.",
     "intro": "CPigs creates a relaxed space where it's possible to recognize corrupt behavior without pointing fingers. Through play, each person understands how small decisions — shortcuts, favors, silence — transform into entire systems.",
