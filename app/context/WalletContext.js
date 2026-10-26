@@ -2,20 +2,10 @@
 
 import { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { BrowserProvider, Contract, formatUnits } from 'ethers';
+import { POLYGON_MAINNET, POLYGON_CHAIN_ID, COINK_ADDRESS, COINK_SYMBOL, COINK_DECIMALS } from '../utils/web3Config';
 
 const WalletContext = createContext();
 
-const POLYGON_MAINNET = {
-  chainId: '0x89', // 137 in decimal
-  chainName: 'Polygon Mainnet',
-  nativeCurrency: {
-    name: 'MATIC',
-    symbol: 'MATIC',
-    decimals: 18
-  },
-  rpcUrls: ['https://polygon-rpc.com/'],
-  blockExplorerUrls: ['https://polygonscan.com/']
-};
 
 // const POLYGON_AMOY = {
 //   chainId: '0x13882', // 80002 in decimal
@@ -30,11 +20,11 @@ const POLYGON_MAINNET = {
 // };
 
 // Chain IDs as constants for reuse
-const POLYGON_MAINNET_ID = 137;
+const POLYGON_MAINNET_ID = POLYGON_CHAIN_ID;
 const POLYGON_AMOY_ID = 80002;
-const DEFAULT_TRACKED_TOKEN_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_TOKEN_ADDRESS || '0x1E60032C0b93b5A8A0F3eD485cb35DBfE86972a5';
-const DEFAULT_TRACKED_TOKEN_SYMBOL = process.env.NEXT_PUBLIC_TRACKED_TOKEN_SYMBOL || 'TOKEN';
-const DEFAULT_TRACKED_TOKEN_DECIMALS = Number(process.env.NEXT_PUBLIC_TRACKED_TOKEN_DECIMALS || 18);
+const DEFAULT_TRACKED_TOKEN_ADDRESS = COINK_ADDRESS;
+const DEFAULT_TRACKED_TOKEN_SYMBOL = COINK_SYMBOL;
+const DEFAULT_TRACKED_TOKEN_DECIMALS = COINK_DECIMALS;
 const DEFAULT_NFT_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_NFT_ADDRESS || '0xc03B2ed81Cfce282D5cd921D429262f7cca3651f';
 
 const ERC20_ABI = [

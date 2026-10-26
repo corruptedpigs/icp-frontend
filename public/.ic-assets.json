@@ -2,5 +2,11 @@
     {
         "match": ".well-known",
         "ignore": false
+    },
+    {
+        "match": "coink-console/manifest.json",
+        "headers": {
+            "Access-Control-Allow-Origin": "*"
+        }
     }
 ]

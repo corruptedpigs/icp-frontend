@@ -1,0 +1,5 @@
+{
+  "name": "CPigs COINK Console",
+  "description": "Team treasury console for COINK on Polygon. Propose reserve withdrawals and contract operations through Safe.",
+  "iconPath": "logo.png"
+}

@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Menu, X, Volume2, VolumeX } from "lucide-react";
 import { useTranslations } from "../../../app/components/LanguageContext";
 import LanguageToggle from "../../../app/components/LanguageToggle";
+import Link from 'next/link';
+import { isFlagUnlocked } from '../../../app/utils/featureFlags';
 
 const navItems = [
   { key: "games", id: "jogos" },
@@ -18,6 +20,16 @@ const NewNavbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [soundOn, setSoundOn] = useState(false);
+  const [coinkUnlocked, setCoinkUnlocked] = useState(false);
+
+  useEffect(() => {
+    const update = () => setCoinkUnlocked(isFlagUnlocked('coink'));
+    update();
+    window.addEventListener('storage', update);
+    return () => {
+      window.removeEventListener('storage', update);
+    };
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
@@ -46,6 +58,7 @@ const NewNavbar = () => {
         </a>
 
         <nav className="ml-auto hidden items-center gap-6 lg:flex">
+          {coinkUnlocked && <Link href="/coink-console" className="font-heading text-xs uppercase tracking-wider text-primary">COINK Console</Link>}
           {navItems.map((item) => (
             <button
               key={item.key}
@@ -82,6 +95,7 @@ const NewNavbar = () => {
 
       {mobileOpen && (
         <nav className="border-t border-border/40 bg-background/90 px-4 pb-4 backdrop-blur-xl lg:hidden">
+          {coinkUnlocked && <Link href="/coink-console" className="block py-3 font-heading text-xs uppercase tracking-wider text-primary">COINK Console</Link>}
           {navItems.map((item) => (
             <button
               key={item.key}

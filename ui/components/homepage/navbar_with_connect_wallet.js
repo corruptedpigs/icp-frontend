@@ -13,12 +13,19 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
   const [isMounted, setIsMounted] = useState(false);
   const [swapUnlocked, setSwapUnlocked] = useState(false);
   const [mintUnlocked, setMintUnlocked] = useState(false);
+  const [coinkUnlocked, setCoinkUnlocked] = useState(false);
   const [walletMenuOpen, setWalletMenuOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     setSwapUnlocked(isFlagUnlocked("swap"));
     setMintUnlocked(isFlagUnlocked("mint"));
+    const updateCoink = () => setCoinkUnlocked(isFlagUnlocked('coink'));
+    updateCoink();
+    window.addEventListener('storage', updateCoink);
+    return () => {
+      window.removeEventListener('storage', updateCoink);
+    };
   }, []);
 
   const formatAddress = (address) => {
@@ -115,6 +122,9 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
                 </Link>
               </li>
             )}
+            {isMounted && coinkUnlocked && (
+              <li className="mt-2 px-2"><Link href="/coink-console" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">COINK Console</Link></li>
+            )}
             {isMounted && (
               <li className="mt-2 px-2">
                 <AddTokenButton id="navbar-mobile-add-token-btn" />
@@ -183,6 +193,9 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
                 Mint
               </Link>
             </li>
+          )}
+          {isMounted && coinkUnlocked && (
+            <li><Link href="/coink-console" className="btn btn-sm btn-outline border-pink-500 text-pink-400 uppercase hover:bg-pink-500 hover:border-pink-500">COINK Console</Link></li>
           )}
           {isMounted && (
             <li>
