@@ -8,6 +8,9 @@ jest.mock('../app/context/WalletContext', () => ({
 jest.mock('../app/hooks/useJoinGame', () => ({
   useJoinGame: () => ({ isLoading: true, isWaiting: true, error: null }),
 }));
+jest.mock('../app/context/GameSessionContext', () => ({
+  useGameSession: () => ({ soundEnabled: true, setSoundEnabled: jest.fn() }),
+}));
 jest.mock('../ui/components/homepage/navbar_with_connect_wallet', () => () => null);
 jest.mock('../app/components/GameHUD', () => () => null);
 jest.mock('../app/components/choose_game_card', () => () => null);

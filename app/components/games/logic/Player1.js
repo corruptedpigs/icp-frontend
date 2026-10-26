@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-const Player1 = ({ images, nfts }) => {
+const Player1 = ({ images, nfts, opponentReady = false }) => {
   const [selectedIds, setSelectedIds] = useState([]);
 
   // Support both plain image array and full nft objects array.
@@ -118,11 +118,17 @@ const Player1 = ({ images, nfts }) => {
 
         <button
           id="squad-lock-btn"
-          disabled={selectedIds.length !== 3}
+          disabled={!opponentReady || selectedIds.length !== 3}
+          aria-describedby={!opponentReady ? 'squad-waiting-message' : undefined}
           className="btn btn-warning text-xl font-bold uppercase tracking-widest px-10 h-14 disabled:opacity-40"
         >
           LOCK IN SELECTION
         </button>
+        {!opponentReady && (
+          <p id="squad-waiting-message" role="status" className="text-sm text-yellow-300 text-center">
+            Waiting for an opponent. You can pick cards, but cannot lock them in yet.
+          </p>
+        )}
       </div>
 
     </div>

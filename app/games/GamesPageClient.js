@@ -7,6 +7,7 @@ import GameHUD from "../components/GameHUD";
 import styles from '../../styles/Game.module.css';
 import { useJoinGame } from "../hooks/useJoinGame";
 import { useWallet } from "../context/WalletContext";
+import { useGameSession } from "../context/GameSessionContext";
 
 function getJoinErrorMessage(error) {
   const message = error?.message || "Could not join the game.";
@@ -20,6 +21,7 @@ export default function GamesPageClient() {
   const router = useRouter();
   const { account, connectWallet, isConnecting } = useWallet();
   const { joinGame, isLoading, error, isWaiting } = useJoinGame();
+  const { beginJoin, completeJoin, soundEnabled, setSoundEnabled } = useGameSession();
 
   const handleJoinLogic = async (e) => {
     e.preventDefault();
@@ -31,7 +33,9 @@ export default function GamesPageClient() {
     }
 
     try {
-      await joinGame();
+      beginJoin();
+      const result = await joinGame();
+      completeJoin({ ...result.match, matched: result.matched });
       router.push("/games/logic");
     } catch (err) {
       console.error("Failed to join game:", err);
@@ -56,6 +60,10 @@ export default function GamesPageClient() {
         <div className="hero h-screen">
           <div className="hero-overlay bg-opacity-60"></div>
           <div className="container my-24">
+            <label className="flex justify-center items-center gap-2 mb-6 text-white">
+              <input type="checkbox" checked={soundEnabled} onChange={e => setSoundEnabled(e.target.checked)} disabled={isLoading || isWaiting} />
+              Play a sound when an opponent joins
+            </label>
             <div className="flex flex-wrap items-center justify-center gap-24">
 
               <div

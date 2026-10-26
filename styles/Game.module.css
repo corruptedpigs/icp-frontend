@@ -1,0 +1,41 @@
+.opponentArrival {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: min(36rem, calc(100vw - 2rem));
+  padding: 1.25rem;
+  border: 2px solid #facc15;
+  border-radius: 1rem;
+  background: #171024;
+  color: white;
+  box-shadow: 0 0 40px #ec489980;
+  animation: arrivalEntrance 450ms ease-out;
+}
+
+.arrivalPulse {
+  flex: none;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  background: #facc15;
+  animation: arrivalPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes arrivalEntrance {
+  from { opacity: 0; transform: translate(-50%, -1.5rem) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+}
+
+@keyframes arrivalPulse {
+  50% { box-shadow: 0 0 0 12px #facc1500; transform: scale(1.3); }
+  0%, 100% { box-shadow: 0 0 0 0 #facc1566; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .opponentArrival, .arrivalPulse { animation: none; }
+}

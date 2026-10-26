@@ -6,6 +6,7 @@ import Player1 from "../../components/games/logic/Player1";
 import { useWalletNFTs } from "../../hooks/useWalletNFTs";
 import { useWallet } from "../../context/WalletContext";
 import GameHUD from "../../components/GameHUD";
+import { useGameSession } from "../../context/GameSessionContext";
 
 const MIN_NFTS_REQUIRED = 3;
 const ACQUIRE_NFTS_URL = "/mint";
@@ -29,6 +30,7 @@ function NotEnoughNFTs({ count }) {
 
 export default function GamePageClient() {
   const { account } = useWallet();
+  const { opponentReady } = useGameSession();
   const { nfts, nftImages, isLoading } = useWalletNFTs();
 
   // const hasEnoughNFTs = nftImages.length >= MIN_NFTS_REQUIRED;
@@ -54,7 +56,7 @@ export default function GamePageClient() {
 
           {/* Game timer */}
           <div className="flex justify-end pt-2 pr-2">
-            <GameTimer seconds={60} />
+            {opponentReady && <GameTimer seconds={60} />}
           </div>
 
           {/* Player 1 — full-width centered selection phase */}
@@ -65,7 +67,7 @@ export default function GamePageClient() {
           ) : !account || !hasEnoughNFTs ? (
             <NotEnoughNFTs count={account ? nftImages.length : 0} />
           ) : (
-            <Player1 nfts={nfts} images={nftImages} />
+            <Player1 nfts={nfts} images={nftImages} opponentReady={opponentReady} />
           )}
 
         </div>
