@@ -57,7 +57,7 @@ const NavbarWithConnectWallet = ({ show_logo = false }) => {
   const tokenBalanceLabel = formatTokenBalance();
 
   return (
-    <div id="navbar-main" className="navbar absolute text-neutral-content">
+    <div id="navbar-main" className="navbar absolute z-40 text-neutral-content">
       <div className="navbar-start">
         {show_logo && (
           <Link href="/" className="hidden lg:block">
