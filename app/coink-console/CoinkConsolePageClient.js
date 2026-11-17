@@ -6,9 +6,15 @@ import { Contract, JsonRpcProvider } from 'ethers';
 import NavbarWithConnectWallet from '../../ui/components/homepage/navbar_with_connect_wallet';
 import { useWallet } from '../context/WalletContext';
 import { checkAndPersistFlag } from '../utils/featureFlags';
-import { COINK_ADDRESS, COINK_SYMBOL, POLYGON_CHAIN_ID, POLYGON_EXPLORER_URL, POLYGON_RPC_URL } from '../utils/web3Config';
+import { COINK_ADDRESS, COINK_SYMBOL, POLYGON_CHAIN_ID, POLYGON_EXPLORER_URL } from '../utils/web3Config';
 import { ABI, FUNCTIONS, READS, FUND, TRANSFERABLE, ROLE_LABELS, buildWithdrawal, contractInterface, formatAmount, hasRole, parseArgument, sameAddress } from './contract';
+
 import { submitTransaction } from './transactions';
+
+// Use backend RPC proxy to keep Alchemy API key server-side. Falls back to
+// public RPC for local development when NEXT_PUBLIC_GAME_API_URL is not set.
+const GAME_API_URL = process.env.NEXT_PUBLIC_GAME_API_URL;
+const RPC_URL = GAME_API_URL ? `${GAME_API_URL}/api/v1/rpc/polygon` : 'https://polygon-bor-rpc.publicnode.com';
 
 const button = 'btn btn-sm btn-outline border-pink-500/50 text-pink-300 hover:bg-pink-500 hover:border-pink-500';
 const input = 'w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground disabled:opacity-50';
@@ -60,7 +66,7 @@ function Console() {
   const roles = snapshot?.roles || {};
 
   useEffect(() => {
-    const reader = new JsonRpcProvider(POLYGON_RPC_URL, POLYGON_CHAIN_ID);
+    const reader = new JsonRpcProvider(RPC_URL, POLYGON_CHAIN_ID);
     setResources({ reader, contract: new Contract(COINK_ADDRESS, ABI, reader) });
     return () => reader.destroy();
   }, []);
@@ -168,7 +174,7 @@ function Console() {
         <h2 className="text-xl">Connection</h2>
         <p className="text-sm text-muted-foreground">Internal testing UI, not authentication. Contract permissions and Safe signatures authorize operations. Safe signers must use the Safe App, not send from their individual wallets.</p>
         <a href={`${POLYGON_EXPLORER_URL}address/${COINK_ADDRESS}`} target="_blank" rel="noopener noreferrer" className="block break-all font-mono text-sm text-pink-300">{COINK_SYMBOL}: {COINK_ADDRESS}</a>
-        <p className="break-all text-xs text-muted-foreground">Read RPC: {POLYGON_RPC_URL}</p>
+        <p className="break-all text-xs text-muted-foreground">Read RPC: {RPC_URL}</p>
         <p role="status" className="break-all text-sm">{connection.checking ? 'Checking Safe connection…' : safe ? `Safe: ${account} · Chain ${chainId} · ${safe.info.threshold}/${safe.info.owners.length} signatures` : connection.error || (account ? `Browser wallet: ${account}` : 'Read-only. Connect a wallet or open as a custom Safe App. Calldata generation does not require a wallet.')}</p>
         {account && chainId !== POLYGON_CHAIN_ID && <p role="alert" className="text-amber-300">Wrong network. Use Polygon Mainnet (137), not Amoy.</p>}
         <div className="flex flex-wrap gap-3">
