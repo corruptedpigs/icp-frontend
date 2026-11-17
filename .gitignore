@@ -17,6 +17,7 @@ out/
 
 # Next.js
 .next/
+.next-dev/
 next-build/
 
 # Local env files — contain secrets, never commit

@@ -18,6 +18,9 @@ export const metadata = {
   title: title,
   description: description,
   keywords: "satire, social impact, collectible cards, corruption, education, games, burn to donate",
+  other: {
+    'build-commit': process.env.BUILD_COMMIT_SHA || 'unknown',
+  },
   openGraph: {
     description: description,
     logo: logoUrl,
