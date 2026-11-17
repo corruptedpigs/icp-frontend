@@ -6,7 +6,7 @@
 |---|---|
 | Network | Polygon Mainnet |
 | Chain ID | `137` (`0x89`) |
-| RPC | `https://polygon-rpc.com/` |
+| RPC | `https://polygon-bor-rpc.publicnode.com` (override with `NEXT_PUBLIC_POLYGON_RPC_URL`; the old default `polygon-rpc.com` now returns 403 "API key disabled") |
 | Explorer | `https://polygonscan.com/` |
 | Gas token | POL (formerly MATIC) |
 

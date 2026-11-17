@@ -1,5 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import CoinkConsolePageClient from '../app/coink-console/CoinkConsolePageClient';
+import { render, screen, waitFor, act } from '@testing-library/react';
+import CoinkConsolePageClient, { READ_RETRY_MS } from '../app/coink-console/CoinkConsolePageClient';
 
 const mockParams = new URLSearchParams();
 const mockWallet = { account: null, chainId: null };
@@ -17,7 +17,8 @@ jest.mock('ethers', () => {
   })) };
 });
 
-beforeEach(() => { localStorage.clear(); mockParams.delete('coink'); });
+beforeEach(() => { localStorage.clear(); mockParams.delete('coink'); jest.useFakeTimers(); });
+afterEach(() => { jest.useRealTimers(); });
 
 test('locked UI does not initialize console RPCs', async () => {
   const { JsonRpcProvider } = require('ethers');
@@ -42,4 +43,50 @@ test('lock URL revokes persisted console access', async () => {
   render(<CoinkConsolePageClient />);
   expect(await screen.findByText('Access restricted')).toBeInTheDocument();
   expect(localStorage.getItem('coink_unlocked')).toBeNull();
+});
+
+describe('failed read auto-retry', () => {
+  function mockContract({ failUntil = 0 } = {}) {
+    const { Contract } = require('ethers');
+    const calls = { owner: 0, reserves: 0 };
+    Contract.mockImplementationOnce(() => ({
+      owner: async () => { calls.owner += 1; if (calls.owner <= failUntil) throw new Error('server response 401'); return '0x1111111111111111111111111111111111111111'; },
+      UBQaddress: async () => '0x2222222222222222222222222222222222222222',
+      AirDropManager: async () => '0x3333333333333333333333333333333333333333',
+      reserves: async () => { calls.reserves += 1; if (calls.owner <= failUntil) throw new Error('server response 401'); return { name: 'Reserve', amount: 10n ** 18n }; },
+      ...Object.fromEntries(['excessBalance', 'COINKbalance', 'POLbalance', 'totalReserved', 'totalFoundersLocked', 'totalSocialWhitelisted', 'reserveFundAvailable'].map((name) => [name, async () => 0n])),
+    }));
+    return calls;
+  }
+
+  test('retries a failed read after 30 s and stops once a refresh succeeds', async () => {
+    const calls = mockContract({ failUntil: 1 });
+    mockParams.set('coink', 'berardo');
+    render(<CoinkConsolePageClient />);
+    await act(async () => {}); // flush the initial refresh (fails)
+    expect(screen.getByText(/Could not read contract: server response 401/)).toBeInTheDocument();
+    expect(calls.owner).toBe(1);
+    await act(async () => { jest.advanceTimersByTime(READ_RETRY_MS - 1); });
+    expect(calls.owner).toBe(1); // no premature retry
+    await act(async () => { jest.advanceTimersByTime(1); });
+    await act(async () => {}); // flush the retry refresh (succeeds)
+    expect(calls.owner).toBe(2); // retried exactly once
+    expect(screen.queryByText(/Could not read contract/)).not.toBeInTheDocument();
+    await act(async () => { jest.advanceTimersByTime(60_000); });
+    expect(calls.owner).toBe(2); // success stops the retry timer
+  });
+
+  test('keeps retrying while reads keep failing', async () => {
+    const calls = mockContract({ failUntil: 99 });
+    mockParams.set('coink', 'berardo');
+    render(<CoinkConsolePageClient />);
+    await act(async () => {});
+    expect(screen.getByText(/Could not read contract: server response 401/)).toBeInTheDocument();
+    for (let i = 2; i <= 4; i += 1) {
+      await act(async () => { jest.advanceTimersByTime(READ_RETRY_MS); });
+      await act(async () => {});
+      expect(calls.owner).toBe(i);
+      expect(screen.getByText(/Could not read contract/)).toBeInTheDocument();
+    }
+  });
 });

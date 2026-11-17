@@ -13,6 +13,9 @@ import { submitTransaction } from './transactions';
 const button = 'btn btn-sm btn-outline border-pink-500/50 text-pink-300 hover:bg-pink-500 hover:border-pink-500';
 const input = 'w-full rounded-lg border border-border bg-background px-3 py-2 text-foreground disabled:opacity-50';
 const errorText = (error) => error.reason || error.shortMessage || error.message || 'Operation failed.';
+// ethers only retries HTTP 429 internally (fast randomized backoff); 401/403 and
+// network errors are never retried, so failed reads are re-run at the app level.
+export const READ_RETRY_MS = 30_000;
 
 export default function CoinkConsolePageClient() {
   const searchParams = useSearchParams();
@@ -43,6 +46,7 @@ function Console() {
   const [snapshot, setSnapshot] = useState(null);
   const [loading, setLoading] = useState(false);
   const [readError, setReadError] = useState('');
+  const [failedRefreshes, setFailedRefreshes] = useState(0);
   const [tab, setTab] = useState('withdraw');
   const [reserveId, setReserveId] = useState('');
   const [recipient, setRecipient] = useState('');
@@ -104,12 +108,23 @@ function Console() {
         Promise.all(READS.map(async ([name]) => [name, await contract[name]()])),
       ]);
       setSnapshot({ roles: { owner, ubq, airdrop }, reserves, values: Object.fromEntries(values) });
+      setFailedRefreshes(0); // Disarm any pending auto-retry from an earlier failure.
     } catch (error) {
       setSnapshot(null); // Never allow sends based on stale permissions/balances after a failed refresh.
       setReadError(errorText(error));
+      setFailedRefreshes((count) => count + 1); // A counter, not the error text: identical consecutive failures must still re-arm the retry.
     } finally { setLoading(false); }
   }, [resources]);
   useEffect(() => { refresh(); }, [refresh]);
+  // ethers only retries HTTP 429 internally (fast randomized backoff); 401/403
+  // and network errors are never retried. Re-run failed reads after
+  // READ_RETRY_MS so a throttled or briefly-down RPC recovers without a manual
+  // click; a successful refresh (automatic or manual) disarms the timer.
+  useEffect(() => {
+    if (!failedRefreshes) return;
+    const retry = setTimeout(() => { if (!loading) refresh(); }, READ_RETRY_MS);
+    return () => clearTimeout(retry);
+  }, [failedRefreshes, loading, refresh]);
 
   const fundAvailable = snapshot?.values.reserveFundAvailable || 0n;
   const withdrawable = (snapshot?.reserves || []).filter((reserve) => reserve.id === FUND ? fundAvailable > 0n : TRANSFERABLE.includes(reserve.id) && reserve.amount > 0n);
@@ -164,7 +179,7 @@ function Console() {
         </div>
         {Object.entries(roles).map(([role, address]) => <p key={role} className="break-all text-xs"><span className={sameAddress(account, address) ? 'text-green-300' : 'text-muted-foreground'}>{ROLE_LABELS[role]}: </span><span className="font-mono">{address}</span>{sameAddress(account, address) ? ' (connected)' : ''}</p>)}
         {account && snapshot && !hasRole(account, roles, 'ubq') && <p className="text-sm text-amber-300">This account is not UBQ. Reserve withdrawals are disabled; you can prepare calldata for the treasury Safe.</p>}
-        {readError && <p role="alert" className="text-red-300">Could not read contract: {readError}</p>}
+        {readError && <p role="alert" className="text-red-300">Could not read contract: {readError} (retrying every {READ_RETRY_MS / 1000} s)</p>}
       </section>
 
       <div className="flex gap-3" aria-label="Console sections">
