@@ -6,7 +6,7 @@ import { hasRole, sameAddress } from './contract';
 export async function submitTransaction({ reader, contract, safe, provider, account, role, data }) {
   let signer;
   if (safe) {
-    const info = await safe.sdk.safe.getSafeInfo();
+    const info = await safe.sdk.safe.getInfo();
     if (Number(info.chainId) !== POLYGON_CHAIN_ID || !sameAddress(info.safeAddress, account)) {
       throw new Error('Safe account/network changed. Reopen the Polygon Safe App.');
     }

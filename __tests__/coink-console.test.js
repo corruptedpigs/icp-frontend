@@ -94,13 +94,13 @@ describe('COINK transaction safety', () => {
 
   test('Safe proposals simulate as the Safe and never invoke browser signing', async () => {
     options.safe = { sdk: {
-      safe: { getSafeInfo: jest.fn().mockResolvedValue({ safeAddress: account, chainId: 137 }) },
+      safe: { getInfo: jest.fn().mockResolvedValue({ safeAddress: account, chainId: 137 }) },
       txs: { send: jest.fn().mockResolvedValue({ safeTxHash: 'safe-hash' }) },
     } };
     await expect(submitTransaction(options)).resolves.toEqual({ safeTxHash: 'safe-hash' });
     expect(options.safe.sdk.txs.send).toHaveBeenCalledWith({ txs: [{ to: COINK_ADDRESS, value: '0', data: '0x1234' }] });
     expect(options.provider.getSigner).not.toHaveBeenCalled();
-    options.safe.sdk.safe.getSafeInfo.mockResolvedValue({ safeAddress: account, chainId: 1 });
+    options.safe.sdk.safe.getInfo.mockResolvedValue({ safeAddress: account, chainId: 1 });
     await expect(submitTransaction(options)).rejects.toThrow('Safe account/network changed');
     expect(options.safe.sdk.txs.send).toHaveBeenCalledTimes(1);
   });

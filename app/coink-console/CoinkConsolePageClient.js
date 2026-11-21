@@ -89,7 +89,7 @@ function Console() {
         if (!active) return;
         sdk = new SafeAppsSDK({ allowedDomains: [/^https:\/\/app\.safe\.global$/] });
         const info = await Promise.race([
-          sdk.safe.getSafeInfo(),
+          sdk.safe.getInfo(),
           new Promise((_, reject) => { timer = setTimeout(() => reject(new Error('Safe connection timed out. Open this page as a custom app at app.safe.global.')), 5000); }),
         ]);
         if (active) setConnection({ checking: false, safe: { sdk, info }, embedded: true, error: '' });
