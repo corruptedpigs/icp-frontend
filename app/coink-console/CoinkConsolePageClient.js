@@ -63,6 +63,11 @@ function Console() {
   const [output, setOutput] = useState(null);
   const [busy, setBusy] = useState(false);
   const sending = useRef(false);
+  const confirming = useRef(false);
+  const [confirmation, setConfirmation] = useState(null);
+  // window.confirm() is ignored inside the Safe{Wallet} sandboxed iframe (no allow-modals), so confirm in-page.
+  const confirmInPage = (message) => new Promise((resolve) => setConfirmation({ message, resolve }));
+  const answerConfirmation = (ok) => { confirmation.resolve(ok); setConfirmation(null); };
   const safe = connection.safe;
   const account = safe?.info.safeAddress || (connection.embedded ? null : wallet.account);
   const chainId = safe ? Number(safe.info.chainId) : wallet.chainId;
@@ -142,7 +147,7 @@ function Console() {
   const canSend = (role) => !connection.checking && !connection.error && !loading && Boolean(snapshot) && chainId === POLYGON_CHAIN_ID && hasRole(account, roles, role);
 
   async function run(name, role, buildData, onlyData, danger = false) {
-    if (sending.current) return;
+    if (sending.current || confirming.current) return;
     try {
       const data = buildData();
       if (onlyData) {
@@ -153,7 +158,10 @@ function Console() {
       const decoded = contractInterface.parseTransaction({ data });
       const definition = FUNCTIONS.find((fn) => fn.name === decoded.name);
       const details = definition.inputs.map(([key, type], index) => `${key}: ${type === 'token' ? `${formatAmount(decoded.args[index])} ${COINK_SYMBOL}` : decoded.args[index].toString()}`).join('\n');
-      if (!window.confirm(`${danger ? 'DANGER — potentially irreversible operation.\n' : ''}${name}\n${decoded.name}\n${details}\nContract: ${COINK_ADDRESS}\nFrom: ${account}\nNetwork: Polygon (137)\nValue: 0\nCalldata: ${data}\n\nVerify these details before continuing.`)) return;
+      confirming.current = true;
+      let confirmed;
+      try { confirmed = await confirmInPage(`${danger ? 'DANGER — potentially irreversible operation.\n' : ''}${name}\n${decoded.name}\n${details}\nContract: ${COINK_ADDRESS}\nFrom: ${account}\nNetwork: Polygon (137)\nValue: 0\nCalldata: ${data}\n\nVerify these details before continuing.`); } finally { confirming.current = false; }
+      if (!confirmed) return;
       sending.current = true;
       setBusy(true);
       setOutput({ text: 'Simulating transaction…' });
@@ -226,6 +234,7 @@ function Console() {
         </section>
         <section className="glass-card p-5 space-y-3"><h2 className="text-xl">Quick reads</h2>{READS.map(([name, label]) => <p key={name} className="text-sm">{label}: <span className="font-mono">{snapshot ? formatAmount(snapshot.values[name], name === 'POLbalance' ? 18 : undefined) : '—'}</span></p>)}</section>
       </>}
+      {confirmation && <section role="alertdialog" aria-label="Confirm transaction" className="glass-card border border-pink-500/50 p-5 space-y-4"><pre className="whitespace-pre-wrap break-all text-sm">{confirmation.message}</pre><div className="flex gap-3"><button className={button} onClick={() => answerConfirmation(true)}>Confirm</button><button className={button} onClick={() => answerConfirmation(false)}>Cancel</button></div></section>}
       {output && <section role={output.error ? 'alert' : 'status'} className={`glass-card p-5 ${output.error ? 'text-red-300' : 'text-purple-200'}`}><pre className="whitespace-pre-wrap break-all text-sm">{output.text}</pre>{output.hash && <a className="mt-3 inline-block text-pink-300 underline" href={`${POLYGON_EXPLORER_URL}tx/${output.hash}`} target="_blank" rel="noopener noreferrer">View on Polygonscan</a>}</section>}
     </div>
   );
