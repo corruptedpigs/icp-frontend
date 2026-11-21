@@ -26,7 +26,10 @@ export const READ_RETRY_MS = 30_000;
 export default function CoinkConsolePageClient() {
   const searchParams = useSearchParams();
   const [unlocked, setUnlocked] = useState(null);
-  useEffect(() => { setUnlocked(checkAndPersistFlag('coink', searchParams)); }, [searchParams]);
+  useEffect(() => { // Inside a Safe{Wallet} iframe neither the query string nor localStorage survives,
+    // so embedding unlocks the UI (the gate is not authentication; roles are on-chain).
+    const flag = checkAndPersistFlag('coink', searchParams);
+    setUnlocked(window.parent !== window || flag); }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-background text-foreground">

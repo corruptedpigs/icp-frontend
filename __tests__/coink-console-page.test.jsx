@@ -90,3 +90,16 @@ describe('failed read auto-retry', () => {
     }
   });
 });
+
+test('embedded in an iframe (Safe{Wallet}) unlocks without the flag', async () => {
+  const original = Object.getOwnPropertyDescriptor(window, 'parent');
+  Object.defineProperty(window, 'parent', { value: {}, configurable: true });
+  try {
+    render(<CoinkConsolePageClient />);
+    expect(await screen.findByText('Connection')).toBeInTheDocument();
+    expect(screen.queryByText('Access restricted')).not.toBeInTheDocument();
+    expect(localStorage.getItem('coink_unlocked')).toBeNull();
+  } finally {
+    if (original) Object.defineProperty(window, 'parent', original); else delete window.parent;
+  }
+});
