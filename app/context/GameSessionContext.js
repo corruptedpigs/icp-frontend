@@ -2,12 +2,14 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useWallet } from './WalletContext';
+import { useSimulation } from './SimulationContext';
 import styles from '../../styles/Game.module.css';
 
 const GameSessionContext = createContext(null);
 
 export function GameSessionProvider({ children }) {
   const { account } = useWallet();
+  const { simulation } = useSimulation();
   const [session, setSession] = useState(null);
   const [showArrival, setShowArrival] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -19,7 +21,7 @@ export function GameSessionProvider({ children }) {
     setSession(null);
     setShowArrival(false);
     sessionAccount.current = null;
-  }, [account]);
+  }, [account, simulation]); // switching test mode resets the game session
 
   useEffect(() => () => {
     audio.current?.context.close().catch(() => {});

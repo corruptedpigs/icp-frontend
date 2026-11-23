@@ -6,6 +6,7 @@ import Player1 from "../../components/games/logic/Player1";
 import { useWalletNFTs } from "../../hooks/useWalletNFTs";
 import { useWallet } from "../../context/WalletContext";
 import GameHUD from "../../components/GameHUD";
+import { useSimulation } from "../../context/SimulationContext";
 import { useGameSession } from "../../context/GameSessionContext";
 
 const MIN_NFTS_REQUIRED = 3;
@@ -30,11 +31,12 @@ function NotEnoughNFTs({ count }) {
 
 export default function GamePageClient() {
   const { account } = useWallet();
+  const { simulation } = useSimulation();
   const { opponentReady } = useGameSession();
   const { nfts, nftImages, isLoading } = useWalletNFTs();
 
-  // const hasEnoughNFTs = nftImages.length >= MIN_NFTS_REQUIRED;
-  const hasEnoughNFTs = true;
+  // Real mode keeps the legacy always-true behaviour; simulation enforces the minimum.
+  const hasEnoughNFTs = simulation ? nftImages.length >= MIN_NFTS_REQUIRED : true;
 
   return (
     <main

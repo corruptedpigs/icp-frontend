@@ -1,4 +1,13 @@
 import { createConsumer } from '@rails/actioncable';
+import { withSimulationParam } from './gameApi';
+
+export const DEFAULT_MATCH_TIMEOUT_MS = 90000;
+
+/** Wait for an opponent; override with NEXT_PUBLIC_MATCHMAKING_TIMEOUT_MS (tests). */
+export function getMatchTimeoutMs() {
+  const value = Number(process.env.NEXT_PUBLIC_MATCHMAKING_TIMEOUT_MS);
+  return Number.isFinite(value) && value > 0 ? value : DEFAULT_MATCH_TIMEOUT_MS;
+}
 
 export function getCableUrl(apiUrl) {
   const url = new URL('/cable', apiUrl);
@@ -12,7 +21,7 @@ export function waitForCableMatch({ apiUrl, token, signal, timeoutMessage, failu
       reject(new Error('Matchmaking cancelled'));
       return;
     }
-    const consumer = createConsumer(process.env.NEXT_PUBLIC_GAME_CABLE_URL || getCableUrl(apiUrl));
+    const consumer = createConsumer(withSimulationParam(process.env.NEXT_PUBLIC_GAME_CABLE_URL || getCableUrl(apiUrl)));
     let subscription;
     let settled = false;
     const finish = (error, match) => {
@@ -26,7 +35,7 @@ export function waitForCableMatch({ apiUrl, token, signal, timeoutMessage, failu
       else resolve(match);
     };
     const cancel = () => finish(new Error('Matchmaking cancelled'));
-    const timer = setTimeout(() => finish(new Error(timeoutMessage)), 90000);
+    const timer = setTimeout(() => finish(new Error(timeoutMessage)), getMatchTimeoutMs());
     signal.addEventListener('abort', cancel, { once: true });
     try {
       subscription = consumer.subscriptions.create({ channel: 'MatchmakingChannel', token }, {

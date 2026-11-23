@@ -7,8 +7,8 @@ const Player1 = ({ images, nfts, opponentReady = false }) => {
   const [selectedIds, setSelectedIds] = useState([]);
 
   // Support both plain image array and full nft objects array.
-  // Use the image URL as a stable unique ID since nft objects have no explicit id.
-  const cards = nfts ?? images.map(src => ({ image: src, burnPower: null, name: null }));
+  // Cards carry a stable `id`; fall back to the image URL for legacy callers.
+  const cards = nfts ?? images.map(src => ({ id: src, image: src, burnPower: null, name: null }));
 
   const toggleSelect = (id) => {
     setSelectedIds(prev => {
@@ -18,7 +18,7 @@ const Player1 = ({ images, nfts, opponentReady = false }) => {
     });
   };
 
-  const selectedCards = cards.filter(c => selectedIds.includes(c.image));
+  const selectedCards = cards.filter(c => selectedIds.includes(c.id ?? c.image));
   const totalPower = selectedCards.reduce((sum, c) => sum + (c.burnPower ?? 0), 0);
 
   const getTier = (power) => {
@@ -44,7 +44,7 @@ const Player1 = ({ images, nfts, opponentReady = false }) => {
       {/* Card grid */}
       <div id="squad-card-grid" className="flex flex-wrap justify-center gap-12">
         {cards.map((card, index) => {
-          const id = card.image;
+          const id = card.id ?? card.image;
           const isSelected = selectedIds.includes(id);
           const isDisabled = selectedIds.length >= 3 && !isSelected;
 

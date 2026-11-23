@@ -23,37 +23,13 @@ import { waitForCableMatch } from '../utils/matchmaking';
 import { useWallet } from "../context/WalletContext";
 import { useTranslations } from "../components/LanguageContext";
 import { getAddress, verifyMessage } from "ethers";
+import { GAME_API_BASE, fetchGameApi, readJson, fetchSimulatedToken } from "../utils/gameApi";
+import { isSimulation } from "../utils/simulation";
+import { useSimulation } from "../context/SimulationContext";
 
-const GAME_API_BASE = process.env.NEXT_PUBLIC_GAME_API_URL || "http://localhost:3000";
 const GAME_TYPE = "logic";
 const POLL_INTERVAL_MS = 2000;
 const MAX_WAIT_ATTEMPTS = 45; // ~90 seconds
-/** Fetches the API without exposing browser/network diagnostics to players. */
-async function fetchGameApi(path, options, serviceUnavailableMessage) {
-  let response;
-  try {
-    const origin = new URL(GAME_API_BASE).origin;
-    response = await fetch(`${origin}${path}`, options);
-  } catch {
-    // Browsers report offline, DNS, CORS, and connection-refused failures as
-    // generic TypeErrors (often just "Failed to fetch"). Keep that detail out
-    // of the player-facing error.
-    throw new Error(serviceUnavailableMessage);
-  }
-
-  if (response.status >= 500) {
-    throw new Error(serviceUnavailableMessage);
-  }
-  return response;
-}
-
-async function readJson(response, fallbackMessage) {
-  try {
-    return await response.json();
-  } catch {
-    throw new Error(fallbackMessage);
-  }
-}
 
 /** Builds an EIP‑4361 (SIWE) plain‑text message. */
 function buildSiweMessage({ domain, address, uri, chainId, nonce, issuedAt }) {
@@ -117,17 +93,30 @@ async function waitForMatch(sessionId, bearerToken, t) {
 export function useJoinGame() {
   const { provider, account, chainId } = useWallet();
   const { t } = useTranslations();
+  const { simulation: simulationOn } = useSimulation();
   const [isLoading, setIsLoading] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
   const [error, setError] = useState(null);
-  const [token, setToken] = useState(null);
+  // Tokens are kept per mode so a simulated token is never sent on real
+  // requests (and vice versa).
+  const [tokens, setTokens] = useState({ real: null, sim: null });
   const [match, setMatch] = useState(null);
   const pendingWait = useRef(null);
 
   useEffect(() => () => pendingWait.current?.abort(), [account, provider]);
 
+  // Switching mode drops any in-flight matchmaking and the previous match.
+  useEffect(() => {
+    pendingWait.current?.abort();
+    setMatch(null);
+    setError(null);
+    setIsWaiting(false);
+  }, [simulationOn]);
+
   const joinGame = useCallback(async () => {
-    if (!provider || !account) {
+    const simulation = isSimulation();
+    const mode = simulation ? "sim" : "real";
+    if (!account || (!simulation && !provider)) {
       throw new Error(t("game.errors.walletNotConnected"));
     }
 
@@ -135,52 +124,61 @@ export function useJoinGame() {
     setError(null);
 
     try {
-      // 1. Get server nonce
-      const nonce = await fetchServerNonce(account, t);
-      // Use the address from the signer itself. Wallet context state can be
-      // stale after switching accounts/providers in an injected wallet.
-      const signer = await provider.getSigner();
-      const signerAddress = getAddress(await signer.getAddress());
-      if (signerAddress.toLowerCase() !== account.toLowerCase()) {
-        throw new Error(t("game.errors.walletChanged"));
-      }
+      let bearerToken;
+      if (simulation) {
+        // Simulation: no nonce/SIWE; the backend issues a token for the wallet.
+        bearerToken = await fetchSimulatedToken(account, {
+          unavailable: t("game.errors.serviceUnavailable"),
+          failure: t("game.errors.walletVerification"),
+        });
+      } else {
+        // 1. Get server nonce
+        const nonce = await fetchServerNonce(account, t);
+        // Use the address from the signer itself. Wallet context state can be
+        // stale after switching accounts/providers in an injected wallet.
+        const signer = await provider.getSigner();
+        const signerAddress = getAddress(await signer.getAddress());
+        if (signerAddress.toLowerCase() !== account.toLowerCase()) {
+          throw new Error(t("game.errors.walletChanged"));
+        }
 
-      // 2. Build & sign SIWE message
-      const domain = typeof window !== "undefined" ? window.location.host : "corruptedpigs.com";
-      const uri = typeof window !== "undefined" ? window.location.origin : `https://${domain}`;
-      const issuedAt = new Date().toISOString();
-      const message = buildSiweMessage({
-        domain,
-        address: signerAddress,
-        uri,
-        chainId: chainId ?? 137,
-        nonce,
-        issuedAt,
-      });
-      // ethers handles wallet-specific personal_sign encoding and address
-      // formatting. Manually issuing personal_sign then falling back to this
-      // call duplicated the same request and could pass a mismatched address.
-      const signature = await signer.signMessage(message);
-      const recoveredAddress = getAddress(verifyMessage(message, signature));
-      if (recoveredAddress !== signerAddress) {
-        throw new Error(t("game.errors.signatureAccountMismatch"));
-      }
+        // 2. Build & sign SIWE message
+        const domain = typeof window !== "undefined" ? window.location.host : "corruptedpigs.com";
+        const uri = typeof window !== "undefined" ? window.location.origin : `https://${domain}`;
+        const issuedAt = new Date().toISOString();
+        const message = buildSiweMessage({
+          domain,
+          address: signerAddress,
+          uri,
+          chainId: chainId ?? 137,
+          nonce,
+          issuedAt,
+        });
+        // ethers handles wallet-specific personal_sign encoding and address
+        // formatting. Manually issuing personal_sign then falling back to this
+        // call duplicated the same request and could pass a mismatched address.
+        const signature = await signer.signMessage(message);
+        const recoveredAddress = getAddress(verifyMessage(message, signature));
+        if (recoveredAddress !== signerAddress) {
+          throw new Error(t("game.errors.signatureAccountMismatch"));
+        }
 
-      // 3. Verify auth
-      const verifyRes = await fetchGameApi("/api/v1/auth/verify", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message, signature }),
-      }, t("game.errors.serviceUnavailable"));
-      if (!verifyRes.ok) {
-        throw new Error(t("game.errors.walletVerification"));
+        // 3. Verify auth
+        const verifyRes = await fetchGameApi("/api/v1/auth/verify", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message, signature }),
+        }, t("game.errors.serviceUnavailable"));
+        if (!verifyRes.ok) {
+          throw new Error(t("game.errors.walletVerification"));
+        }
+        const verifyData = await readJson(verifyRes, t("game.errors.walletVerification"));
+        bearerToken = verifyData.token;
+        if (!bearerToken) {
+          throw new Error(t("game.errors.walletVerification"));
+        }
       }
-      const verifyData = await readJson(verifyRes, t("game.errors.walletVerification"));
-      const bearerToken = verifyData.token;
-      if (!bearerToken) {
-        throw new Error(t("game.errors.walletVerification"));
-      }
-      setToken(bearerToken);
+      setTokens((prev) => ({ ...prev, [mode]: bearerToken }));
 
       // 4. Join matchmaking
       const matchRes = await fetchGameApi("/api/v1/matchmaking", {
@@ -227,6 +225,7 @@ export function useJoinGame() {
     }
   }, [provider, account, chainId, t]);
 
+  const token = tokens[simulationOn ? "sim" : "real"];
   return { joinGame, isLoading, isWaiting, error, token, match };
 }
 

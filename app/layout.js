@@ -3,6 +3,7 @@ import "../styles/globals.css";
 import '../fonts/roboto.css';
 import { MuteProvider } from './components/mute_context';
 import { WalletProvider } from './context/WalletContext';
+import { SimulationProvider } from './context/SimulationContext';
 import { LanguageProvider } from './components/LanguageContext';
 
 const baseUrl = process.env.HOST_URL
@@ -41,11 +42,13 @@ export default function RootLayout({ children }) {
       </head>
       <body className="roboto">
         <LanguageProvider>
+          <SimulationProvider>
           <WalletProvider>
             <MuteProvider>
               {children}
             </MuteProvider>
           </WalletProvider>
+          </SimulationProvider>
         </LanguageProvider>
       </body>
       {process.env.NODE_ENV === 'production' && (
