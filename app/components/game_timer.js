@@ -1,37 +1,68 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from 'next/navigation';
 import ModalTimeIsUp from "./games/modalTimeIsUp"
 
-const GameTimer = ({ seconds }) => {
+/**
+ * Server-driven countdown. `deadline` is the move deadline in client-clock ms
+ * (server `move_deadline_at` already adjusted by the clock offset). When it
+ * elapses, `onExpire` (optional, async) asks the server for the real state and
+ * may return a new `{ deadline }` to keep playing; otherwise "Time is up" shows.
+ */
+const GameTimer = ({ deadline, onExpire }) => {
   const timerElapsedColour = "bg-gray-900";
+  const [current, setCurrent] = useState({ deadline, total: Math.max(0, deadline - Date.now()) });
   const [activeHr, setActiveHr] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const nrOfPills = 11;
   const router = useRouter();
+  const onExpireRef = useRef(onExpire);
+  onExpireRef.current = onExpire;
+
+  // A new server deadline restarts the clock.
+  useEffect(() => {
+    setCurrent({ deadline, total: Math.max(0, deadline - Date.now()) });
+  }, [deadline]);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveHr(prev => prev + 1);
-    }, seconds * 1000 / nrOfPills);
-
-    const timeout = setTimeout(() => {
+    let cancelled = false;
+    const tick = () => {
+      const remaining = current.deadline - Date.now();
+      const elapsed = current.total ? 1 - remaining / current.total : 1;
+      setActiveHr(Math.min(nrOfPills, Math.max(0, Math.floor(elapsed * nrOfPills))));
+    };
+    tick();
+    const interval = setInterval(tick, 250);
+    const timeout = setTimeout(async () => {
       clearInterval(interval);
-      setIsModalOpen(true);
-    }, seconds * 1000);
+      setActiveHr(nrOfPills);
+      let next = null;
+      try {
+        next = await onExpireRef.current?.();
+      } catch {
+        next = null; // cannot confirm with the server: treat the time as up
+      }
+      if (cancelled) return;
+      if (next?.deadline && next.deadline > Date.now()) {
+        setCurrent({ deadline: next.deadline, total: next.deadline - Date.now() });
+      } else {
+        setIsModalOpen(true);
+      }
+    }, Math.max(0, current.deadline - Date.now()));
 
     return () => {
+      cancelled = true;
       clearInterval(interval);
       clearTimeout(timeout);
     };
-  }, [seconds, nrOfPills]);
+  }, [current, nrOfPills]);
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
 
-    // redirects to /games only on prod so that we can more easily develop the UI
-    if(process.env.NODE_ENV === 'production') {
+    // Same in dev and prod; set NEXT_PUBLIC_TIME_UP_REDIRECT=off to stay on the page while developing the UI.
+    if (process.env.NEXT_PUBLIC_TIME_UP_REDIRECT !== 'off') {
       router.push('/games');
     }
   };

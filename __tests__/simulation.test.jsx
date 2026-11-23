@@ -8,7 +8,7 @@ const ACCOUNT = '0x' + 'a'.repeat(40);
 let mockWallet;
 jest.mock('../app/context/WalletContext', () => ({ useWallet: () => mockWallet }));
 jest.mock('../app/components/LanguageContext', () => ({ useTranslations: () => ({ t: k => k }) }));
-jest.mock('../app/utils/matchmaking', () => ({ waitForCableMatch: jest.fn() }));
+jest.mock('../app/utils/matchmaking', () => ({ ...jest.requireActual('../app/utils/matchmaking'), waitForCableMatch: jest.fn() }));
 
 const { useWalletNFTs } = require('../app/hooks/useWalletNFTs');
 const { useJoinGame } = require('../app/hooks/useJoinGame');

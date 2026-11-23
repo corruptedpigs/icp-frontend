@@ -10,16 +10,16 @@
  * 4. POST /api/v1/matchmaking { game_type } with Authorization header.
  * 5. If the response indicates a match already exists (matched:true or vs_cpu)
  *    → return immediately.
- * 6. Else subscribe to MatchmakingChannel until a matched event arrives,
- *    or until a 90 s timeout. The polling helper below is retained for reuse,
- *    but is not used by this flow.
+ * 6. Else subscribe to MatchmakingChannel until `matched` or `expired` arrives.
+ *    The local timer comes from the server (`expires_at − server_time`); when
+ *    it fires, GET /game_sessions/:id decides. The server is the only authority.
  *
  * Returns an object:
  * { joinGame(), isLoading, isWaiting, error, token, match }
  */
 
 import { useState, useCallback, useEffect, useRef } from "react";
-import { waitForCableMatch } from '../utils/matchmaking';
+import { waitForCableMatch, getWaitMs, getExpiryDeadline, withClockOffset } from '../utils/matchmaking';
 import { useWallet } from "../context/WalletContext";
 import { useTranslations } from "../components/LanguageContext";
 import { getAddress, verifyMessage } from "ethers";
@@ -28,8 +28,6 @@ import { isSimulation } from "../utils/simulation";
 import { useSimulation } from "../context/SimulationContext";
 
 const GAME_TYPE = "logic";
-const POLL_INTERVAL_MS = 2000;
-const MAX_WAIT_ATTEMPTS = 45; // ~90 seconds
 
 /** Builds an EIP‑4361 (SIWE) plain‑text message. */
 function buildSiweMessage({ domain, address, uri, chainId, nonce, issuedAt }) {
@@ -64,30 +62,13 @@ async function fetchServerNonce(walletAddress, t) {
   return data.nonce;
 }
 
-/** Polls the game session until a match is ready or timeout. */
-async function waitForMatch(sessionId, bearerToken, t) {
-  const poll = async (attempt = 0) => {
-    if (attempt > MAX_WAIT_ATTEMPTS) {
-      throw new Error(t("game.errors.opponentTimeout"));
-    }
-    const res = await fetchGameApi(`/api/v1/game_sessions/${sessionId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${bearerToken}`,
-      },
-    }, t("game.errors.serviceUnavailable"));
-    if (!res.ok) {
-      throw new Error(t("game.errors.matchStatus"));
-    }
-    const data = await readJson(res, t("game.errors.matchStatus"));
-    // Defensive checks for backend response.
-    if (data.matched || data.status === "active" || data.status === "matched" || data.vs_cpu) {
-      return data;
-    }
-    await new Promise((r) => setTimeout(r, POLL_INTERVAL_MS));
-    return poll(attempt + 1);
-  };
-  return poll();
+/** GET /game_sessions/:id — the server's current view of a session. */
+export async function fetchGameSession(sessionId, bearerToken, t) {
+  const res = await fetchGameApi(`/api/v1/game_sessions/${encodeURIComponent(sessionId)}`, {
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${bearerToken}` },
+  }, t("game.errors.serviceUnavailable"));
+  if (!res.ok) throw new Error(t("game.errors.matchStatus"));
+  return readJson(res, t("game.errors.matchStatus"));
 }
 
 export function useJoinGame() {
@@ -101,6 +82,7 @@ export function useJoinGame() {
   // requests (and vice versa).
   const [tokens, setTokens] = useState({ real: null, sim: null });
   const [match, setMatch] = useState(null);
+  const [waitingUntil, setWaitingUntil] = useState(null); // client-clock ms
   const pendingWait = useRef(null);
 
   useEffect(() => () => pendingWait.current?.abort(), [account, provider]);
@@ -111,6 +93,7 @@ export function useJoinGame() {
     setMatch(null);
     setError(null);
     setIsWaiting(false);
+    setWaitingUntil(null);
   }, [simulationOn]);
 
   const joinGame = useCallback(async () => {
@@ -196,37 +179,53 @@ export function useJoinGame() {
 
       // Immediate match? start game.
       if (matchData.matched || matchData.vs_cpu) {
-        setMatch(matchData);
-        return { token: bearerToken, match: matchData, matched: true };
+        const ready = withClockOffset(matchData);
+        setMatch(ready);
+        return { token: bearerToken, match: ready, matched: true };
       }
       // Else wait for opponent
       if (!matchData.matchmaking_token) throw new Error(t('game.errors.matchmaking'));
+      const sessionId = matchData.public_id || matchData.session_id || matchData.id;
+      const received = Date.now();
+      setWaitingUntil(getExpiryDeadline(matchData, received));
       setIsWaiting(true);
       const controller = new AbortController();
-      pendingWait.current?.abort();
+      pendingWait.current?.abort(); // re-join replaces any earlier wait
       pendingWait.current = controller;
+      const checkSession = async () => {
+        if (!sessionId) return { status: "waiting" };
+        const state = await fetchGameSession(sessionId, bearerToken, t);
+        const now = Date.now();
+        setWaitingUntil(getExpiryDeadline(state, now));
+        return { ...withClockOffset(state, now), nextWaitMs: getWaitMs(state, now) ?? undefined };
+      };
       const waitingMatch = await waitForCableMatch({
         apiUrl: GAME_API_BASE,
         token: matchData.matchmaking_token,
         signal: controller.signal,
+        timeoutMs: getWaitMs(matchData, received),
+        checkSession,
         timeoutMessage: t('game.errors.opponentTimeout'),
+        expiredMessage: t('game.errors.opponentTimeout'),
         failureMessage: t('game.errors.matchmaking'),
       });
-      pendingWait.current = null;
-      setIsWaiting(false);
-      setMatch(waitingMatch);
-      return { token: bearerToken, match: waitingMatch, matched: true };
+      if (pendingWait.current === controller) pendingWait.current = null;
+      const ready = waitingMatch.clock_offset_ms === undefined
+        ? withClockOffset(waitingMatch)
+        : waitingMatch;
+      setMatch(ready);
+      return { token: bearerToken, match: ready, matched: true };
     } catch (err) {
       setError(err instanceof Error ? err : new Error(String(err)));
       throw err;
     } finally {
       setIsWaiting(false);
+      setWaitingUntil(null);
       setIsLoading(false);
     }
   }, [provider, account, chainId, t]);
 
   const token = tokens[simulationOn ? "sim" : "real"];
-  return { joinGame, isLoading, isWaiting, error, token, match };
+  return { joinGame, isLoading, isWaiting, waitingUntil, error, token, match };
 }
 
-export { waitForMatch };

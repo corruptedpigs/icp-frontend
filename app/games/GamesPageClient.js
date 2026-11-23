@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ChooseGameCard from "../components/choose_game_card";
 import NavbarWithConnectWallet from "../../ui/components/homepage/navbar_with_connect_wallet";
@@ -17,10 +18,24 @@ function getJoinErrorMessage(error) {
   return message;
 }
 
+/** Seconds left until `deadline` (client-clock ms), ticking once a second. */
+function useCountdown(deadline) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!deadline) return undefined;
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, [deadline]);
+  return deadline ? Math.max(0, Math.ceil((deadline - now) / 1000)) : null;
+}
+
 export default function GamesPageClient() {
   const router = useRouter();
   const { account, connectWallet, isConnecting } = useWallet();
-  const { joinGame, isLoading, error, isWaiting } = useJoinGame();
+  const { joinGame, isLoading, error, isWaiting, waitingUntil } = useJoinGame();
+  const secondsLeft = useCountdown(isWaiting ? waitingUntil : null);
+  const waitingLabel = secondsLeft === null ? "Waiting for opponent…" : `Waiting for opponent… ${secondsLeft}s`;
   const { beginJoin, completeJoin, soundEnabled, setSoundEnabled } = useGameSession();
 
   const handleJoinLogic = async (e) => {
@@ -35,7 +50,7 @@ export default function GamesPageClient() {
     try {
       beginJoin();
       const result = await joinGame();
-      completeJoin({ ...result.match, matched: result.matched });
+      completeJoin({ ...result.match, matched: result.matched, token: result.token });
       router.push("/games/logic");
     } catch (err) {
       console.error("Failed to join game:", err);
@@ -73,7 +88,7 @@ export default function GamesPageClient() {
                   className={isLoading || isWaiting || isConnecting ? "cursor-not-allowed" : "cursor-pointer"}
                   aria-busy={isLoading || isWaiting || isConnecting}
                   title={isLoading || isWaiting || isConnecting
-                    ? (isConnecting ? "Connecting wallet…" : isWaiting ? "Waiting for opponent…" : "Signing in…")
+                    ? (isConnecting ? "Connecting wallet…" : isWaiting ? waitingLabel : "Signing in…")
                     : undefined}
                 >
                   {isLoading || isWaiting || isConnecting ? (
@@ -85,7 +100,7 @@ export default function GamesPageClient() {
                           {isConnecting
                             ? "Connecting wallet…"
                             : isWaiting
-                            ? "Waiting for opponent…"
+                            ? waitingLabel
                             : "Signing in…"}
                         </span>
                       </div>
