@@ -243,6 +243,25 @@ Note **NEXT_PUBLIC** is the prefix used by Next.js to make env vars available to
 
 **.env.icprod** is included for deployment to Internet Computer ic network which would be covered below.
 
+### Simulation mode ("Test mode")
+
+Testing without a wallet or NFTs. The **frontend decides**: the temporary *Test mode* button in the game HUD turns it on (a yellow `SIMULATION` banner shows while active; stored in `localStorage` under `simulation-mode`). There is no env var toggle.
+
+While on:
+- every API request carries `X-Simulation: on`, and the ActionCable URL gets `?simulation=on`;
+- cards come from `GET {API}/api/v1/players/:wallet/cards`, sign-in uses `POST /api/v1/auth/simulate` (no SIWE); simulated and real tokens are kept apart;
+- *Connect Wallet* asks for any `0x…` address (remembered in localStorage); no MetaMask, Alchemy or Polygon/RPC traffic (the COINK console skips its RPC reads);
+- switching mode resets the game session and reloads cards.
+
+The backend obeys only if its `:simulation` Flipper flag is on. Otherwise it answers 403 (or 404 on the simulation-only endpoints); the frontend then shows an error and **turns test mode off**, never falling back silently to real mode. With the mode off, the real Alchemy/MetaMask/SIWE flow is unchanged.
+
+| Variable | Purpose |
+| --- | --- |
+| `NEXT_PUBLIC_GAME_API_URL` | Backend base URL. |
+| `NEXT_PUBLIC_MATCHMAKING_TIMEOUT_MS` | Optional opponent-wait timeout in ms (default `90000`), for tests. |
+
+To remove the feature: delete `SimulationContext.js`, `SimulationControls.js` and `utils/simulation.js`, and their usages.
+
 ## Deploy to IC Network Canister
 
 The most exciting part is to deploy your Next.js / Internet Computer Dapp to production Internet Computer mainnet blockchain network.

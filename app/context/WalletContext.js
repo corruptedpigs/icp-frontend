@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { BrowserProvider, Contract, formatUnits } from 'ethers';
+import { useSimulation } from './SimulationContext';
 import { POLYGON_MAINNET, POLYGON_CHAIN_ID, COINK_ADDRESS, COINK_SYMBOL, COINK_DECIMALS } from '../utils/web3Config';
 
 const WalletContext = createContext();
@@ -26,6 +27,10 @@ const DEFAULT_TRACKED_TOKEN_ADDRESS = COINK_ADDRESS;
 const DEFAULT_TRACKED_TOKEN_SYMBOL = COINK_SYMBOL;
 const DEFAULT_TRACKED_TOKEN_DECIMALS = COINK_DECIMALS;
 const DEFAULT_NFT_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_NFT_ADDRESS || '0xc03B2ed81Cfce282D5cd921D429262f7cca3651f';
+
+// Simulation mode: the "wallet" is just an address typed/selected by the tester.
+const SIM_WALLET_KEY = 'sim-wallet';
+const ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
 
 const ERC20_ABI = [
   'function balanceOf(address) view returns (uint256)',
@@ -54,6 +59,8 @@ export function WalletProvider({ children }) {
   const [chainId, setChainId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const { simulation } = useSimulation();
+  const lastMode = useRef(simulation);
   const [trackedTokenAddress, setTrackedTokenAddress] = useState(DEFAULT_TRACKED_TOKEN_ADDRESS);
   const [trackedTokenDecimals, setTrackedTokenDecimals] = useState(Number.isFinite(DEFAULT_TRACKED_TOKEN_DECIMALS) ? DEFAULT_TRACKED_TOKEN_DECIMALS : 18);
   const [tokenBalance, setTokenBalance] = useState(null);
@@ -67,6 +74,12 @@ export function WalletProvider({ children }) {
     setProvider(null);
     setChainId(null);
     setTokenBalance(null);
+
+    if (typeof window !== 'undefined' && simulation) {
+      // Simulated identity only: leave the real wallet's saved connection alone.
+      window.localStorage.removeItem(SIM_WALLET_KEY);
+      return;
+    }
 
     if (typeof window !== 'undefined') {
       window.sessionStorage.setItem('wallet-disconnected', 'true');
@@ -85,7 +98,7 @@ export function WalletProvider({ children }) {
         }
       }
     }
-  }, []);
+  }, [simulation]);
 
   const setTrackedToken = useCallback((address, defaultSymbol = DEFAULT_TRACKED_TOKEN_SYMBOL, defaultDecimals = 18) => {
     setTrackedTokenAddress(address || '');
@@ -127,7 +140,7 @@ export function WalletProvider({ children }) {
   }, [account, provider, trackedTokenAddress, tokenSymbol]);
 
   const addTrackedTokenToWallet = useCallback(async () => {
-    if (typeof window === 'undefined' || !window.ethereum || !trackedTokenAddress) {
+    if (simulation || typeof window === 'undefined' || !window.ethereum || !trackedTokenAddress) {
       return false;
     }
 
@@ -149,9 +162,24 @@ export function WalletProvider({ children }) {
       console.error('Error adding tracked token to wallet:', error);
       return false;
     }
-  }, [trackedTokenAddress, tokenSymbol, trackedTokenDecimals]);
+  }, [simulation, trackedTokenAddress, tokenSymbol, trackedTokenDecimals]);
 
-  const connectWallet = useCallback(async () => {
+  const connectWallet = useCallback(async (simAddress) => {
+    if (simulation) {
+      // Simulation: no window.ethereum, no provider, no chain calls.
+      if (typeof window === 'undefined') return false;
+      // onClick handlers may pass an event; only strings count as an address.
+      let address = typeof simAddress === 'string' ? simAddress : null;
+      address = (address ?? window.localStorage.getItem(SIM_WALLET_KEY) ?? window.prompt('Simulation mode: enter the wallet address (0x…) to play as')) ?? '';
+      address = address.trim();
+      if (!ADDRESS_RE.test(address)) return false;
+      window.localStorage.setItem(SIM_WALLET_KEY, address);
+      setAccount(address);
+      setProvider(null);
+      setChainId(POLYGON_MAINNET_ID);
+      return true;
+    }
+
     if (typeof window === 'undefined' || !window.ethereum) {
       console.error('Web3 wallet not found. Please install MetaMask or another Web3 wallet.');
       return false;
@@ -212,7 +240,7 @@ export function WalletProvider({ children }) {
     } finally {
       setIsConnecting(false);
     }
-  }, []);
+  }, [simulation]);
 
   const handleAccountsChanged = useCallback((accounts) => {
     if (accounts.length === 0) {
@@ -235,6 +263,26 @@ export function WalletProvider({ children }) {
   // Check if wallet is already connected on mount (only after component is mounted)
   useEffect(() => {
     if (!isMounted) return;
+
+    // The real wallet and the simulated address are separate identities:
+    // changing mode drops the current account before restoring the other one.
+    if (lastMode.current !== simulation) {
+      lastMode.current = simulation;
+      setAccount(null);
+      setProvider(null);
+      setChainId(null);
+      setTokenBalance(null);
+    }
+
+    if (simulation) {
+      const saved = window.localStorage.getItem(SIM_WALLET_KEY);
+      if (saved && ADDRESS_RE.test(saved)) {
+        setAccount(saved);
+        setProvider(null);
+        setChainId(POLYGON_MAINNET_ID);
+      }
+      return undefined;
+    }
 
     const initWallet = async () => {
       if (typeof window !== 'undefined' && window.ethereum) {
@@ -273,7 +321,7 @@ export function WalletProvider({ children }) {
         window.ethereum.removeListener('chainChanged', handleChainChanged);
       }
     };
-  }, [isMounted, handleAccountsChanged, handleChainChanged]);
+  }, [isMounted, simulation, handleAccountsChanged, handleChainChanged]);
 
   useEffect(() => {
     if (!account || !provider) {
@@ -400,6 +448,7 @@ export function WalletProvider({ children }) {
     tokenSymbol,
     isTokenBalanceLoading,
     isConnecting,
+    isSimulation: simulation,
     connectWallet,
     disconnectWallet,
     switchToPolygon,

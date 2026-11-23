@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { Contract, JsonRpcProvider } from 'ethers';
 import NavbarWithConnectWallet from '../../ui/components/homepage/navbar_with_connect_wallet';
 import { useWallet } from '../context/WalletContext';
+import { useSimulation } from '../context/SimulationContext';
 import { checkAndPersistFlag } from '../utils/featureFlags';
 import { COINK_ADDRESS, COINK_SYMBOL, POLYGON_CHAIN_ID, POLYGON_EXPLORER_URL } from '../utils/web3Config';
 import { ABI, FUNCTIONS, READS, FUND, TRANSFERABLE, ROLE_LABELS, buildWithdrawal, contractInterface, formatAmount, hasRole, parseArgument, sameAddress } from './contract';
@@ -73,11 +74,15 @@ function Console() {
   const chainId = safe ? Number(safe.info.chainId) : wallet.chainId;
   const roles = snapshot?.roles || {};
 
+  const { simulation } = useSimulation();
   useEffect(() => {
+    // Test mode: the backend blocks the RPC proxy, so do not call it at all.
+    if (simulation) { setResources(null); setSnapshot(null); setReadError('Chain reads are disabled in test mode.'); return undefined; }
+    setReadError('');
     const reader = new JsonRpcProvider(RPC_URL, POLYGON_CHAIN_ID);
     setResources({ reader, contract: new Contract(COINK_ADDRESS, ABI, reader) });
     return () => reader.destroy();
-  }, []);
+  }, [simulation]);
 
   useEffect(() => {
     let active = true;
@@ -196,7 +201,7 @@ function Console() {
         </div>
         {Object.entries(roles).map(([role, address]) => <p key={role} className="break-all text-xs"><span className={sameAddress(account, address) ? 'text-green-300' : 'text-muted-foreground'}>{ROLE_LABELS[role]}: </span><span className="font-mono">{address}</span>{sameAddress(account, address) ? ' (connected)' : ''}</p>)}
         {account && snapshot && !hasRole(account, roles, 'ubq') && <p className="text-sm text-amber-300">This account is not UBQ. Reserve withdrawals are disabled; you can prepare calldata for the treasury Safe.</p>}
-        {readError && <p role="alert" className="text-red-300">Could not read contract: {readError} (retrying every {READ_RETRY_MS / 1000} s)</p>}
+        {readError && <p role="alert" className="text-red-300">{simulation ? readError : `Could not read contract: ${readError} (retrying every ${READ_RETRY_MS / 1000} s)`}</p>}
       </section>
 
       <div className="flex gap-3" aria-label="Console sections">

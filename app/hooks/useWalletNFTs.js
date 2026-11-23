@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useWallet } from '../context/WalletContext';
+import { useSimulation } from '../context/SimulationContext';
+import { fetchPlayerCards } from '../utils/gameApi';
 
 const NFT_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_TRACKED_NFT_ADDRESS;
 const ALCHEMY_API_KEY = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY;
@@ -21,14 +23,54 @@ function resolveIpfsUrl(uri) {
 
 export function useWalletNFTs() {
   const { account } = useWallet();
+  const { simulation } = useSimulation();
   const [nftImages, setNftImages] = useState([]);
   const [nfts, setNfts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    if (simulation) {
+      // Cards come from the game backend; no Alchemy/Polygon traffic.
+      if (!account) {
+        setNftImages([]);
+        setNfts([]);
+        return;
+      }
+      const controller = new AbortController();
+      setIsLoading(true);
+      setError(null);
+      fetchPlayerCards(account, {}, { signal: controller.signal })
+        .then(({ cards }) => {
+          if (controller.signal.aborted) return;
+          const mapped = cards
+            .map(card => ({
+              id: String(card.id),
+              tokenId: card.token_id ?? null,
+              image: resolveIpfsUrl(card.image),
+              burnPower: card.burn_power === null || card.burn_power === undefined ? null : Number(card.burn_power),
+              name: card.name || null,
+            }))
+            .filter(card => card.image);
+          setNfts(mapped);
+          setNftImages(mapped.map(n => n.image));
+        })
+        .catch(err => {
+          if (controller.signal.aborted) return;
+          console.error('Error fetching simulated cards:', err);
+          setError(err);
+          setNfts([]);
+          setNftImages([]);
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setIsLoading(false);
+        });
+      return () => controller.abort();
+    }
+
     if (!account || !NFT_CONTRACT_ADDRESS || !ALCHEMY_API_KEY) {
       setNftImages([]);
+      setNfts([]);
       return;
     }
 
@@ -98,7 +140,7 @@ export function useWalletNFTs() {
     return () => {
       cancelled = true;
     };
-  }, [account]);
+  }, [account, simulation]);
 
   return { nftImages, nfts, isLoading, error };
 }
