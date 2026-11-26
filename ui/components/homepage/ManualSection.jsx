@@ -36,7 +36,7 @@ const ManualSection = () => {
                   src="/pig-suit.jpg"
                   alt="CPigs"
                   fill
-                  className="object-cover opacity-90"
+                  className="object-cover object-[50%_25%] opacity-90"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               </div>

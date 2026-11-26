@@ -54,7 +54,7 @@ const NewNavbar = () => {
             className="h-10 w-auto"
             style={{ filter: "drop-shadow(0 0 12px rgba(255,51,187,0.5))" }}
           />
-          <span className="font-display text-2xl tracking-wider text-glow-pink">CPigs</span>
+          <span className="font-display text-2xl tracking-wider text-accent text-glow-gold">CPigs</span>
         </a>
 
         <nav className="ml-auto hidden items-center gap-6 lg:flex">
