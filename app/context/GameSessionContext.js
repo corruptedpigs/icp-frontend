@@ -71,7 +71,7 @@ export function GameSessionProvider({ children }) {
   }
 
   return (
-    <GameSessionContext.Provider value={{ opponentReady, beginJoin, completeJoin, soundEnabled, setSoundEnabled }}>
+    <GameSessionContext.Provider value={{ opponentReady, match: opponentReady ? session.match : null, beginJoin, completeJoin, soundEnabled, setSoundEnabled }}>
       {children}
       {showArrival && opponentReady && (
         <div role="status" aria-live="polite" className={styles.opponentArrival}>

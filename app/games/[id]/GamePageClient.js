@@ -7,6 +7,8 @@ import { useWalletNFTs } from "../../hooks/useWalletNFTs";
 import { useWallet } from "../../context/WalletContext";
 import GameHUD from "../../components/GameHUD";
 import { useSimulation } from "../../context/SimulationContext";
+import { fetchGameSession } from "../../hooks/useJoinGame";
+import { toClientMs, withClockOffset } from "../../utils/matchmaking";
 import { useGameSession } from "../../context/GameSessionContext";
 
 const MIN_NFTS_REQUIRED = 3;
@@ -32,7 +34,16 @@ function NotEnoughNFTs({ count }) {
 export default function GamePageClient() {
   const { account } = useWallet();
   const { simulation } = useSimulation();
-  const { opponentReady } = useGameSession();
+  const { opponentReady, match } = useGameSession();
+  const moveDeadline = match ? toClientMs(match.move_deadline_at, match.clock_offset_ms ?? 0) : NaN;
+  const sessionId = match?.public_id || match?.session_id;
+
+  // Ask the server what really happened before declaring time up.
+  const checkDeadline = async () => {
+    if (!sessionId || !match?.token) return null;
+    const state = withClockOffset(await fetchGameSession(sessionId, match.token, (key) => key));
+    return { deadline: toClientMs(state.move_deadline_at, state.clock_offset_ms) };
+  };
   const { nfts, nftImages, isLoading } = useWalletNFTs();
 
   // Real mode keeps the legacy always-true behaviour; simulation enforces the minimum.
@@ -58,7 +69,9 @@ export default function GamePageClient() {
 
           {/* Game timer */}
           <div className="flex justify-end pt-2 pr-2">
-            {opponentReady && <GameTimer seconds={60} />}
+            {opponentReady && Number.isFinite(moveDeadline) && (
+              <GameTimer deadline={moveDeadline} onExpire={checkDeadline} />
+            )}
           </div>
 
           {/* Player 1 — full-width centered selection phase */}
